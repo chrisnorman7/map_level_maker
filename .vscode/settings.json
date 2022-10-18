@@ -11,6 +11,8 @@
     "pubspec",
     "recase",
     "riverpod",
+    "sdl",
+    "synthizer",
     "todos",
     "unawaited"
   ]

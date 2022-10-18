@@ -4,7 +4,7 @@ import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers.dart';
+import '../providers/providers.dart';
 import '../src/json/map_level_schema.dart';
 import 'edit_map_level_schema.dart';
 

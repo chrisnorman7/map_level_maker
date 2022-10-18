@@ -4,10 +4,10 @@ import 'package:backstreets_widgets/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// A list tile to show the given [coordinates].
-class CoordinatesListTile extends StatelessWidget {
+/// A list tile to show the given int [coordinates].
+class IntCoordinatesListTile extends StatelessWidget {
   /// Create an instance.
-  const CoordinatesListTile({
+  const IntCoordinatesListTile({
     required this.coordinates,
     required this.onChanged,
     this.title = 'Coordinates',
@@ -51,19 +51,31 @@ class CoordinatesListTile extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => CallbackShortcuts(
         bindings: {
-          const SingleActivator(LogicalKeyboardKey.arrowLeft, meta: true): () {
+          const SingleActivator(
+            LogicalKeyboardKey.arrowLeft,
+            alt: true,
+          ): () {
             final x = coordinates.x - coordinateModifier;
             onChanged(Point(max(x, minX ?? x), coordinates.y));
           },
-          const SingleActivator(LogicalKeyboardKey.arrowRight, meta: true): () {
+          const SingleActivator(
+            LogicalKeyboardKey.arrowRight,
+            alt: true,
+          ): () {
             final x = coordinates.x + coordinateModifier;
             onChanged(Point(min(x, maxX ?? x), coordinates.y));
           },
-          const SingleActivator(LogicalKeyboardKey.arrowDown, meta: true): () {
+          const SingleActivator(
+            LogicalKeyboardKey.arrowDown,
+            alt: true,
+          ): () {
             final y = coordinates.y - coordinateModifier;
             onChanged(Point(coordinates.x, max(y, minY ?? y)));
           },
-          const SingleActivator(LogicalKeyboardKey.arrowUp, meta: true): () {
+          const SingleActivator(
+            LogicalKeyboardKey.arrowUp,
+            alt: true,
+          ): () {
             final y = coordinates.y + coordinateModifier;
             onChanged(Point(coordinates.x, min(y, maxY ?? y)));
           }
