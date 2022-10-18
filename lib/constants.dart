@@ -28,3 +28,6 @@ final musicDirectory = Directory(path.join(soundsDirectory.path, 'music'));
 
 /// The directory where ambiances are stored.
 final ambiancesDirectory = Directory(path.join(soundsDirectory.path, 'amb'));
+
+/// The message to be shown when something is unset.
+const unsetMessage = '<Not set>';
