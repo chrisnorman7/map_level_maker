@@ -1,5 +1,7 @@
 import 'package:backstreets_widgets/icons.dart';
 import 'package:backstreets_widgets/screens.dart';
+import 'package:backstreets_widgets/shortcuts.dart';
+import 'package:backstreets_widgets/util.dart';
 import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -210,15 +212,34 @@ class EditMapLevelSchema extends ConsumerWidget {
         final feature = features[index];
         return SearchableListTile(
           searchString: feature.name,
-          child: PushWidgetListTile(
-            title: feature.name,
-            builder: (final context) => EditMapLevelFeatureSchema(
-              mapLevelSchemaArgument: MapLevelSchemaArgument(
-                mapLevelId: level.id,
-                valueId: feature.id,
+          child: CallbackShortcuts(
+            bindings: {
+              deleteShortcut: () => confirm(
+                    context: context,
+                    message:
+                        'Are you sure you want to delete the ${feature.name} '
+                        'feature?',
+                    title: confirmDeleteTitle,
+                    yesCallback: () {
+                      Navigator.pop(context);
+                      level.features.removeWhere(
+                        (final element) => element.id == feature.id,
+                      );
+                      level.save();
+                      ref.refresh(mapLevelSchemaProvider.call(id));
+                    },
+                  )
+            },
+            child: PushWidgetListTile(
+              title: feature.name,
+              builder: (final context) => EditMapLevelFeatureSchema(
+                mapLevelSchemaArgument: MapLevelSchemaArgument(
+                  mapLevelId: level.id,
+                  valueId: feature.id,
+                ),
               ),
+              autofocus: index == 0,
             ),
-            autofocus: index == 0,
           ),
         );
       },

@@ -40,3 +40,6 @@ const unsetMessage = '<Not set>';
 
 /// The message when something can be cleared.
 const clearMessage = 'Clear';
+
+/// The title of delete confirmations.
+const confirmDeleteTitle = 'Confirm Delete';
