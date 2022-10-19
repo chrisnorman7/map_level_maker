@@ -3,9 +3,11 @@ import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../constants.dart';
 import '../providers/map_level_schema_argument.dart';
 import '../providers/providers.dart';
 import '../widgets/int_coordinates_list_tile.dart';
+import '../widgets/sound_list_tile.dart';
 
 /// A widget to edit a feature.
 class EditMapLevelFeatureSchema extends ConsumerWidget {
@@ -39,6 +41,15 @@ class EditMapLevelFeatureSchema extends ConsumerWidget {
               },
               header: 'Name',
               autofocus: true,
+            ),
+            SoundListTile(
+              directory: footstepsDirectory,
+              sound: feature.footstepSound,
+              onChanged: (final value) {
+                feature.footstepSound = value;
+                save(ref);
+              },
+              title: 'Footstep Sound',
             ),
             IntCoordinatesListTile(
               coordinates: feature.start,
