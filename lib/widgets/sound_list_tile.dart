@@ -67,17 +67,22 @@ class SoundListTile extends StatelessWidget {
         sound: value,
         gain: gain,
         looping: looping,
-        child: PushWidgetListTile(
-          title: title,
-          builder: (final context) => SelectSound(
-            directory: directory,
-            onDone: onChanged,
-            currentSound: sound,
-            nullable: nullable,
+        child: Builder(
+          builder: (final builderContext) => PushWidgetListTile(
+            title: title,
+            builder: (final context) {
+              PlaySoundSemantics.of(builderContext)?.stop();
+              return SelectSound(
+                directory: directory,
+                onDone: onChanged,
+                currentSound: sound,
+                nullable: nullable,
+              );
+            },
+            subtitle: value == null
+                ? unsetMessage
+                : path.basenameWithoutExtension(value).replaceAll('_', ' '),
           ),
-          subtitle: value == null
-              ? unsetMessage
-              : path.basenameWithoutExtension(value).replaceAll('_', ' '),
         ),
       ),
     );
