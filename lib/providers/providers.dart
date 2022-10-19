@@ -19,7 +19,7 @@ import 'map_level_schema_context.dart';
 final sdlProvider = Provider((final ref) => Sdl());
 
 /// Provides a synthizer instance.
-final synthizerProvider = Provider((final ref) => Synthizer());
+final synthizerProvider = Provider((final ref) => Synthizer()..initialize());
 
 /// Provide a synthizer context.
 final synthizerContextProvider = Provider((final ref) {
@@ -45,14 +45,22 @@ final bufferCacheProvider = Provider(
 
 /// Provide a game.
 final gameProvider = Provider(
-  (final ref) => Game(
-    title: 'Map Level Maker',
-    sdl: ref.watch(sdlProvider),
-    soundBackend: SynthizerSoundBackend(
-      context: ref.watch(synthizerContextProvider),
-      bufferCache: ref.watch(bufferCacheProvider),
-    ),
-  ),
+  (final ref) {
+    final sdl = ref.watch(sdlProvider);
+    print(sdl);
+    final synthizerContext = ref.watch(synthizerContextProvider);
+    print(synthizerContext);
+    final bufferCache = ref.watch(bufferCacheProvider);
+    print(bufferCache);
+    return Game(
+      title: 'Map Level Maker',
+      sdl: sdl,
+      soundBackend: SynthizerSoundBackend(
+        context: synthizerContext,
+        bufferCache: bufferCache,
+      ),
+    );
+  },
 );
 
 /// Provide the maps which form this project.
