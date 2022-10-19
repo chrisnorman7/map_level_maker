@@ -10,8 +10,9 @@ import 'package:ziggurat/sound.dart';
 import 'package:ziggurat/ziggurat.dart';
 
 import '../constants.dart';
-import '../src/json/map_level_feature_schema.dart';
 import '../src/json/map_level_schema.dart';
+import '../src/json/map_level_schema_feature.dart';
+import '../src/json/map_level_schema_function.dart';
 import 'map_level_schema_argument.dart';
 import 'map_level_schema_context.dart';
 
@@ -96,8 +97,8 @@ final mapLevelSchemaProvider = Provider.family<MapLevelSchema, String>(
 );
 
 /// Provide a single feature.
-final mapLevelFeatureSchemaProvider = Provider.family<
-    MapLevelSchemaContext<MapLevelFeatureSchema>, MapLevelSchemaArgument>(
+final mapLevelSchemaFeatureProvider = Provider.family<
+    MapLevelSchemaContext<MapLevelSchemaFeature>, MapLevelSchemaArgument>(
   (final ref, final argument) {
     final level = ref.watch(
       mapLevelSchemaProvider.call(argument.mapLevelId),
@@ -106,6 +107,19 @@ final mapLevelFeatureSchemaProvider = Provider.family<
       level: level,
       value: level.features
           .firstWhere((final element) => element.id == argument.valueId),
+    );
+  },
+);
+
+/// Provide a single function.
+final mapLevelSchemaFunctionProvider = Provider.family<
+    MapLevelSchemaContext<MapLevelSchemaFunction>, MapLevelSchemaArgument>(
+  (final ref, final arg) {
+    final level = ref.watch(mapLevelSchemaProvider.call(arg.mapLevelId));
+    return MapLevelSchemaContext(
+      level: level,
+      value: level.functions
+          .firstWhere((final element) => element.id == arg.valueId),
     );
   },
 );

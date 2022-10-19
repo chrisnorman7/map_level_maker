@@ -4,13 +4,13 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../util.dart';
 
-part 'map_level_feature_schema.g.dart';
+part 'map_level_schema_feature.g.dart';
 
 /// A feature in a map level schema.
 @JsonSerializable()
-class MapLevelFeatureSchema {
+class MapLevelSchemaFeature {
   /// Create an instance.
-  MapLevelFeatureSchema({
+  MapLevelSchemaFeature({
     final String? id,
     this.name = 'Untitled Feature',
     this.startX = 0,
@@ -21,8 +21,8 @@ class MapLevelFeatureSchema {
   }) : id = id ?? newId();
 
   /// Create an instance from a JSON object.
-  factory MapLevelFeatureSchema.fromJson(final Map<String, dynamic> json) =>
-      _$MapLevelFeatureSchemaFromJson(json);
+  factory MapLevelSchemaFeature.fromJson(final Map<String, dynamic> json) =>
+      _$MapLevelSchemaFeatureFromJson(json);
 
   /// The ID of this feature.
   final String id;
@@ -66,5 +66,5 @@ class MapLevelFeatureSchema {
   String? footstepSound;
 
   /// Convert an instance to JSON.
-  Map<String, dynamic> toJson() => _$MapLevelFeatureSchemaToJson(this);
+  Map<String, dynamic> toJson() => _$MapLevelSchemaFeatureToJson(this);
 }

@@ -24,7 +24,7 @@ class EditMapLevelFeatureSchema extends ConsumerWidget {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     final featureContext = ref.watch(
-      mapLevelFeatureSchemaProvider.call(mapLevelSchemaArgument),
+      mapLevelSchemaFeatureProvider.call(mapLevelSchemaArgument),
     );
     final level = featureContext.level;
     final feature = featureContext.value;
@@ -96,6 +96,6 @@ class EditMapLevelFeatureSchema extends ConsumerWidget {
           mapLevelSchemaArgument.mapLevelId,
         ),
       )
-      ..refresh(mapLevelFeatureSchemaProvider.call(mapLevelSchemaArgument));
+      ..refresh(mapLevelSchemaFeatureProvider.call(mapLevelSchemaArgument));
   }
 }

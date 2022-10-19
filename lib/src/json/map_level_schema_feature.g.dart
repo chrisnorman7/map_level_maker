@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'map_level_feature_schema.dart';
+part of 'map_level_schema_feature.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-MapLevelFeatureSchema _$MapLevelFeatureSchemaFromJson(
+MapLevelSchemaFeature _$MapLevelSchemaFeatureFromJson(
         Map<String, dynamic> json) =>
-    MapLevelFeatureSchema(
+    MapLevelSchemaFeature(
       id: json['id'] as String?,
       name: json['name'] as String? ?? 'Untitled Feature',
       startX: json['startX'] as int? ?? 0,
@@ -18,8 +18,8 @@ MapLevelFeatureSchema _$MapLevelFeatureSchemaFromJson(
       footstepSound: json['footstepSound'] as String?,
     );
 
-Map<String, dynamic> _$MapLevelFeatureSchemaToJson(
-        MapLevelFeatureSchema instance) =>
+Map<String, dynamic> _$MapLevelSchemaFeatureToJson(
+        MapLevelSchemaFeature instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

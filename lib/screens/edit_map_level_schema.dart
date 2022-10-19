@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants.dart';
 import '../providers/map_level_schema_argument.dart';
 import '../providers/providers.dart';
-import '../src/json/map_level_feature_schema.dart';
+import '../src/json/map_level_schema_feature.dart';
 import '../widgets/double_coordinates_list_tile.dart';
 import '../widgets/int_coordinates_list_tile.dart';
 import '../widgets/music_schema_list_tile.dart';
@@ -46,7 +46,7 @@ class EditMapLevelSchema extends ConsumerWidget {
             builder: (final context) => getFeaturesPage(ref: ref),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                final feature = MapLevelFeatureSchema();
+                final feature = MapLevelSchemaFeature();
                 level.features.add(feature);
                 save(ref);
                 pushWidget(

@@ -8,7 +8,8 @@ import 'package:ziggurat/sound.dart';
 
 import '../../constants.dart';
 import '../../util.dart';
-import 'map_level_feature_schema.dart';
+import 'map_level_schema_feature.dart';
+import 'map_level_schema_function.dart';
 import 'music_schema.dart';
 
 part 'map_level_schema.g.dart';
@@ -35,9 +36,11 @@ class MapLevelSchema {
     this.sonarDistanceMultiplier = 75,
     this.reverbPreset,
     this.music,
-    final List<MapLevelFeatureSchema>? features,
+    final List<MapLevelSchemaFeature>? features,
+    final List<MapLevelSchemaFunction>? functions,
   })  : id = id ?? newId(),
-        features = features ?? [];
+        features = features ?? [],
+        functions = functions ?? [];
 
   /// Create an instance from a JSON object.
   factory MapLevelSchema.fromJson(final Map<String, dynamic> json) =>
@@ -115,7 +118,7 @@ class MapLevelSchema {
   MusicSchema? music;
 
   /// The features of this map.
-  final List<MapLevelFeatureSchema> features;
+  final List<MapLevelSchemaFeature> features;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaToJson(this);
@@ -140,6 +143,9 @@ class MapLevelSchema {
 
   /// Get the dart filename for this instance.
   String get dartFilename => '$filename.dart';
+
+  /// The functions for this map.
+  final List<MapLevelSchemaFunction> functions;
 
   /// Get the JSON filename for this instance.
   String get jsonFilename => '$id.json';
