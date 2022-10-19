@@ -84,7 +84,7 @@ final mapsProvider = Provider((final ref) {
     final data = file.readAsStringSync();
     final json = jsonDecode(data) as JsonType;
     return MapLevelSchema.fromJson(json);
-  });
+  }).toList();
 });
 
 /// Provide a single map level schema.

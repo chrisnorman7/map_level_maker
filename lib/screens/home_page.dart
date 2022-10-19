@@ -1,9 +1,12 @@
 import 'package:backstreets_widgets/icons.dart';
 import 'package:backstreets_widgets/screens.dart';
+import 'package:backstreets_widgets/shortcuts.dart';
+import 'package:backstreets_widgets/util.dart';
 import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../constants.dart';
 import '../providers/providers.dart';
 import '../src/json/map_level_schema.dart';
 import 'edit_map_level_schema.dart';
@@ -18,7 +21,11 @@ class HomePage extends ConsumerWidget {
   /// Build the widget.
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final maps = ref.watch(mapsProvider).toList();
+    final maps = ref.watch(mapsProvider)
+      ..sort(
+        (final a, final b) =>
+            a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+      );
     return SimpleScaffold(
       title: 'Map Levels',
       body: maps.isEmpty
@@ -32,11 +39,32 @@ class HomePage extends ConsumerWidget {
                 final map = maps[index];
                 return SearchableListTile(
                   searchString: map.name,
-                  child: PushWidgetListTile(
-                    title: map.name,
-                    builder: (final context) => EditMapLevelSchema(id: map.id),
-                    autofocus: index == 0,
-                    subtitle: '${map.maxX} x ${map.maxY}',
+                  child: CallbackShortcuts(
+                    bindings: {
+                      deleteShortcut: () => confirm(
+                            context: context,
+                            message: 'Are you sure you want to delete the '
+                                '${map.name} map?',
+                            title: confirmDeleteTitle,
+                            yesCallback: () {
+                              Navigator.pop(context);
+                              if (map.jsonFile.existsSync()) {
+                                map.jsonFile.deleteSync();
+                              }
+                              if (map.dartFile.existsSync()) {
+                                map.dartFile.deleteSync();
+                              }
+                              ref.refresh(mapsProvider);
+                            },
+                          )
+                    },
+                    child: PushWidgetListTile(
+                      title: map.name,
+                      builder: (final context) =>
+                          EditMapLevelSchema(id: map.id),
+                      autofocus: index == 0,
+                      subtitle: '${map.maxX} x ${map.maxY}',
+                    ),
                   ),
                 );
               },
