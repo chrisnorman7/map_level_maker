@@ -1,8 +1,12 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:path/path.dart' as path;
+import 'package:recase/recase.dart';
 import 'package:ziggurat/sound.dart';
 
+import '../../constants.dart';
 import '../../util.dart';
 import 'map_level_feature_schema.dart';
 
@@ -14,6 +18,7 @@ class MapLevelSchema {
   /// Create an instance.
   MapLevelSchema({
     final String? id,
+    this.className = 'UntitledMapBase',
     this.name = 'Untitled Map',
     this.maxX = 100,
     this.maxY = 100,
@@ -39,6 +44,9 @@ class MapLevelSchema {
 
   /// The ID of this map.
   final String id;
+
+  /// The class name of this schema.
+  String className;
 
   /// The name of this map.
   String name;
@@ -110,4 +118,28 @@ class MapLevelSchema {
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaToJson(this);
+
+  /// Save this schema.
+  void save() {
+    final json = toJson();
+    final data = indentedJsonEncoder.convert(json);
+    jsonFile.writeAsStringSync(data);
+  }
+
+  /// Get the JSON file where this instance should be stored.
+  File get jsonFile => File(path.join(mapsDirectory.path, jsonFilename));
+
+  /// Get the Dart file where this instance should be stored.
+  File get dartFile => File(path.join(mapsDirectory.path, dartFilename));
+
+  /// Get the base filename for this instance.
+  ///
+  /// This value is a snake case representation of [className].
+  String get filename => className.snakeCase;
+
+  /// Get the dart filename for this instance.
+  String get dartFilename => '$filename.dart';
+
+  /// Get the JSON filename for this instance.
+  String get jsonFilename => '$id.json';
 }

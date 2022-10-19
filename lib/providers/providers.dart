@@ -1,18 +1,19 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:dart_sdl/dart_sdl.dart';
 import 'package:dart_synthizer/dart_synthizer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as path;
 import 'package:ziggurat/sound.dart';
 import 'package:ziggurat/ziggurat.dart';
 
 import '../constants.dart';
 import '../src/json/map_level_feature_schema.dart';
 import '../src/json/map_level_schema.dart';
-import '../src/json/project.dart';
 import 'map_level_schema_argument.dart';
-import 'schema_context.dart';
+import 'map_level_schema_context.dart';
 
 /// Provide an sdl instance.
 final sdlProvider = Provider((final ref) => Sdl());
@@ -56,20 +57,10 @@ final gameProvider = Provider(
 
 /// Provide the maps which form this project.
 ///
-/// If no maps exist, they will be created.
-///
-/// If the sounds directories don't exist, they will be created.
-final projectProvider = Provider((final ref) {
-  final Project project;
-  if (projectFile.existsSync()) {
-    final data = projectFile.readAsStringSync();
-    final json = jsonDecode(data) as JsonType;
-    project = Project.fromJson(json);
-  } else {
-    // ignore: prefer_const_constructors
-    project = Project(mapLevels: []);
-  }
+/// If any of the various directories don't exist, they will be created.
+final mapsProvider = Provider((final ref) {
   for (final directory in [
+    mapsDirectory,
     soundsDirectory,
     footstepsDirectory,
     wallsDirectory,
@@ -80,29 +71,35 @@ final projectProvider = Provider((final ref) {
       directory.createSync(recursive: true);
     }
   }
-  return project;
+  return mapsDirectory
+      .listSync()
+      .whereType<File>()
+      .where((final element) => path.extension(element.path) == '.json')
+      .map<MapLevelSchema>((final file) {
+    final data = file.readAsStringSync();
+    final json = jsonDecode(data) as JsonType;
+    return MapLevelSchema.fromJson(json);
+  });
 });
 
 /// Provide a single map level schema.
-final mapLevelSchemaProvider =
-    Provider.family<SchemaContext<MapLevelSchema>, String>(
+final mapLevelSchemaProvider = Provider.family<MapLevelSchema, String>(
   (final ref, final id) {
-    final project = ref.watch(projectProvider);
-    final map =
-        project.mapLevels.firstWhere((final element) => element.id == id);
-    return SchemaContext(project: project, value: map);
+    final maps = ref.watch(mapsProvider);
+    return maps.firstWhere((final element) => element.id == id);
   },
 );
 
 /// Provide a single feature.
 final mapLevelFeatureSchemaProvider = Provider.family<
-    SchemaContext<MapLevelFeatureSchema>, MapLevelSchemaArgument>(
+    MapLevelSchemaContext<MapLevelFeatureSchema>, MapLevelSchemaArgument>(
   (final ref, final argument) {
-    final mapLevelSchemaContext =
-        ref.watch(mapLevelSchemaProvider.call(argument.mapLevelId));
-    return SchemaContext(
-      project: mapLevelSchemaContext.project,
-      value: mapLevelSchemaContext.value.features
+    final level = ref.watch(
+      mapLevelSchemaProvider.call(argument.mapLevelId),
+    );
+    return MapLevelSchemaContext(
+      level: level,
+      value: level.features
           .firstWhere((final element) => element.id == argument.valueId),
     );
   },

@@ -9,6 +9,6 @@ class MapLevelSchemaArgument {
   /// The ID of the map level to use.
   final String mapLevelId;
 
-  /// THe ID of the thing to request.
+  /// The ID of the thing to request.
   final String valueId;
 }

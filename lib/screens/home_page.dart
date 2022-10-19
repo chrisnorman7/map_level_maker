@@ -18,8 +18,7 @@ class HomePage extends ConsumerWidget {
   /// Build the widget.
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final project = ref.watch(projectProvider);
-    final maps = project.mapLevels;
+    final maps = ref.watch(mapsProvider).toList();
     return SimpleScaffold(
       title: 'Map Levels',
       body: maps.isEmpty
@@ -44,10 +43,8 @@ class HomePage extends ConsumerWidget {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          final map = MapLevelSchema();
-          maps.add(map);
-          project.save();
-          ref.refresh(projectProvider);
+          MapLevelSchema().save();
+          ref.refresh(mapsProvider);
         },
         tooltip: 'Create Map',
         child: addIcon,

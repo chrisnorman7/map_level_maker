@@ -9,6 +9,7 @@ part of 'map_level_schema.dart';
 MapLevelSchema _$MapLevelSchemaFromJson(Map<String, dynamic> json) =>
     MapLevelSchema(
       id: json['id'] as String?,
+      className: json['className'] as String? ?? 'UntitledMapBase',
       name: json['name'] as String? ?? 'Untitled Map',
       maxX: json['maxX'] as int? ?? 100,
       maxY: json['maxY'] as int? ?? 100,
@@ -35,6 +36,7 @@ MapLevelSchema _$MapLevelSchemaFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$MapLevelSchemaToJson(MapLevelSchema instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'className': instance.className,
       'name': instance.name,
       'maxX': instance.maxX,
       'maxY': instance.maxY,

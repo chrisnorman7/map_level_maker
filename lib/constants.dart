@@ -1,13 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
+/// The JSON encoder to use.
+const indentedJsonEncoder = JsonEncoder.withIndent('  ');
+
 /// The UUID generator to use.
 const uuid = Uuid();
 
-/// The file where the project JSON will be stored.
-final projectFile = File('../project.json');
+/// The directory where map files will be stored.
+///
+/// This directory will contain both JSON and class files.
+final mapsDirectory = Directory('../lib/src/maps');
 
 /// The type of JSON data.
 typedef JsonType = Map<String, dynamic>;
