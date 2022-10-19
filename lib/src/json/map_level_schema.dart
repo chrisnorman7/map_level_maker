@@ -9,6 +9,7 @@ import 'package:ziggurat/sound.dart';
 import '../../constants.dart';
 import '../../util.dart';
 import 'map_level_feature_schema.dart';
+import 'music_schema.dart';
 
 part 'map_level_schema.g.dart';
 
@@ -111,7 +112,7 @@ class MapLevelSchema {
   ReverbPreset? reverbPreset;
 
   /// The music to use.
-  String? music;
+  MusicSchema? music;
 
   /// The features of this map.
   final List<MapLevelFeatureSchema> features;

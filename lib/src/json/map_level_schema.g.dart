@@ -26,7 +26,9 @@ MapLevelSchema _$MapLevelSchemaFromJson(Map<String, dynamic> json) =>
       reverbPreset: json['reverbPreset'] == null
           ? null
           : ReverbPreset.fromJson(json['reverbPreset'] as Map<String, dynamic>),
-      music: json['music'] as String?,
+      music: json['music'] == null
+          ? null
+          : MusicSchema.fromJson(json['music'] as Map<String, dynamic>),
       features: (json['features'] as List<dynamic>?)
           ?.map(
               (e) => MapLevelFeatureSchema.fromJson(e as Map<String, dynamic>))
