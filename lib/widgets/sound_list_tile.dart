@@ -64,7 +64,9 @@ class SoundListTile extends StatelessWidget {
           currentSound: value,
           nullable: nullable,
         ),
-        subtitle: value == null ? unsetMessage : path.basename(value),
+        subtitle: value == null
+            ? unsetMessage
+            : path.basenameWithoutExtension(value).replaceAll('_', ' '),
       ),
     );
   }
