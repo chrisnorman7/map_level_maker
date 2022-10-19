@@ -12,6 +12,7 @@ dependencies:
   backstreets_widgets: ^0.6.0
   cupertino_icons: ^1.0.2
   dart_sdl: ^0.10.1
+  dart_style: ^2.2.4
   dart_synthizer: ^0.11.1
   file: ^6.1.4
   flutter:
