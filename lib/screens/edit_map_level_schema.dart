@@ -11,6 +11,7 @@ import '../src/json/map_level_feature_schema.dart';
 import '../src/json/map_level_schema.dart';
 import '../widgets/double_coordinates_list_tile.dart';
 import '../widgets/int_coordinates_list_tile.dart';
+import '../widgets/music_schema_list_tile.dart';
 import '../widgets/sound_list_tile.dart';
 import 'edit_map_level_feature_schema.dart';
 
@@ -96,6 +97,13 @@ class EditMapLevelSchema extends ConsumerWidget {
               save(ref);
             },
             title: 'Wall Sound',
+          ),
+          MusicSchemaListTile(
+            music: level.music,
+            onChanged: (final value) {
+              level.music = value;
+              save(ref);
+            },
           ),
           IntCoordinatesListTile(
             coordinates: level.maxSize,
