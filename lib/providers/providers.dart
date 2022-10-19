@@ -71,7 +71,9 @@ final mapsProvider = Provider((final ref) {
     footstepsDirectory,
     wallsDirectory,
     musicDirectory,
-    ambiancesDirectory
+    ambiancesDirectory,
+    earconsDirectory,
+    descriptionsDirectory,
   ]) {
     if (!directory.existsSync()) {
       directory.createSync(recursive: true);

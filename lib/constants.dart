@@ -39,6 +39,13 @@ final musicDirectory = Directory(path.join(soundsDirectory.path, 'music'));
 /// The directory where ambiances are stored.
 final ambiancesDirectory = Directory(path.join(soundsDirectory.path, 'amb'));
 
+/// The directory where earcons are stored.
+final earconsDirectory = Directory(path.join(soundsDirectory.path, 'earcons'));
+
+/// The directory where descriptions are stored.
+final descriptionsDirectory =
+    Directory(path.join(soundsDirectory.path, 'descriptions'));
+
 /// The message to be shown when something is unset.
 const unsetMessage = '<Not set>';
 
