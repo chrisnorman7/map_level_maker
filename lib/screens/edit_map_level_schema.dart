@@ -10,11 +10,13 @@ import '../constants.dart';
 import '../providers/map_level_schema_argument.dart';
 import '../providers/providers.dart';
 import '../src/json/map_level_schema_feature.dart';
+import '../src/json/map_level_schema_function.dart';
 import '../widgets/double_coordinates_list_tile.dart';
 import '../widgets/int_coordinates_list_tile.dart';
 import '../widgets/music_schema_list_tile.dart';
 import '../widgets/sound_list_tile.dart';
 import 'edit_map_level_feature_schema.dart';
+import 'edit_map_level_schema_function.dart';
 
 /// A widget to edit the map with the given [id].
 class EditMapLevelSchema extends ConsumerWidget {
@@ -32,6 +34,7 @@ class EditMapLevelSchema extends ConsumerWidget {
   Widget build(final BuildContext context, final WidgetRef ref) {
     final level = ref.watch(mapLevelSchemaProvider.call(id));
     final features = level.features;
+    final functions = level.functions;
     return Cancel(
       child: TabbedScaffold(
         tabs: [
@@ -60,6 +63,20 @@ class EditMapLevelSchema extends ConsumerWidget {
                 );
               },
               tooltip: 'Create Feature',
+              child: addIcon,
+            ),
+          ),
+          TabbedScaffoldTab(
+            title: 'Functions',
+            icon: Text('${functions.length}'),
+            builder: (final context) => getFunctionsTab(ref: ref),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                final function = MapLevelSchemaFunction();
+                functions.add(function);
+                save(ref);
+              },
+              tooltip: 'New Function',
               child: addIcon,
             ),
           )
@@ -241,6 +258,73 @@ class EditMapLevelSchema extends ConsumerWidget {
                 ),
               ),
               autofocus: index == 0,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Get the functions tab.
+  Widget getFunctionsTab({
+    required final WidgetRef ref,
+  }) {
+    final level = ref.watch(mapLevelSchemaProvider.call(id));
+    final functions = level.functions
+      ..sort(
+        (final a, final b) =>
+            a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+      );
+    if (functions.isEmpty) {
+      return const CenterText(
+        text: 'There are no functions to show.',
+        autofocus: true,
+      );
+    }
+    return BuiltSearchableListView(
+      items: functions,
+      builder: (final context, final index) {
+        final function = functions[index];
+        return SearchableListTile(
+          searchString: function.name,
+          child: CallbackShortcuts(
+            bindings: {
+              deleteShortcut: () => confirm(
+                    context: context,
+                    message:
+                        'Are you sure you want to delete the ${function.name} '
+                        'function?',
+                    yesCallback: () {
+                      Navigator.pop(context);
+                      for (final feature in level.features) {
+                        for (final id in [feature.onActivateId]) {
+                          if (id == function.id) {
+                            showMessage(
+                              context: context,
+                              message: 'This function is being used by the '
+                                  '${feature.name} feature.',
+                            );
+                            return;
+                          }
+                        }
+                      }
+                      level.functions.removeWhere(
+                        (final element) => element.id == function.id,
+                      );
+                      save(ref);
+                    },
+                  )
+            },
+            child: PushWidgetListTile(
+              title: function.name,
+              builder: (final context) => EditMapLevelSchemaFunction(
+                argument: MapLevelSchemaArgument(
+                  mapLevelId: id,
+                  valueId: function.id,
+                ),
+              ),
+              autofocus: index == 0,
+              subtitle: function.comment,
             ),
           ),
         );

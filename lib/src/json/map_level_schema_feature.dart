@@ -18,6 +18,7 @@ class MapLevelSchemaFeature {
     this.endX = 0,
     this.endY = 0,
     this.footstepSound,
+    this.onActivateId,
   }) : id = id ?? newId();
 
   /// Create an instance from a JSON object.
@@ -64,6 +65,9 @@ class MapLevelSchemaFeature {
 
   /// The footstep sound to use.
   String? footstepSound;
+
+  /// The function to call when activating this feature.
+  String? onActivateId;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaFeatureToJson(this);
