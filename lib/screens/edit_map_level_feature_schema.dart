@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants.dart';
 import '../providers/map_level_schema_argument.dart';
 import '../providers/providers.dart';
+import '../widgets/function_list_tile.dart';
 import '../widgets/int_coordinates_list_tile.dart';
 import '../widgets/sound_list_tile.dart';
 
@@ -50,6 +51,15 @@ class EditMapLevelFeatureSchema extends ConsumerWidget {
                 save(ref);
               },
               title: 'Footstep Sound',
+            ),
+            FunctionListTile(
+              functions: [null, ...level.functions],
+              function: level.findFunction(feature.onActivateId),
+              onChanged: (final value) {
+                feature.onActivateId = value?.id;
+                save(ref);
+              },
+              title: 'On Activate Function',
             ),
             IntCoordinatesListTile(
               coordinates: feature.start,

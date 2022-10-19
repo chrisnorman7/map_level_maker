@@ -147,6 +147,19 @@ class MapLevelSchema {
   /// The functions for this map.
   final List<MapLevelSchemaFunction> functions;
 
+  /// Returns the function with the given [id] or `null`.
+  MapLevelSchemaFunction? findFunction(final String? id) {
+    if (id == null) {
+      return null;
+    }
+    for (final function in functions) {
+      if (id == function.id) {
+        return function;
+      }
+    }
+    return null;
+  }
+
   /// Get the JSON filename for this instance.
   String get jsonFilename => '$id.json';
 }
