@@ -56,6 +56,15 @@ class EditMapLevelSchema extends ConsumerWidget {
                 final feature = MapLevelFeatureSchema();
                 level.features.add(feature);
                 save(ref);
+                pushWidget(
+                  context: context,
+                  builder: (final context) => EditMapLevelFeatureSchema(
+                    mapLevelSchemaArgument: MapLevelSchemaArgument(
+                      mapLevelId: level.id,
+                      valueId: feature.id,
+                    ),
+                  ),
+                );
               },
               tooltip: 'Create Feature',
               child: addIcon,
