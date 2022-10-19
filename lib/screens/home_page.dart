@@ -71,8 +71,12 @@ class HomePage extends ConsumerWidget {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          MapLevelSchema().save();
+          final level = MapLevelSchema()..save();
           ref.refresh(mapsProvider);
+          pushWidget(
+            context: context,
+            builder: (final context) => EditMapLevelSchema(id: level.id),
+          );
         },
         tooltip: 'Create Map',
         child: addIcon,
