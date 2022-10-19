@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:backstreets_widgets/shortcuts.dart';
+import 'package:backstreets_widgets/util.dart';
 import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 
 import '../constants.dart';
@@ -51,22 +54,31 @@ class SoundListTile extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final value = sound;
-    return PlaySoundSemantics(
-      directory: directory,
-      sound: value,
-      gain: gain,
-      looping: looping,
-      child: PushWidgetListTile(
-        title: title,
-        builder: (final context) => SelectSound(
-          directory: directory,
-          onDone: onChanged,
-          currentSound: value,
-          nullable: nullable,
+    return CallbackShortcuts(
+      bindings: {
+        SingleActivator(
+          LogicalKeyboardKey.keyC,
+          control: useControlKey,
+          meta: useMetaKey,
+        ): () => setClipboardText(path.join(directory.path, sound))
+      },
+      child: PlaySoundSemantics(
+        directory: directory,
+        sound: value,
+        gain: gain,
+        looping: looping,
+        child: PushWidgetListTile(
+          title: title,
+          builder: (final context) => SelectSound(
+            directory: directory,
+            onDone: onChanged,
+            currentSound: value,
+            nullable: nullable,
+          ),
+          subtitle: value == null
+              ? unsetMessage
+              : path.basenameWithoutExtension(value).replaceAll('_', ' '),
         ),
-        subtitle: value == null
-            ? unsetMessage
-            : path.basenameWithoutExtension(value).replaceAll('_', ' '),
       ),
     );
   }

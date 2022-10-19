@@ -4,6 +4,7 @@ import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../constants.dart';
 import '../providers/map_level_schema_argument.dart';
 import '../providers/providers.dart';
 import '../providers/schema_context.dart';
@@ -11,6 +12,7 @@ import '../src/json/map_level_feature_schema.dart';
 import '../src/json/map_level_schema.dart';
 import '../widgets/double_coordinates_list_tile.dart';
 import '../widgets/int_coordinates_list_tile.dart';
+import '../widgets/sound_list_tile.dart';
 import 'edit_map_level_feature_schema.dart';
 
 /// A widget to edit the map with the given [id].
@@ -78,6 +80,24 @@ class EditMapLevelSchema extends ConsumerWidget {
           },
           header: 'Name',
           autofocus: true,
+        ),
+        SoundListTile(
+          directory: footstepsDirectory,
+          sound: level.defaultFootstepSound,
+          onChanged: (final value) {
+            level.defaultFootstepSound = value;
+            save(ref);
+          },
+          title: 'Default Footstep Sound',
+        ),
+        SoundListTile(
+          directory: wallsDirectory,
+          sound: level.wallSound,
+          onChanged: (final value) {
+            level.wallSound = value;
+            save(ref);
+          },
+          title: 'Wall Sound',
         ),
         IntCoordinatesListTile(
           coordinates: level.maxSize,
