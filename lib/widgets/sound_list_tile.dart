@@ -72,7 +72,7 @@ class SoundListTile extends StatelessWidget {
           builder: (final context) => SelectSound(
             directory: directory,
             onDone: onChanged,
-            currentSound: value,
+            currentSound: sound,
             nullable: nullable,
           ),
           subtitle: value == null

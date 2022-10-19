@@ -37,3 +37,6 @@ final ambiancesDirectory = Directory(path.join(soundsDirectory.path, 'amb'));
 
 /// The message to be shown when something is unset.
 const unsetMessage = '<Not set>';
+
+/// The message when something can be cleared.
+const clearMessage = 'Clear';

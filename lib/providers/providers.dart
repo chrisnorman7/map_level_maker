@@ -47,11 +47,8 @@ final bufferCacheProvider = Provider(
 final gameProvider = Provider(
   (final ref) {
     final sdl = ref.watch(sdlProvider);
-    print(sdl);
     final synthizerContext = ref.watch(synthizerContextProvider);
-    print(synthizerContext);
     final bufferCache = ref.watch(bufferCacheProvider);
-    print(bufferCache);
     return Game(
       title: 'Map Level Maker',
       sdl: sdl,
