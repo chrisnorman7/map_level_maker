@@ -83,11 +83,19 @@ class EditMapLevelFeatureSchema extends ConsumerWidget {
 
   /// Save the project.
   void save(final WidgetRef ref) {
-    final provider =
-        mapLevelSchemaProvider.call(mapLevelSchemaArgument.mapLevelId);
-    ref.watch(provider).save();
     ref
-      ..refresh(mapLevelFeatureSchemaProvider.call(mapLevelSchemaArgument))
-      ..refresh(provider);
+        .watch(
+          mapLevelSchemaProvider.call(
+            mapLevelSchemaArgument.mapLevelId,
+          ),
+        )
+        .save();
+    ref
+      ..refresh(
+        mapLevelSchemaProvider.call(
+          mapLevelSchemaArgument.mapLevelId,
+        ),
+      )
+      ..refresh(mapLevelFeatureSchemaProvider.call(mapLevelSchemaArgument));
   }
 }
