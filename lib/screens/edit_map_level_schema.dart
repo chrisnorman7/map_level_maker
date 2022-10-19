@@ -250,6 +250,8 @@ class EditMapLevelSchema extends ConsumerWidget {
   void save(final WidgetRef ref) {
     final provider = mapLevelSchemaProvider.call(id);
     ref.watch(provider).save();
-    ref.refresh(provider);
+    ref
+      ..refresh(provider)
+      ..refresh(mapsProvider);
   }
 }
