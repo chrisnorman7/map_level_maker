@@ -24,8 +24,7 @@ class EditMapLevelFeatureSchema extends ConsumerWidget {
     final featureContext = ref.watch(
       mapLevelFeatureSchemaProvider.call(mapLevelSchemaArgument),
     );
-    final level = ref
-        .watch(mapLevelSchemaProvider.call(mapLevelSchemaArgument.mapLevelId));
+    final level = featureContext.level;
     final feature = featureContext.value;
     return Cancel(
       child: SimpleScaffold(
@@ -36,6 +35,7 @@ class EditMapLevelFeatureSchema extends ConsumerWidget {
               value: feature.name,
               onChanged: (final value) {
                 feature.name = value;
+                save(ref);
               },
               header: 'Name',
               autofocus: true,
@@ -72,11 +72,11 @@ class EditMapLevelFeatureSchema extends ConsumerWidget {
 
   /// Save the project.
   void save(final WidgetRef ref) {
+    final provider =
+        mapLevelSchemaProvider.call(mapLevelSchemaArgument.mapLevelId);
+    ref.watch(provider).save();
     ref
-        .watch(mapLevelSchemaProvider.call(mapLevelSchemaArgument.mapLevelId))
-        .save();
-    ref.refresh(
-      mapLevelFeatureSchemaProvider.call(mapLevelSchemaArgument),
-    );
+      ..refresh(mapLevelFeatureSchemaProvider.call(mapLevelSchemaArgument))
+      ..refresh(provider);
   }
 }

@@ -52,7 +52,7 @@ class EditMapLevelSchema extends ConsumerWidget {
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 final feature = MapLevelFeatureSchema();
-                features.add(feature);
+                level.features.add(feature);
                 save(ref);
               },
               tooltip: 'Create Feature',
@@ -227,7 +227,8 @@ class EditMapLevelSchema extends ConsumerWidget {
 
   /// Save the project.
   void save(final WidgetRef ref) {
-    ref.watch(mapLevelSchemaProvider.call(id)).save();
-    ref.refresh(mapLevelSchemaProvider.call(id));
+    final provider = mapLevelSchemaProvider.call(id);
+    ref.watch(provider).save();
+    ref.refresh(provider);
   }
 }
