@@ -2,8 +2,20 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dart_style/dart_style.dart';
+import 'package:jinja/jinja.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
+
+import 'map_level_schema_to_code.dart';
+
+/// The jinjua environment to use.
+final jinja = Environment(
+  filters: {
+    'comment': toComment,
+    'asset': toAsset,
+    'quote': quoteValue,
+  },
+);
 
 /// The JSON encoder to use.
 const indentedJsonEncoder = JsonEncoder.withIndent('  ');

@@ -18,6 +18,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.0.2
+  jinja: ^0.4.0-dev.51
   json_annotation: ^4.7.0
   path: ^1.8.2
   recase: ^4.1.0

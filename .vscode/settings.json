@@ -9,13 +9,18 @@
     "Colors",
     "earcon",
     "earcons",
+    "endfor",
+    "endwith",
     "formals",
+    "jinja",
+    "jinjua",
     "pubspec",
     "recase",
     "riverpod",
     "sdl",
     "synthizer",
     "todos",
-    "unawaited"
+    "unawaited",
+    "writeln"
   ]
 }
