@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:backstreets_widgets/screens.dart';
+import 'package:backstreets_widgets/shortcuts.dart';
 import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -75,11 +78,34 @@ class EditMapLevelSchemaItem extends ConsumerWidget {
               directory: ambiancesDirectory,
               title: 'Ambiance',
             ),
-            IntCoordinatesListTile(
-              coordinates: item.coordinates,
-              onChanged: (final value) {
-                item.coordinates = value;
-                save(ref);
+            Builder(
+              builder: (final context) {
+                final coordinates = item.coordinates;
+                if (coordinates == null) {
+                  return ListTile(
+                    title: const Text('Coordinates'),
+                    subtitle: const Text(unsetMessage),
+                    onTap: () {
+                      item.coordinates = const Point(0, 0);
+                      save(ref);
+                    },
+                  );
+                }
+                return CallbackShortcuts(
+                  bindings: {
+                    deleteShortcut: () {
+                      item.coordinates = null;
+                      save(ref);
+                    }
+                  },
+                  child: IntCoordinatesListTile(
+                    coordinates: coordinates,
+                    onChanged: (final value) {
+                      item.coordinates = value;
+                      save(ref);
+                    },
+                  ),
+                );
               },
             ),
           ],

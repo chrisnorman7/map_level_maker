@@ -14,8 +14,8 @@ class MapLevelSchemaItem {
   MapLevelSchemaItem({
     final String? id,
     this.name = 'Untitled Item',
-    this.x = 0,
-    this.y = 0,
+    this.x,
+    this.y,
     this.ambiance,
     this.earcon,
     this.descriptionSound,
@@ -33,19 +33,26 @@ class MapLevelSchemaItem {
   String name;
 
   /// The x coordinate.
-  int x;
+  int? x;
 
   /// The y coordinate.
-  int y;
+  int? y;
 
   /// The coordinates of this item.
   @JsonKey(ignore: true)
-  Point<int> get coordinates => Point(x, y);
+  Point<int>? get coordinates {
+    final cX = x;
+    final cY = y;
+    if (cX == null || cY == null) {
+      return null;
+    }
+    return Point(cX, cY);
+  }
 
   /// Set the [coordinates].
-  set coordinates(final Point<int> value) {
-    x = value.x;
-    y = value.y;
+  set coordinates(final Point<int>? value) {
+    x = value?.x;
+    y = value?.y;
   }
 
   /// The ambiance for this item.

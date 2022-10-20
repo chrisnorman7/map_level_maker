@@ -47,13 +47,8 @@ class MapLevelSchemaAmbiance {
 
   /// Set the coordinates.
   set coordinates(final Point<double>? value) {
-    if (value == null) {
-      x = null;
-      y = null;
-    } else {
-      x = value.x;
-      y = value.y;
-    }
+    x = value?.x;
+    y = value?.y;
   }
 
   /// Convert an instance to JSON.

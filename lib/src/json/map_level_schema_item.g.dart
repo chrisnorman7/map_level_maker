@@ -10,8 +10,8 @@ MapLevelSchemaItem _$MapLevelSchemaItemFromJson(Map<String, dynamic> json) =>
     MapLevelSchemaItem(
       id: json['id'] as String?,
       name: json['name'] as String? ?? 'Untitled Item',
-      x: json['x'] as int? ?? 0,
-      y: json['y'] as int? ?? 0,
+      x: json['x'] as int?,
+      y: json['y'] as int?,
       ambiance: json['ambiance'] == null
           ? null
           : MusicSchema.fromJson(json['ambiance'] as Map<String, dynamic>),
