@@ -26,61 +26,72 @@ class HomePage extends ConsumerWidget {
         (final a, final b) =>
             a.name.toLowerCase().compareTo(b.name.toLowerCase()),
       );
-    return SimpleScaffold(
-      title: 'Map Levels',
-      body: maps.isEmpty
-          ? const CenterText(
-              text: 'There are no maps to show.',
-              autofocus: true,
-            )
-          : BuiltSearchableListView(
-              items: maps,
-              builder: (final context, final index) {
-                final map = maps[index];
-                return SearchableListTile(
-                  searchString: map.name,
-                  child: CallbackShortcuts(
-                    bindings: {
-                      deleteShortcut: () => confirm(
-                            context: context,
-                            message: 'Are you sure you want to delete the '
-                                '${map.name} map?',
-                            title: confirmDeleteTitle,
-                            yesCallback: () {
-                              Navigator.pop(context);
-                              if (map.jsonFile.existsSync()) {
-                                map.jsonFile.deleteSync();
-                              }
-                              if (map.dartFile.existsSync()) {
-                                map.dartFile.deleteSync();
-                              }
-                              ref.refresh(mapsProvider);
-                            },
-                          )
-                    },
-                    child: PushWidgetListTile(
-                      title: map.name,
-                      builder: (final context) =>
-                          EditMapLevelSchema(id: map.id),
-                      autofocus: index == 0,
-                      subtitle: '${map.maxX} x ${map.maxY}',
+    return CallbackShortcuts(
+      bindings: {
+        newShortcut: () => newMapLevelSchema(context: context, ref: ref)
+      },
+      child: SimpleScaffold(
+        title: 'Map Levels',
+        body: maps.isEmpty
+            ? const CenterText(
+                text: 'There are no maps to show.',
+                autofocus: true,
+              )
+            : BuiltSearchableListView(
+                items: maps,
+                builder: (final context, final index) {
+                  final map = maps[index];
+                  return SearchableListTile(
+                    searchString: map.name,
+                    child: CallbackShortcuts(
+                      bindings: {
+                        deleteShortcut: () => confirm(
+                              context: context,
+                              message: 'Are you sure you want to delete the '
+                                  '${map.name} map?',
+                              title: confirmDeleteTitle,
+                              yesCallback: () {
+                                Navigator.pop(context);
+                                if (map.jsonFile.existsSync()) {
+                                  map.jsonFile.deleteSync();
+                                }
+                                if (map.dartFile.existsSync()) {
+                                  map.dartFile.deleteSync();
+                                }
+                                ref.refresh(mapsProvider);
+                              },
+                            )
+                      },
+                      child: PushWidgetListTile(
+                        title: map.name,
+                        builder: (final context) =>
+                            EditMapLevelSchema(id: map.id),
+                        autofocus: index == 0,
+                        subtitle: '${map.maxX} x ${map.maxY}',
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final level = MapLevelSchema()..save();
-          ref.refresh(mapsProvider);
-          pushWidget(
-            context: context,
-            builder: (final context) => EditMapLevelSchema(id: level.id),
-          );
-        },
-        tooltip: 'Create Map',
-        child: addIcon,
+                  );
+                },
+              ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => newMapLevelSchema(context: context, ref: ref),
+          tooltip: 'Create Map',
+          child: addIcon,
+        ),
       ),
+    );
+  }
+
+  /// Create a new map.
+  void newMapLevelSchema({
+    required final BuildContext context,
+    required final WidgetRef ref,
+  }) {
+    final level = MapLevelSchema()..save();
+    ref.refresh(mapsProvider);
+    pushWidget(
+      context: context,
+      builder: (final context) => EditMapLevelSchema(id: level.id),
     );
   }
 }
