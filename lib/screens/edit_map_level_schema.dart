@@ -17,6 +17,7 @@ import '../src/json/map_level_schema_feature.dart';
 import '../src/json/map_level_schema_function.dart';
 import '../src/json/map_level_schema_item.dart';
 import '../src/json/music_schema.dart';
+import '../validators.dart';
 import '../widgets/double_coordinates_list_tile.dart';
 import '../widgets/int_coordinates_list_tile.dart';
 import '../widgets/music_schema_list_tile.dart';
@@ -137,6 +138,15 @@ class EditMapLevelSchema extends ConsumerWidget {
     final level = ref.watch(mapLevelSchemaProvider.call(id));
     return ListView(
       children: [
+        TextListTile(
+          value: level.className,
+          onChanged: (final value) {
+            level.className = value;
+            save(ref);
+          },
+          header: 'Class Name',
+          validator: (final value) => validateClassName(value: value),
+        ),
         TextListTile(
           value: level.name,
           onChanged: (final value) {
