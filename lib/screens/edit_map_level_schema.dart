@@ -309,19 +309,43 @@ class EditMapLevelSchema extends ConsumerWidget {
         final item = items[index];
         return SearchableListTile(
           searchString: item.name,
-          child: PlaySoundSemantics(
-            directory: ambiancesDirectory,
-            sound: item.ambiance?.sound,
-            gain: item.ambiance?.gain ?? 0.7,
-            looping: true,
-            child: PushWidgetListTile(
-              title: item.name,
-              builder: (final context) => EditMapLevelSchemaItem(
-                argument:
-                    MapLevelSchemaArgument(mapLevelId: id, valueId: item.id),
+          child: CallbackShortcuts(
+            bindings: {
+              deleteShortcut: () => confirm(
+                    context: context,
+                    message: 'Are you sure you want to delete the ${item.name} '
+                        'item?',
+                    title: confirmDeleteTitle,
+                    yesCallback: () {
+                      Navigator.pop(context);
+                      level.items.removeWhere(
+                        (final element) => element.id == item.id,
+                      );
+                      save(ref);
+                    },
+                  )
+            },
+            child: PlaySoundSemantics(
+              directory: ambiancesDirectory,
+              sound: item.ambiance?.sound,
+              gain: item.ambiance?.gain ?? 0.7,
+              looping: true,
+              child: Builder(
+                builder: (final context) => PushWidgetListTile(
+                  title: item.name,
+                  builder: (final builderContext) {
+                    PlaySoundSemantics.of(context)?.stop();
+                    return EditMapLevelSchemaItem(
+                      argument: MapLevelSchemaArgument(
+                        mapLevelId: id,
+                        valueId: item.id,
+                      ),
+                    );
+                  },
+                  autofocus: index == 0,
+                  subtitle: item.descriptionText,
+                ),
               ),
-              autofocus: index == 0,
-              subtitle: item.descriptionText,
             ),
           ),
         );
