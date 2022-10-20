@@ -59,7 +59,7 @@ final gameProvider = Provider(
         context: synthizerContext,
         bufferCache: bufferCache,
       ),
-    );
+    )..defaultPannerStrategy = DefaultPannerStrategy.hrtf;
   },
 );
 

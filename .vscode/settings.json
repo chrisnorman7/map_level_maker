@@ -12,6 +12,7 @@
     "endfor",
     "endwith",
     "formals",
+    "hrtf",
     "jinja",
     "jinjua",
     "pubspec",
