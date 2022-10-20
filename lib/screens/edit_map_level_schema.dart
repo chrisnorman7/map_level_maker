@@ -245,7 +245,11 @@ class EditMapLevelSchema extends ConsumerWidget {
     required final WidgetRef ref,
   }) {
     final level = ref.watch(mapLevelSchemaProvider.call(id));
-    final features = level.features;
+    final features = level.features
+      ..sort(
+        (final a, final b) =>
+            a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+      );
     if (features.isEmpty) {
       return const CenterText(
         text: 'There are no features to show.',
@@ -296,7 +300,11 @@ class EditMapLevelSchema extends ConsumerWidget {
     required final WidgetRef ref,
   }) {
     final level = ref.watch(mapLevelSchemaProvider.call(id));
-    final items = level.items;
+    final items = level.items
+      ..sort(
+        (final a, final b) =>
+            a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+      );
     if (items.isEmpty) {
       return const CenterText(
         text: 'There are no items to show.',
