@@ -224,6 +224,7 @@ class EditMapLevelSchema extends ConsumerWidget {
           minY: 0.0,
           maxX: level.maxX - 1,
           maxY: level.maxY - 1,
+          title: 'Initial Coordinates',
         ),
         DoubleListTile(
           value: level.heading,
