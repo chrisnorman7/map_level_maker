@@ -15,7 +15,7 @@ import '../widgets/double_coordinates_list_tile.dart';
 import '../widgets/int_coordinates_list_tile.dart';
 import '../widgets/music_schema_list_tile.dart';
 import '../widgets/sound_list_tile.dart';
-import 'edit_map_level_feature_schema.dart';
+import 'edit_map_level_schema_feature.dart';
 import 'edit_map_level_schema_function.dart';
 
 /// A widget to edit the map with the given [id].
@@ -54,7 +54,7 @@ class EditMapLevelSchema extends ConsumerWidget {
                 save(ref);
                 pushWidget(
                   context: context,
-                  builder: (final context) => EditMapLevelFeatureSchema(
+                  builder: (final context) => EditMapLevelSchemaFeature(
                     mapLevelSchemaArgument: MapLevelSchemaArgument(
                       mapLevelId: level.id,
                       valueId: feature.id,
@@ -251,7 +251,7 @@ class EditMapLevelSchema extends ConsumerWidget {
             },
             child: PushWidgetListTile(
               title: feature.name,
-              builder: (final context) => EditMapLevelFeatureSchema(
+              builder: (final context) => EditMapLevelSchemaFeature(
                 mapLevelSchemaArgument: MapLevelSchemaArgument(
                   mapLevelId: level.id,
                   valueId: feature.id,

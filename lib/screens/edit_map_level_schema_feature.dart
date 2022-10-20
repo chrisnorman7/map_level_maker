@@ -11,9 +11,9 @@ import '../widgets/int_coordinates_list_tile.dart';
 import '../widgets/sound_list_tile.dart';
 
 /// A widget to edit a feature.
-class EditMapLevelFeatureSchema extends ConsumerWidget {
+class EditMapLevelSchemaFeature extends ConsumerWidget {
   /// Create an instance.
-  const EditMapLevelFeatureSchema({
+  const EditMapLevelSchemaFeature({
     required this.mapLevelSchemaArgument,
     super.key,
   });

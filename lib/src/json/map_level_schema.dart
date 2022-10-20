@@ -10,6 +10,7 @@ import '../../constants.dart';
 import '../../util.dart';
 import 'map_level_schema_feature.dart';
 import 'map_level_schema_function.dart';
+import 'map_level_schema_item.dart';
 import 'music_schema.dart';
 
 part 'map_level_schema.g.dart';
@@ -38,9 +39,11 @@ class MapLevelSchema {
     this.music,
     final List<MapLevelSchemaFeature>? features,
     final List<MapLevelSchemaFunction>? functions,
+    final List<MapLevelSchemaItem>? items,
   })  : id = id ?? newId(),
         features = features ?? [],
-        functions = functions ?? [];
+        functions = functions ?? [],
+        items = items ?? [];
 
   /// Create an instance from a JSON object.
   factory MapLevelSchema.fromJson(final Map<String, dynamic> json) =>
@@ -120,6 +123,25 @@ class MapLevelSchema {
   /// The features of this map.
   final List<MapLevelSchemaFeature> features;
 
+  /// The functions for this map.
+  final List<MapLevelSchemaFunction> functions;
+
+  /// Returns the function with the given [id] or `null`.
+  MapLevelSchemaFunction? findFunction(final String? id) {
+    if (id == null) {
+      return null;
+    }
+    for (final function in functions) {
+      if (id == function.id) {
+        return function;
+      }
+    }
+    return null;
+  }
+
+  /// The items on this map.
+  final List<MapLevelSchemaItem> items;
+
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaToJson(this);
 
@@ -143,22 +165,6 @@ class MapLevelSchema {
 
   /// Get the dart filename for this instance.
   String get dartFilename => '$filename.dart';
-
-  /// The functions for this map.
-  final List<MapLevelSchemaFunction> functions;
-
-  /// Returns the function with the given [id] or `null`.
-  MapLevelSchemaFunction? findFunction(final String? id) {
-    if (id == null) {
-      return null;
-    }
-    for (final function in functions) {
-      if (id == function.id) {
-        return function;
-      }
-    }
-    return null;
-  }
 
   /// Get the JSON filename for this instance.
   String get jsonFilename => '$id.json';
