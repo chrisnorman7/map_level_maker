@@ -11,12 +11,15 @@ import '../providers/map_level_schema_argument.dart';
 import '../providers/providers.dart';
 import '../src/json/map_level_schema_feature.dart';
 import '../src/json/map_level_schema_function.dart';
+import '../src/json/map_level_schema_item.dart';
 import '../widgets/double_coordinates_list_tile.dart';
 import '../widgets/int_coordinates_list_tile.dart';
 import '../widgets/music_schema_list_tile.dart';
+import '../widgets/play_sound_semantics.dart';
 import '../widgets/sound_list_tile.dart';
 import 'edit_map_level_schema_feature.dart';
 import 'edit_map_level_schema_function.dart';
+import 'edit_map_level_schema_item.dart';
 
 /// A widget to edit the map with the given [id].
 class EditMapLevelSchema extends ConsumerWidget {
@@ -67,6 +70,29 @@ class EditMapLevelSchema extends ConsumerWidget {
             ),
           ),
           TabbedScaffoldTab(
+            title: 'Items',
+            icon: Text('${level.items.length}'),
+            builder: (final context) => getItemsTab(ref: ref),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                final item = MapLevelSchemaItem();
+                level.items.add(item);
+                save(ref);
+                pushWidget(
+                  context: context,
+                  builder: (final context) => EditMapLevelSchemaItem(
+                    argument: MapLevelSchemaArgument(
+                      mapLevelId: level.id,
+                      valueId: item.id,
+                    ),
+                  ),
+                );
+              },
+              tooltip: 'New Item',
+              child: addIcon,
+            ),
+          ),
+          TabbedScaffoldTab(
             title: 'Functions',
             icon: Text('${functions.length}'),
             builder: (final context) => getFunctionsTab(ref: ref),
@@ -85,7 +111,7 @@ class EditMapLevelSchema extends ConsumerWidget {
     );
   }
 
-  /// Get the settings page.
+  /// Get the settings tab.
   Widget getSettingsPage({
     required final WidgetRef ref,
   }) {
@@ -214,7 +240,7 @@ class EditMapLevelSchema extends ConsumerWidget {
     );
   }
 
-  /// Get the features page.
+  /// Get the features tab.
   Widget getFeaturesPage({
     required final WidgetRef ref,
   }) {
@@ -258,6 +284,44 @@ class EditMapLevelSchema extends ConsumerWidget {
                 ),
               ),
               autofocus: index == 0,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Get the items tab.
+  Widget getItemsTab({
+    required final WidgetRef ref,
+  }) {
+    final level = ref.watch(mapLevelSchemaProvider.call(id));
+    final items = level.items;
+    if (items.isEmpty) {
+      return const CenterText(
+        text: 'There are no items to show.',
+        autofocus: true,
+      );
+    }
+    return BuiltSearchableListView(
+      items: items,
+      builder: (final context, final index) {
+        final item = items[index];
+        return SearchableListTile(
+          searchString: item.name,
+          child: PlaySoundSemantics(
+            directory: ambiancesDirectory,
+            sound: item.ambiance?.sound,
+            gain: item.ambiance?.gain ?? 0.7,
+            looping: true,
+            child: PushWidgetListTile(
+              title: item.name,
+              builder: (final context) => EditMapLevelSchemaItem(
+                argument:
+                    MapLevelSchemaArgument(mapLevelId: id, valueId: item.id),
+              ),
+              autofocus: index == 0,
+              subtitle: item.descriptionText,
             ),
           ),
         );

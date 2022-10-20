@@ -13,6 +13,7 @@ import '../constants.dart';
 import '../src/json/map_level_schema.dart';
 import '../src/json/map_level_schema_feature.dart';
 import '../src/json/map_level_schema_function.dart';
+import '../src/json/map_level_schema_item.dart';
 import 'map_level_schema_argument.dart';
 import 'map_level_schema_context.dart';
 
@@ -123,5 +124,16 @@ final mapLevelSchemaFunctionProvider = Provider.family<
       value: level.functions
           .firstWhere((final element) => element.id == arg.valueId),
     );
+  },
+);
+
+/// Provide a single item.
+final mapLevelSchemaItemProvider = Provider.family<
+    MapLevelSchemaContext<MapLevelSchemaItem>, MapLevelSchemaArgument>(
+  (final ref, final arg) {
+    final level = ref.watch(mapLevelSchemaProvider.call(arg.mapLevelId));
+    final item =
+        level.items.firstWhere((final element) => element.id == arg.valueId);
+    return MapLevelSchemaContext(level: level, value: item);
   },
 );
