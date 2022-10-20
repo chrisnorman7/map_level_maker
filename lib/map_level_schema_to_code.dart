@@ -43,7 +43,7 @@ abstract class {{ className }} extends MapLevel {
     super.moveDistance = {{ moveDistance }},
     super.sonarDistanceMultiplier = {{ sonarDistanceMultiplier }},
     final List<MapLevelItem>? items,
-    super.features,
+    final List<MapLevelFeature>? features,
     final List<Ambiance>? levelAmbiances,
   }) : super(
     items: [
@@ -72,15 +72,18 @@ abstract class {{ className }} extends MapLevel {
       {% for ambiance in ambiances %}
       const Ambiance(
         sound: {{ ambiance.sound.sound | asset }},
+        {% if ambiance.sound.gain != 0.5 %}
         gain: {{ ambiance.sound.gain }},
+        {% endif %}
         {% if ambiance.x and ambiance.y %}
         position: Point({{ambiance.x }}, {{ ambiance.y }}),
         {% endif %}
-      )
+      ),
       {% endfor %}
     ],
+    features: features ?? [],
   ) {
-    features.addAll([
+    this.features.addAll([
       {% for feature in features %}
       {% if feature.onActivateFunctionName is none %}
       const
