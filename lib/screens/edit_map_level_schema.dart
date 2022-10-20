@@ -6,19 +6,23 @@ import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as path;
 
 import '../constants.dart';
 import '../new_menu_item_context.dart';
 import '../providers/map_level_schema_argument.dart';
 import '../providers/providers.dart';
+import '../src/json/map_level_schema_ambiance.dart';
 import '../src/json/map_level_schema_feature.dart';
 import '../src/json/map_level_schema_function.dart';
 import '../src/json/map_level_schema_item.dart';
+import '../src/json/music_schema.dart';
 import '../widgets/double_coordinates_list_tile.dart';
 import '../widgets/int_coordinates_list_tile.dart';
 import '../widgets/music_schema_list_tile.dart';
 import '../widgets/play_sound_semantics.dart';
 import '../widgets/sound_list_tile.dart';
+import 'edit_map_level_schema_ambiance.dart';
 import 'edit_map_level_schema_feature.dart';
 import 'edit_map_level_schema_function.dart';
 import 'edit_map_level_schema_item.dart';
@@ -88,6 +92,21 @@ class EditMapLevelSchema extends ConsumerWidget {
             floatingActionButton: FloatingActionButton(
               onPressed: () => newItem(context: context, ref: ref),
               tooltip: 'New Item',
+              child: addIcon,
+            ),
+          ),
+          TabbedScaffoldTab(
+            title: 'Ambiances',
+            icon: Text('${level.ambiances.length}'),
+            builder: (final context) => CallbackShortcuts(
+              bindings: {
+                newShortcut: () => newAmbiance(context: context, ref: ref)
+              },
+              child: getAmbiancesTab(ref: ref),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => newAmbiance(context: context, ref: ref),
+              tooltip: 'New Ambiance',
               child: addIcon,
             ),
           ),
@@ -361,6 +380,71 @@ class EditMapLevelSchema extends ConsumerWidget {
     );
   }
 
+  /// Get the ambiances tab.
+  Widget getAmbiancesTab({
+    required final WidgetRef ref,
+  }) {
+    final level = ref.watch(mapLevelSchemaProvider.call(id));
+    final ambiances = level.ambiances;
+    if (ambiances.isEmpty) {
+      return const CenterText(
+        text: 'There are no ambiances to show.',
+        autofocus: true,
+      );
+    }
+    return BuiltSearchableListView(
+      items: ambiances,
+      builder: (final context, final index) {
+        final ambiance = ambiances[index];
+        return SearchableListTile(
+          searchString: ambiance.sound.sound,
+          child: CallbackShortcuts(
+            bindings: {
+              deleteShortcut: () => confirm(
+                    context: context,
+                    message: 'Are you sure you want to delete this ambiance?',
+                    title: confirmDeleteTitle,
+                    yesCallback: () {
+                      level.ambiances.removeWhere(
+                        (final element) => element.id == ambiance.id,
+                      );
+                      save(ref);
+                    },
+                  )
+            },
+            child: PlaySoundSemantics(
+              sound: ambiance.sound.sound,
+              directory: ambiancesDirectory,
+              gain: ambiance.sound.gain,
+              looping: true,
+              child: Builder(
+                builder: (final context) {
+                  final coordinates = ambiance.coordinates;
+                  return PushWidgetListTile(
+                    title: path.basenameWithoutExtension(ambiance.sound.sound),
+                    builder: (final builderContext) {
+                      PlaySoundSemantics.of(context)?.stop();
+                      return EditMapLevelSchemaAmbiance(
+                        argument: MapLevelSchemaArgument(
+                          mapLevelId: id,
+                          valueId: ambiance.id,
+                        ),
+                      );
+                    },
+                    autofocus: index == 0,
+                    subtitle: coordinates == null
+                        ? unsetMessage
+                        : '${coordinates.x}, ${coordinates.y}',
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   /// Get the functions tab.
   Widget getFunctionsTab({
     required final WidgetRef ref,
@@ -456,6 +540,11 @@ class EditMapLevelSchema extends ConsumerWidget {
         onPressed: () => newItem(context: context, ref: ref),
       ),
       NewMenuItemContext(
+        title: 'Ambiance',
+        shortcut: LogicalKeyboardKey.keyA,
+        onPressed: () => newAmbiance(context: context, ref: ref),
+      ),
+      NewMenuItemContext(
         title: 'Function',
         shortcut: LogicalKeyboardKey.keyM,
         onPressed: () => newFunction(context: context, ref: ref),
@@ -533,6 +622,38 @@ class EditMapLevelSchema extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Create a new ambiance.
+  void newAmbiance({
+    required final BuildContext context,
+    required final WidgetRef ref,
+  }) {
+    final possibleAmbiances = ambiancesDirectory.listSync();
+    if (possibleAmbiances.isEmpty) {
+      showMessage(
+        context: context,
+        message: 'There are no ambiances to use.',
+      );
+    } else {
+      final level = ref.watch(mapLevelSchemaProvider.call(id));
+      final ambiance = MapLevelSchemaAmbiance(
+        sound: MusicSchema(
+          sound: path.basename(possibleAmbiances.first.path),
+        ),
+      );
+      level.ambiances.add(ambiance);
+      save(ref);
+      pushWidget(
+        context: context,
+        builder: (final context) => EditMapLevelSchemaAmbiance(
+          argument: MapLevelSchemaArgument(
+            mapLevelId: id,
+            valueId: ambiance.id,
+          ),
+        ),
+      );
+    }
   }
 
   /// Create a new function.

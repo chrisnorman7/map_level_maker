@@ -8,6 +8,7 @@ import 'package:ziggurat/sound.dart';
 
 import '../../constants.dart';
 import '../../util.dart';
+import 'map_level_schema_ambiance.dart';
 import 'map_level_schema_feature.dart';
 import 'map_level_schema_function.dart';
 import 'map_level_schema_item.dart';
@@ -40,10 +41,12 @@ class MapLevelSchema {
     final List<MapLevelSchemaFeature>? features,
     final List<MapLevelSchemaFunction>? functions,
     final List<MapLevelSchemaItem>? items,
+    final List<MapLevelSchemaAmbiance>? ambiances,
   })  : id = id ?? newId(),
         features = features ?? [],
         functions = functions ?? [],
-        items = items ?? [];
+        items = items ?? [],
+        ambiances = ambiances ?? [];
 
   /// Create an instance from a JSON object.
   factory MapLevelSchema.fromJson(final Map<String, dynamic> json) =>
@@ -141,6 +144,9 @@ class MapLevelSchema {
 
   /// The items on this map.
   final List<MapLevelSchemaItem> items;
+
+  /// The extra ambiances for this level.
+  final List<MapLevelSchemaAmbiance> ambiances;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaToJson(this);

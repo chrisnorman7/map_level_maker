@@ -40,6 +40,10 @@ MapLevelSchema _$MapLevelSchemaFromJson(Map<String, dynamic> json) =>
       items: (json['items'] as List<dynamic>?)
           ?.map((e) => MapLevelSchemaItem.fromJson(e as Map<String, dynamic>))
           .toList(),
+      ambiances: (json['ambiances'] as List<dynamic>?)
+          ?.map(
+              (e) => MapLevelSchemaAmbiance.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$MapLevelSchemaToJson(MapLevelSchema instance) =>
@@ -64,4 +68,5 @@ Map<String, dynamic> _$MapLevelSchemaToJson(MapLevelSchema instance) =>
       'features': instance.features,
       'functions': instance.functions,
       'items': instance.items,
+      'ambiances': instance.ambiances,
     };

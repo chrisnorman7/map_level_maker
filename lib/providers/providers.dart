@@ -11,6 +11,7 @@ import 'package:ziggurat/ziggurat.dart';
 
 import '../constants.dart';
 import '../src/json/map_level_schema.dart';
+import '../src/json/map_level_schema_ambiance.dart';
 import '../src/json/map_level_schema_feature.dart';
 import '../src/json/map_level_schema_function.dart';
 import '../src/json/map_level_schema_item.dart';
@@ -135,5 +136,16 @@ final mapLevelSchemaItemProvider = Provider.family<
     final item =
         level.items.firstWhere((final element) => element.id == arg.valueId);
     return MapLevelSchemaContext(level: level, value: item);
+  },
+);
+
+/// Provide a single ambiance.
+final mapLevelSchemaAmbianceProvider = Provider.family<
+    MapLevelSchemaContext<MapLevelSchemaAmbiance>, MapLevelSchemaArgument>(
+  (final ref, final arg) {
+    final level = ref.watch(mapLevelSchemaProvider.call(arg.mapLevelId));
+    final ambiance = level.ambiances
+        .firstWhere((final element) => element.id == arg.valueId);
+    return MapLevelSchemaContext(level: level, value: ambiance);
   },
 );
