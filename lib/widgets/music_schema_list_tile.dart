@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:backstreets_widgets/shortcuts.dart';
@@ -16,6 +17,7 @@ class MusicSchemaListTile extends StatelessWidget {
   const MusicSchemaListTile({
     required this.music,
     required this.onChanged,
+    this.directory,
     this.title = 'Music',
     this.nullable = true,
     this.autofocus = false,
@@ -28,6 +30,9 @@ class MusicSchemaListTile extends StatelessWidget {
 
   /// The function to call when the [music] changes.
   final ValueChanged<MusicSchema?> onChanged;
+
+  /// The directory where music files are stored.
+  final Directory? directory;
 
   /// The title of the list tile.
   final String title;
@@ -44,12 +49,13 @@ class MusicSchemaListTile extends StatelessWidget {
   /// Build the widget.
   @override
   Widget build(final BuildContext context) {
+    final d = directory ?? musicDirectory;
     final schema = music;
     if (schema == null) {
       return PushWidgetListTile(
         title: title,
         builder: (final context) => SelectSound(
-          directory: musicDirectory,
+          directory: d,
           onDone: (final value) {
             if (value == null) {
               onChanged(null);
@@ -82,7 +88,7 @@ class MusicSchemaListTile extends StatelessWidget {
       },
       child: PlaySoundSemantics(
         sound: schema.sound,
-        directory: musicDirectory,
+        directory: d,
         gain: schema.gain,
         looping: true,
         child: Builder(
@@ -91,7 +97,7 @@ class MusicSchemaListTile extends StatelessWidget {
             builder: (final context) {
               PlaySoundSemantics.of(builderContext)?.stop();
               return SelectSound(
-                directory: musicDirectory,
+                directory: d,
                 onDone: (final value) {
                   if (value == null) {
                     onChanged(null);

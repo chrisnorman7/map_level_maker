@@ -26,61 +26,64 @@ class EditMapLevelSchemaItem extends ConsumerWidget {
   Widget build(final BuildContext context, final WidgetRef ref) {
     final itemContext = ref.watch(mapLevelSchemaItemProvider.call(argument));
     final item = itemContext.value;
-    return SimpleScaffold(
-      title: 'Edit Item',
-      body: ListView(
-        children: [
-          TextListTile(
-            value: item.name,
-            onChanged: (final value) {
-              item.name = value;
-              save(ref);
-            },
-            header: 'Name',
-            autofocus: true,
-          ),
-          TextListTile(
-            value: item.descriptionText,
-            onChanged: (final value) {
-              item.descriptionText = value;
-              save(ref);
-            },
-            header: 'Description Text',
-          ),
-          SoundListTile(
-            directory: earconsDirectory,
-            sound: item.earcon,
-            onChanged: (final value) {
-              item.earcon = value;
-              save(ref);
-            },
-            title: 'Earcon',
-          ),
-          SoundListTile(
-            directory: descriptionsDirectory,
-            sound: item.descriptionSound,
-            onChanged: (final value) {
-              item.descriptionSound = value;
-              save(ref);
-            },
-            title: 'Description Sound',
-          ),
-          MusicSchemaListTile(
-            music: item.ambiance,
-            onChanged: (final value) {
-              item.ambiance = value;
-              save(ref);
-            },
-            title: 'Ambiance',
-          ),
-          IntCoordinatesListTile(
-            coordinates: item.coordinates,
-            onChanged: (final value) {
-              item.coordinates = value;
-              save(ref);
-            },
-          )
-        ],
+    return Cancel(
+      child: SimpleScaffold(
+        title: 'Edit Item',
+        body: ListView(
+          children: [
+            TextListTile(
+              value: item.name,
+              onChanged: (final value) {
+                item.name = value;
+                save(ref);
+              },
+              header: 'Name',
+              autofocus: true,
+            ),
+            TextListTile(
+              value: item.descriptionText,
+              onChanged: (final value) {
+                item.descriptionText = value;
+                save(ref);
+              },
+              header: 'Description Text',
+            ),
+            SoundListTile(
+              directory: earconsDirectory,
+              sound: item.earcon,
+              onChanged: (final value) {
+                item.earcon = value;
+                save(ref);
+              },
+              title: 'Earcon',
+            ),
+            SoundListTile(
+              directory: descriptionsDirectory,
+              sound: item.descriptionSound,
+              onChanged: (final value) {
+                item.descriptionSound = value;
+                save(ref);
+              },
+              title: 'Description Sound',
+            ),
+            MusicSchemaListTile(
+              music: item.ambiance,
+              onChanged: (final value) {
+                item.ambiance = value;
+                save(ref);
+              },
+              directory: ambiancesDirectory,
+              title: 'Ambiance',
+            ),
+            IntCoordinatesListTile(
+              coordinates: item.coordinates,
+              onChanged: (final value) {
+                item.coordinates = value;
+                save(ref);
+              },
+            )
+          ],
+        ),
       ),
     );
   }
