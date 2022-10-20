@@ -54,9 +54,9 @@ class EditMapLevelSchemaFeature extends ConsumerWidget {
             ),
             FunctionListTile(
               functions: [null, ...level.functions],
-              function: level.findFunction(feature.onActivateId),
+              function: level.findFunction(feature.onActivateFunctionId),
               onChanged: (final value) {
-                feature.onActivateId = value?.id;
+                feature.onActivateFunctionId = value?.id;
                 save(ref);
               },
               title: 'On Activate Function',

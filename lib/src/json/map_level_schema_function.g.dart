@@ -12,11 +12,13 @@ MapLevelSchemaFunction _$MapLevelSchemaFunctionFromJson(
       name: json['name'] as String? ?? 'myFunction',
       comment: json['comment'] as String? ??
           'A function which needs a proper comment.',
+      id: json['id'] as String?,
     );
 
 Map<String, dynamic> _$MapLevelSchemaFunctionToJson(
         MapLevelSchemaFunction instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
       'comment': instance.comment,
     };

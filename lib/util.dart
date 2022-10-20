@@ -13,6 +13,10 @@ void mapLevelSchemaToDart(final MapLevelSchema level) {
     mapLevelSchemaTemplate,
     path: level.jsonFilename,
   );
+  for (final feature in level.features) {
+    feature.onActivateFunctionName =
+        level.findFunction(feature.onActivateFunctionId)?.name;
+  }
   final json = level.toJson();
   final data = indentedJsonEncoder.convert(json);
   final map = jsonDecode(data) as JsonType;

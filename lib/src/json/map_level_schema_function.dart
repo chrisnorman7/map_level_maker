@@ -11,7 +11,8 @@ class MapLevelSchemaFunction {
   MapLevelSchemaFunction({
     this.name = 'myFunction',
     this.comment = 'A function which needs a proper comment.',
-  }) : id = newId();
+    final String? id,
+  }) : id = id ?? newId();
 
   /// Create an instance from a JSON object.
   factory MapLevelSchemaFunction.fromJson(final Map<String, dynamic> json) =>

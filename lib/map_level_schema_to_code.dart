@@ -6,10 +6,10 @@ import 'constants.dart';
 
 /// The template to use for generating maps.
 const mapLevelSchemaTemplate = '''
-// ignore_for_file: lines_longer_than_80_chars
-
+// ignore_for_file: lines_longer_than_80_chars, unused_import
 import 'dart:math';
 import 'package:ziggurat/sound.dart';
+import '../assets/amb.dart';
 import '../assets/descriptions.dart';
 import '../assets/earcons.dart';
 import '../assets/footsteps.dart';
@@ -32,8 +32,6 @@ abstract class {{ className }} extends MapLevel {
     , gain: {{ music.gain }}
     {% endif %}
     ),
-    {% else %}
-    // This map has no music.
     {% endif %}
     super.maxX = {{ maxX }},
     super.maxY = {{ maxY }},
@@ -45,39 +43,69 @@ abstract class {{ className }} extends MapLevel {
     super.moveDistance = {{ moveDistance }},
     super.sonarDistanceMultiplier = {{ sonarDistanceMultiplier }},
     final List<MapLevelItem>? items,
-    final List<MapLevelFeature>? features,
+    super.features,
+    final List<Ambiance>? levelAmbiances,
   }) : super(
     items: [
       ... items ?? [],
       {% for item in items %}
       const MapLevelItem(
         name: {{ item.name | quote }},
+        {% if item.x and item.y %}
         coordinates: Point({{ item.x }}, {{ item.y }}),
+        {% endif %}
         earcon: {{ item.earcon | asset }},
         descriptionText: {{ item.descriptionText | quote }},
         descriptionSound: {{ item.descriptionSound | asset }},
         {% if item.ambiance %}
-        ambiance: {{ item.ambiance | asset }},
+        ambiance: {{ item.ambiance.sound | asset }},
+        {% if item.ambiance.gain != 0.5 %}
+        ambianceGain: {{ item.ambiance.gain }},
+        {% endif %}
         {% endif %}
       ),
       {% endfor %}
     ],
-    features: [
-      ...features ?? [],
+    levelAmbiances: [
+      if (levelAmbiances != null)
+        ...levelAmbiances,
+      {% for ambiance in ambiances %}
+      const Ambiance(
+        sound: {{ ambiance.sound.sound | asset }},
+        gain: {{ ambiance.sound.gain }},
+        {% if ambiance.x and ambiance.y %}
+        position: Point({{ambiance.x }}, {{ ambiance.y }}),
+        {% endif %}
+      )
+      {% endfor %}
+    ],
+  ) {
+    features.addAll([
       {% for feature in features %}
+      {% if feature.onActivateFunctionName is none %}
+      const
+      {% endif %}
       MapLevelFeature(
-        start: const Point({{ feature.startX }}, {{ feature.startY }}),
-        end: const Point({{ feature.endX }}, {{ feature.endY }}),
+        start:
+        {% if feature.onActivateFunctionName %}
+        const
+        {% endif %}
+        Point({{ feature.startX }}, {{ feature.startY }}),
+        end:
+        {% if feature.onActivateFunctionName %}
+        const
+        {% endif %}
+        Point({{ feature.endX }}, {{ feature.endY }}),
         {% if feature.footstepSound %}
         footstepSound: {{ feature.footstepSound | asset }},
         {% endif %}
-        {% if feature.onActivate %}
-        onActivate: {{ feature.onActivate.name }},
+        {% if feature.onActivateFunctionName %}
+        onActivate: {{ feature.onActivateFunctionName }},
         {% endif %}
       ),
-      {% endfor %}
-    ]
-  );
+    {% endfor %}
+    ]);
+  }
 
   {% for function in functions %}
   {{ function.comment | comment }}

@@ -18,7 +18,8 @@ class MapLevelSchemaFeature {
     this.endX = 0,
     this.endY = 0,
     this.footstepSound,
-    this.onActivateId,
+    this.onActivateFunctionId,
+    this.onActivateFunctionName,
   }) : id = id ?? newId();
 
   /// Create an instance from a JSON object.
@@ -67,7 +68,12 @@ class MapLevelSchemaFeature {
   String? footstepSound;
 
   /// The function to call when activating this feature.
-  String? onActivateId;
+  String? onActivateFunctionId;
+
+  /// The name of the function represented by [onActivateFunctionId].
+  ///
+  /// This value is set by the [mapLevelSchemaToDart] function.
+  String? onActivateFunctionName;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaFeatureToJson(this);

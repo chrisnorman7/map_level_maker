@@ -16,7 +16,8 @@ MapLevelSchemaFeature _$MapLevelSchemaFeatureFromJson(
       endX: json['endX'] as int? ?? 0,
       endY: json['endY'] as int? ?? 0,
       footstepSound: json['footstepSound'] as String?,
-      onActivateId: json['onActivateId'] as String?,
+      onActivateFunctionId: json['onActivateFunctionId'] as String?,
+      onActivateFunctionName: json['onActivateFunctionName'] as String?,
     );
 
 Map<String, dynamic> _$MapLevelSchemaFeatureToJson(
@@ -29,5 +30,6 @@ Map<String, dynamic> _$MapLevelSchemaFeatureToJson(
       'endX': instance.endX,
       'endY': instance.endY,
       'footstepSound': instance.footstepSound,
-      'onActivateId': instance.onActivateId,
+      'onActivateFunctionId': instance.onActivateFunctionId,
+      'onActivateFunctionName': instance.onActivateFunctionName,
     };

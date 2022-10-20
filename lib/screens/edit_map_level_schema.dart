@@ -505,7 +505,7 @@ class EditMapLevelSchema extends ConsumerWidget {
             bindings: {
               deleteShortcut: () {
                 for (final feature in level.features) {
-                  for (final id in [feature.onActivateId]) {
+                  for (final id in [feature.onActivateFunctionId]) {
                     if (id == function.id) {
                       showMessage(
                         context: context,
