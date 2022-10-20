@@ -353,31 +353,33 @@ class EditMapLevelSchema extends ConsumerWidget {
           searchString: function.name,
           child: CallbackShortcuts(
             bindings: {
-              deleteShortcut: () => confirm(
-                    context: context,
-                    message:
-                        'Are you sure you want to delete the ${function.name} '
-                        'function?',
-                    yesCallback: () {
-                      Navigator.pop(context);
-                      for (final feature in level.features) {
-                        for (final id in [feature.onActivateId]) {
-                          if (id == function.id) {
-                            showMessage(
-                              context: context,
-                              message: 'This function is being used by the '
-                                  '${feature.name} feature.',
-                            );
-                            return;
-                          }
-                        }
-                      }
-                      level.functions.removeWhere(
-                        (final element) => element.id == function.id,
+              deleteShortcut: () {
+                for (final feature in level.features) {
+                  for (final id in [feature.onActivateId]) {
+                    if (id == function.id) {
+                      showMessage(
+                        context: context,
+                        message: 'This function is being used by the '
+                            '${feature.name} feature.',
                       );
-                      save(ref);
-                    },
-                  )
+                      return;
+                    }
+                  }
+                }
+                confirm(
+                  context: context,
+                  message:
+                      'Are you sure you want to delete the ${function.name} '
+                      'function?',
+                  yesCallback: () {
+                    Navigator.pop(context);
+                    level.functions.removeWhere(
+                      (final element) => element.id == function.id,
+                    );
+                    save(ref);
+                  },
+                );
+              }
             },
             child: PushWidgetListTile(
               title: function.name,
