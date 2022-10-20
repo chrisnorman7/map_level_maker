@@ -20,7 +20,6 @@ class MapLevelSchemaItem {
     this.earcon,
     this.descriptionSound,
     this.descriptionText = 'An item with no description.',
-    this.watchable = true,
   }) : id = id ?? newId();
 
   /// Create an instance from a JSON object.
@@ -60,9 +59,6 @@ class MapLevelSchemaItem {
 
   /// The description sound for this item.
   String? descriptionSound;
-
-  /// Whether or not this item can be watched.
-  bool watchable;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaItemToJson(this);
