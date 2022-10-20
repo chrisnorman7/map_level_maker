@@ -31,6 +31,7 @@ import 'edit_map_level_schema_ambiance.dart';
 import 'edit_map_level_schema_feature.dart';
 import 'edit_map_level_schema_function.dart';
 import 'edit_map_level_schema_item.dart';
+import 'level_preview_screen.dart';
 
 /// A widget to edit the map with the given [id].
 class EditMapLevelSchema extends ConsumerWidget {
@@ -56,7 +57,12 @@ class EditMapLevelSchema extends ConsumerWidget {
             LogicalKeyboardKey.keyB,
             control: useControlKey,
             meta: useMetaKey,
-          ): () => generateLevelCode(context: context, level: level)
+          ): () => generateLevelCode(context: context, level: level),
+          SingleActivator(
+            LogicalKeyboardKey.keyP,
+            control: useControlKey,
+            meta: useMetaKey,
+          ): () => previewLevel(context: context, level: level)
         },
         child: TabbedScaffold(
           tabs: [
@@ -64,6 +70,13 @@ class EditMapLevelSchema extends ConsumerWidget {
               title: 'Settings',
               icon: settingsIcon,
               actions: [
+                ElevatedButton(
+                  onPressed: () => previewLevel(context: context, level: level),
+                  child: const Icon(
+                    Icons.preview,
+                    semanticLabel: 'Preview Level',
+                  ),
+                ),
                 ElevatedButton(
                   onPressed: () =>
                       generateLevelCode(context: context, level: level),
@@ -743,4 +756,14 @@ class EditMapLevelSchema extends ConsumerWidget {
       showError(context: context, e: e, s: s);
     }
   }
+
+  /// Preview the given [level].
+  Future<void> previewLevel({
+    required final BuildContext context,
+    required final MapLevelSchema level,
+  }) =>
+      pushWidget(
+        context: context,
+        builder: (final context) => LevelPreviewScreen(levelSchema: level),
+      );
 }
