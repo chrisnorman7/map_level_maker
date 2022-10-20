@@ -19,6 +19,7 @@ MapLevelSchemaItem _$MapLevelSchemaItemFromJson(Map<String, dynamic> json) =>
       descriptionSound: json['descriptionSound'] as String?,
       descriptionText:
           json['descriptionText'] as String? ?? 'An item with no description.',
+      watchable: json['watchable'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$MapLevelSchemaItemToJson(MapLevelSchemaItem instance) =>
@@ -31,4 +32,5 @@ Map<String, dynamic> _$MapLevelSchemaItemToJson(MapLevelSchemaItem instance) =>
       'earcon': instance.earcon,
       'descriptionText': instance.descriptionText,
       'descriptionSound': instance.descriptionSound,
+      'watchable': instance.watchable,
     };

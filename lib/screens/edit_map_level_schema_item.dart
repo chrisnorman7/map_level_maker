@@ -81,6 +81,14 @@ class EditMapLevelSchemaItem extends ConsumerWidget {
                 item.coordinates = value;
                 save(ref);
               },
+            ),
+            CheckboxListTile(
+              value: item.watchable,
+              onChanged: (final value) {
+                item.watchable = value ?? false;
+                save(ref);
+              },
+              title: const Text('Item Is Watchable'),
             )
           ],
         ),
