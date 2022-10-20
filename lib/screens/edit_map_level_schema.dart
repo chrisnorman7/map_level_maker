@@ -4,9 +4,11 @@ import 'package:backstreets_widgets/shortcuts.dart';
 import 'package:backstreets_widgets/util.dart';
 import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../constants.dart';
+import '../new_menu_item_context.dart';
 import '../providers/map_level_schema_argument.dart';
 import '../providers/providers.dart';
 import '../src/json/map_level_schema_feature.dart';
@@ -44,27 +46,32 @@ class EditMapLevelSchema extends ConsumerWidget {
           TabbedScaffoldTab(
             title: 'Settings',
             icon: settingsIcon,
-            builder: (final context) => getSettingsPage(ref: ref),
+            builder: (final context) => CallbackShortcuts(
+              bindings: {
+                newShortcut: () => newMenu(context: context, ref: ref)
+              },
+              child: getSettingsPage(ref: ref),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => newMenu(context: context, ref: ref),
+              tooltip: 'New...',
+              child: const Icon(
+                Icons.new_label,
+                semanticLabel: 'New...',
+              ),
+            ),
           ),
           TabbedScaffoldTab(
             title: 'Features',
             icon: Text('${features.length}'),
-            builder: (final context) => getFeaturesPage(ref: ref),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                final feature = MapLevelSchemaFeature();
-                level.features.add(feature);
-                save(ref);
-                pushWidget(
-                  context: context,
-                  builder: (final context) => EditMapLevelSchemaFeature(
-                    mapLevelSchemaArgument: MapLevelSchemaArgument(
-                      mapLevelId: level.id,
-                      valueId: feature.id,
-                    ),
-                  ),
-                );
+            builder: (final context) => CallbackShortcuts(
+              bindings: {
+                newShortcut: () => newFeature(context: context, ref: ref)
               },
+              child: getFeaturesPage(ref: ref),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => newFeature(context: context, ref: ref),
               tooltip: 'Create Feature',
               child: addIcon,
             ),
@@ -72,22 +79,14 @@ class EditMapLevelSchema extends ConsumerWidget {
           TabbedScaffoldTab(
             title: 'Items',
             icon: Text('${level.items.length}'),
-            builder: (final context) => getItemsTab(ref: ref),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                final item = MapLevelSchemaItem();
-                level.items.add(item);
-                save(ref);
-                pushWidget(
-                  context: context,
-                  builder: (final context) => EditMapLevelSchemaItem(
-                    argument: MapLevelSchemaArgument(
-                      mapLevelId: level.id,
-                      valueId: item.id,
-                    ),
-                  ),
-                );
+            builder: (final context) => CallbackShortcuts(
+              bindings: {
+                newShortcut: () => newItem(context: context, ref: ref)
               },
+              child: getItemsTab(ref: ref),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => newItem(context: context, ref: ref),
               tooltip: 'New Item',
               child: addIcon,
             ),
@@ -95,13 +94,14 @@ class EditMapLevelSchema extends ConsumerWidget {
           TabbedScaffoldTab(
             title: 'Functions',
             icon: Text('${functions.length}'),
-            builder: (final context) => getFunctionsTab(ref: ref),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                final function = MapLevelSchemaFunction();
-                functions.add(function);
-                save(ref);
+            builder: (final context) => CallbackShortcuts(
+              bindings: {
+                newShortcut: () => newFunction(context: context, ref: ref)
               },
+              child: getFunctionsTab(ref: ref),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => newFunction(context: context, ref: ref),
               tooltip: 'New Function',
               child: addIcon,
             ),
@@ -403,5 +403,121 @@ class EditMapLevelSchema extends ConsumerWidget {
     ref
       ..refresh(provider)
       ..refresh(mapsProvider);
+  }
+
+  /// Show a "new" menu.
+  void newMenu({
+    required final BuildContext context,
+    required final WidgetRef ref,
+  }) {
+    final items = [
+      NewMenuItemContext(
+        title: 'Feature',
+        shortcut: LogicalKeyboardKey.keyF,
+        onPressed: () => newFeature(context: context, ref: ref),
+      ),
+      NewMenuItemContext(
+        title: 'Item',
+        shortcut: LogicalKeyboardKey.keyI,
+        onPressed: () => newItem(context: context, ref: ref),
+      ),
+      NewMenuItemContext(
+        title: 'Function',
+        shortcut: LogicalKeyboardKey.keyM,
+        onPressed: () => newFunction(context: context, ref: ref),
+      )
+    ];
+    pushWidget(
+      context: context,
+      builder: (final context) => Cancel(
+        child: CallbackShortcuts(
+          bindings: {
+            for (final item in items)
+              SingleActivator(item.shortcut): () {
+                Navigator.pop(context);
+                item.onPressed();
+              }
+          },
+          child: SimpleScaffold(
+            title: 'New Menu',
+            body: ListView.builder(
+              itemBuilder: (final context, final index) {
+                final item = items[index];
+                return ListTile(
+                  autofocus: index == 0,
+                  title: Text(item.title),
+                  subtitle: Text(item.shortcut.keyLabel),
+                  onTap: () {
+                    Navigator.pop(context);
+                    item.onPressed();
+                  },
+                );
+              },
+              itemCount: items.length,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Create a new feature.
+  void newFeature({
+    required final BuildContext context,
+    required final WidgetRef ref,
+  }) {
+    final level = ref.watch(mapLevelSchemaProvider.call(id));
+    final feature = MapLevelSchemaFeature();
+    level.features.add(feature);
+    save(ref);
+    pushWidget(
+      context: context,
+      builder: (final context) => EditMapLevelSchemaFeature(
+        mapLevelSchemaArgument: MapLevelSchemaArgument(
+          mapLevelId: id,
+          valueId: feature.id,
+        ),
+      ),
+    );
+  }
+
+  /// Create a new item.
+  void newItem({
+    required final BuildContext context,
+    required final WidgetRef ref,
+  }) {
+    final level = ref.watch(mapLevelSchemaProvider.call(id));
+    final item = MapLevelSchemaItem();
+    level.items.add(item);
+    save(ref);
+    pushWidget(
+      context: context,
+      builder: (final context) => EditMapLevelSchemaItem(
+        argument: MapLevelSchemaArgument(
+          mapLevelId: level.id,
+          valueId: item.id,
+        ),
+      ),
+    );
+  }
+
+  /// Create a new function.
+  void newFunction({
+    required final BuildContext context,
+    required final WidgetRef ref,
+  }) {
+    final level = ref.watch(mapLevelSchemaProvider.call(id));
+    final function = MapLevelSchemaFunction();
+    level.functions.add(function);
+    save(ref);
+    pushWidget(
+      context: context,
+      builder: (final context) => EditMapLevelSchemaFunction(
+        argument: MapLevelSchemaArgument(
+          mapLevelId: id,
+          valueId: function.id,
+        ),
+      ),
+    );
   }
 }
