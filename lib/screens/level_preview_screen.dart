@@ -41,6 +41,7 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
 
   /// The heading of the player.
   late int heading;
+  BackendReverb? _reverb;
 
   /// Initialise state.
   @override
@@ -56,7 +57,16 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
     final game = ref.watch(gameProvider);
     var level = _level;
     if (level == null) {
+      final reverb = _reverb;
       final music = widget.levelSchema.music;
+      final reverbPreset = widget.levelSchema.reverbPreset;
+      if (reverb == null && reverbPreset != null) {
+        final r = game.createReverb(reverbPreset);
+        game
+          ..interfaceSounds.addReverb(reverb: r)
+          ..ambianceSounds.addReverb(reverb: r);
+        _reverb = r;
+      }
       level = Level(
         game: game,
         ambiances: [
@@ -170,6 +180,7 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
   void dispose() {
     super.dispose();
     _level?.onPop(0.5);
+    _reverb?.destroy();
   }
 
   /// Get the feature at the current [coordinates].
