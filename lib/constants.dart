@@ -26,16 +26,24 @@ final codeFormatter = DartFormatter();
 /// The UUID generator to use.
 const uuid = Uuid();
 
+/// The directory where the program is running.
+final workingDirectory = File(Platform.script.toFilePath()).parent;
+
+/// The directory above [workingDirectory].
+final parentDirectory = workingDirectory.parent;
+
 /// The directory where map files will be stored.
 ///
 /// This directory will contain both JSON and class files.
-final mapsDirectory = Directory('../lib/src/maps');
+final mapsDirectory = Directory(
+  path.join(parentDirectory.path, 'lib/src/maps'),
+);
 
 /// The type of JSON data.
 typedef JsonType = Map<String, dynamic>;
 
 /// The location where sounds are stored.
-final soundsDirectory = Directory(path.join('..', 'sounds'));
+final soundsDirectory = Directory(path.join(parentDirectory.path, 'sounds'));
 
 /// The directory where footsteps are stored.
 final footstepsDirectory = Directory(

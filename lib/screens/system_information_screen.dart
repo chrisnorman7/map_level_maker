@@ -4,6 +4,8 @@ import 'package:backstreets_widgets/screens.dart';
 import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
+
 /// A screen to show system information from the [Platform] object.
 class SystemInformationScreen extends StatelessWidget {
   /// Create an instance.
@@ -42,9 +44,18 @@ class SystemInformationScreen extends StatelessWidget {
               ),
               CopyListTile(
                 title: 'Script Path',
-                subtitle:
-                    Platform.script.toFilePath(windows: Platform.isWindows),
+                subtitle: Platform.script.toFilePath(
+                  windows: Platform.isWindows,
+                ),
               ),
+              CopyListTile(
+                title: 'Maps Directory',
+                subtitle: mapsDirectory.path,
+              ),
+              CopyListTile(
+                title: 'Sounds Directory',
+                subtitle: soundsDirectory.path,
+              )
             ],
           ),
         ),
