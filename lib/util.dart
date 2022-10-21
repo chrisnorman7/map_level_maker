@@ -44,3 +44,18 @@ AssetReference getAssetReference({
     throw StateError('Cannot find "$sound" in ${directory.path}.');
   }
 }
+
+/// Get a [File] or [Directory] instance from the provided [path].
+///
+/// If none exist, throw [StateError].
+FileSystemEntity getFileSystemEntity(final String path) {
+  final d = Directory(path);
+  if (d.existsSync()) {
+    return d;
+  }
+  final f = File(path);
+  if (f.existsSync()) {
+    return f;
+  }
+  throw StateError('Not found: $path.');
+}

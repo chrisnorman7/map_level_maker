@@ -36,12 +36,13 @@ class MapLevelSchema {
     this.defaultFootstepSound,
     this.wallSound,
     this.sonarDistanceMultiplier = 75,
-    this.reverbPreset,
     this.music,
     final List<MapLevelSchemaFeature>? features,
     final List<MapLevelSchemaFunction>? functions,
     final List<MapLevelSchemaItem>? items,
     final List<MapLevelSchemaAmbiance>? ambiances,
+    this.reverbPreset,
+    this.reverbTestSound,
   })  : id = id ?? newId(),
         features = features ?? [],
         functions = functions ?? [],
@@ -117,9 +118,6 @@ class MapLevelSchema {
   /// The sonar distance multiplier.
   int sonarDistanceMultiplier;
 
-  /// The reverb preset to use.
-  ReverbPreset? reverbPreset;
-
   /// The music to use.
   MusicSchema? music;
 
@@ -147,6 +145,14 @@ class MapLevelSchema {
 
   /// The extra ambiances for this level.
   final List<MapLevelSchemaAmbiance> ambiances;
+
+  /// The reverb preset to use.
+  ReverbPreset? reverbPreset;
+
+  /// The sound to use to test the [reverbPreset].
+  ///
+  /// This value will be a path relative to [soundsDirectory].
+  String? reverbTestSound;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaToJson(this);

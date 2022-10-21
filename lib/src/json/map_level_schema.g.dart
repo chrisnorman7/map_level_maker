@@ -23,9 +23,6 @@ MapLevelSchema _$MapLevelSchemaFromJson(Map<String, dynamic> json) =>
       defaultFootstepSound: json['defaultFootstepSound'] as String?,
       wallSound: json['wallSound'] as String?,
       sonarDistanceMultiplier: json['sonarDistanceMultiplier'] as int? ?? 75,
-      reverbPreset: json['reverbPreset'] == null
-          ? null
-          : ReverbPreset.fromJson(json['reverbPreset'] as Map<String, dynamic>),
       music: json['music'] == null
           ? null
           : MusicSchema.fromJson(json['music'] as Map<String, dynamic>),
@@ -44,6 +41,10 @@ MapLevelSchema _$MapLevelSchemaFromJson(Map<String, dynamic> json) =>
           ?.map(
               (e) => MapLevelSchemaAmbiance.fromJson(e as Map<String, dynamic>))
           .toList(),
+      reverbPreset: json['reverbPreset'] == null
+          ? null
+          : ReverbPreset.fromJson(json['reverbPreset'] as Map<String, dynamic>),
+      reverbTestSound: json['reverbTestSound'] as String?,
     );
 
 Map<String, dynamic> _$MapLevelSchemaToJson(MapLevelSchema instance) =>
@@ -63,10 +64,11 @@ Map<String, dynamic> _$MapLevelSchemaToJson(MapLevelSchema instance) =>
       'defaultFootstepSound': instance.defaultFootstepSound,
       'wallSound': instance.wallSound,
       'sonarDistanceMultiplier': instance.sonarDistanceMultiplier,
-      'reverbPreset': instance.reverbPreset,
       'music': instance.music,
       'features': instance.features,
       'functions': instance.functions,
       'items': instance.items,
       'ambiances': instance.ambiances,
+      'reverbPreset': instance.reverbPreset,
+      'reverbTestSound': instance.reverbTestSound,
     };

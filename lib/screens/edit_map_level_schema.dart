@@ -26,6 +26,7 @@ import '../widgets/double_coordinates_list_tile.dart';
 import '../widgets/int_coordinates_list_tile.dart';
 import '../widgets/music_schema_list_tile.dart';
 import '../widgets/play_sound_semantics.dart';
+import '../widgets/reverb_list_tile.dart';
 import '../widgets/sound_list_tile.dart';
 import 'edit_map_level_schema_ambiance.dart';
 import 'edit_map_level_schema_feature.dart';
@@ -181,6 +182,7 @@ class EditMapLevelSchema extends ConsumerWidget {
             save(ref);
           },
           header: 'Class Name',
+          autofocus: true,
           validator: (final value) => validateClassName(value: value),
         ),
         TextListTile(
@@ -190,7 +192,7 @@ class EditMapLevelSchema extends ConsumerWidget {
             save(ref);
           },
           header: 'Name',
-          autofocus: true,
+          validator: (final value) => validateNonEmptyValue(value: value),
         ),
         SoundListTile(
           directory: footstepsDirectory,
@@ -216,6 +218,9 @@ class EditMapLevelSchema extends ConsumerWidget {
             level.music = value;
             save(ref);
           },
+        ),
+        ReverbListTile(
+          id: id,
         ),
         IntCoordinatesListTile(
           coordinates: level.maxSize,
