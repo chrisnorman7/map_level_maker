@@ -45,14 +45,16 @@ abstract class {{ className }} extends MapLevel {
     final List<MapLevelItem>? items,
     final List<MapLevelFeature>? features,
     final List<Ambiance>? levelAmbiances,
-    super.reverbPreset = const ReverbPreset(
-      name: {{ name | quote }},
-      {% for name, value in reverbPreset %}
-      {% if name != 'name' %}
-      {{ name }}: {{ value }},
-      {% endif %}
-      {% endfor %}
-    ),
+    {% if reverbPreset %}
+      super.reverbPreset = const ReverbPreset(
+        name: {{ name | quote }},
+        {% for name, value in reverbPreset %}
+          {% if name != 'name' %}
+            {{ name }}: {{ value }},
+          {% endif %}
+        {% endfor %}
+      ),
+    {% endif %}
   }) : super(
     items: [
       ... items ?? [],
