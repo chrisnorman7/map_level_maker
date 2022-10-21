@@ -26,6 +26,7 @@ class EditMapLevelSchemaAmbiance extends ConsumerWidget {
   /// Build the widget.
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final projectContext = ref.watch(projectContextProvider);
     final ambianceContext = ref.watch(
       mapLevelSchemaAmbianceProvider.call(argument),
     );
@@ -42,7 +43,7 @@ class EditMapLevelSchemaAmbiance extends ConsumerWidget {
                 save(ref);
               },
               autofocus: true,
-              directory: ambiancesDirectory,
+              directory: projectContext.ambiancesDirectory,
               nullable: false,
               title: 'Ambiance',
             ),
@@ -84,9 +85,11 @@ class EditMapLevelSchemaAmbiance extends ConsumerWidget {
 
   /// Save the level.
   void save(final WidgetRef ref) {
-    ref.watch(mapLevelSchemaProvider.call(argument.mapLevelId)).save();
+    final provider = mapLevelSchemaProvider.call(argument.mapLevelId);
+    final level = ref.watch(provider);
+    ref.watch(projectContextProvider).saveLevel(level);
     ref
-      ..invalidate(mapLevelSchemaProvider.call(argument.mapLevelId))
+      ..invalidate(provider)
       ..invalidate(mapLevelSchemaAmbianceProvider.call(argument));
   }
 }

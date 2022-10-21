@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'providers/providers.dart';
-import 'screens/home_page.dart';
+import 'screens/welcome_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -38,7 +38,7 @@ class _HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<_HomePage> {
   /// Build a widget.
   @override
-  Widget build(final BuildContext context) => const HomePage();
+  Widget build(final BuildContext context) => const WelcomeScreen();
 
   /// Dispose of the widget.
   @override

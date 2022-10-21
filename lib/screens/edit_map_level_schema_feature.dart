@@ -3,7 +3,6 @@ import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../constants.dart';
 import '../providers/map_level_schema_argument.dart';
 import '../providers/providers.dart';
 import '../widgets/function_list_tile.dart';
@@ -24,6 +23,7 @@ class EditMapLevelSchemaFeature extends ConsumerWidget {
   /// Build the widget.
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final projectContext = ref.watch(projectContextProvider);
     final featureContext = ref.watch(
       mapLevelSchemaFeatureProvider.call(mapLevelSchemaArgument),
     );
@@ -44,7 +44,7 @@ class EditMapLevelSchemaFeature extends ConsumerWidget {
               autofocus: true,
             ),
             SoundListTile(
-              directory: footstepsDirectory,
+              directory: projectContext.footstepsDirectory,
               sound: feature.footstepSound,
               onChanged: (final value) {
                 feature.footstepSound = value;
@@ -93,19 +93,13 @@ class EditMapLevelSchemaFeature extends ConsumerWidget {
 
   /// Save the project.
   void save(final WidgetRef ref) {
+    final provider = mapLevelSchemaProvider.call(
+      mapLevelSchemaArgument.mapLevelId,
+    );
+    final level = ref.watch(provider);
+    ref.watch(projectContextProvider).saveLevel(level);
     ref
-        .watch(
-          mapLevelSchemaProvider.call(
-            mapLevelSchemaArgument.mapLevelId,
-          ),
-        )
-        .save();
-    ref
-      ..invalidate(
-        mapLevelSchemaProvider.call(
-          mapLevelSchemaArgument.mapLevelId,
-        ),
-      )
+      ..invalidate(provider)
       ..invalidate(mapLevelSchemaFeatureProvider.call(mapLevelSchemaArgument));
   }
 }

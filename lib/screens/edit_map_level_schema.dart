@@ -10,9 +10,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jinja/jinja.dart';
 import 'package:path/path.dart' as path;
 
-import '../constants.dart';
 import '../new_menu_item_context.dart';
 import '../providers/map_level_schema_argument.dart';
+import '../providers/project_context.dart';
 import '../providers/providers.dart';
 import '../src/json/map_level_schema.dart';
 import '../src/json/map_level_schema_ambiance.dart';
@@ -46,6 +46,7 @@ class EditMapLevelSchema extends ConsumerWidget {
   /// Build the widget.
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final projectContext = ref.watch(projectContextProvider);
     final level = ref.watch(mapLevelSchemaProvider.call(id));
     final features = level.features;
     final functions = level.functions;
@@ -56,7 +57,11 @@ class EditMapLevelSchema extends ConsumerWidget {
             LogicalKeyboardKey.keyB,
             control: useControlKey,
             meta: useMetaKey,
-          ): () => generateLevelCode(context: context, level: level),
+          ): () => generateLevelCode(
+                context: context,
+                projectContext: projectContext,
+                level: level,
+              ),
           SingleActivator(
             LogicalKeyboardKey.keyP,
             control: useControlKey,
@@ -77,8 +82,11 @@ class EditMapLevelSchema extends ConsumerWidget {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () =>
-                      generateLevelCode(context: context, level: level),
+                  onPressed: () => generateLevelCode(
+                    context: context,
+                    projectContext: projectContext,
+                    level: level,
+                  ),
                   child: const Icon(
                     Icons.build,
                     semanticLabel: 'Generate Code',
@@ -272,6 +280,8 @@ class EditMapLevelSchema extends ConsumerWidget {
     required final BuildContext context,
     required final WidgetRef ref,
   }) {
+    final ambiancesDirectory =
+        ref.watch(projectContextProvider).ambiancesDirectory;
     final possibleAmbiances = ambiancesDirectory.listSync();
     if (possibleAmbiances.isEmpty) {
       showMessage(
@@ -338,13 +348,15 @@ class EditMapLevelSchema extends ConsumerWidget {
   /// Generate code from the given [level].
   void generateLevelCode({
     required final BuildContext context,
+    required final ProjectContext projectContext,
     required final MapLevelSchema level,
   }) {
     try {
-      mapLevelSchemaToDart(level);
+      final dartFile = projectContext.getLevelDartFile(level);
+      mapLevelSchemaToDart(projectContext: projectContext, level: level);
       showMessage(
         context: context,
-        message: 'Code written to ${level.dartFile.path}.',
+        message: 'Code written to ${dartFile.path}.',
       );
     } on TemplateError catch (e, s) {
       showError(context: context, e: e, s: s);

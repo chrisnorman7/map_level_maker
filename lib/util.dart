@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 import 'package:ziggurat/ziggurat.dart';
 
 import 'constants.dart';
 import 'map_level_schema_to_code.dart';
+import 'providers/project_context.dart';
 import 'providers/providers.dart';
 import 'src/json/map_level_schema.dart';
 
@@ -14,7 +16,10 @@ import 'src/json/map_level_schema.dart';
 String newId() => uuid.v4();
 
 /// Write the given [level] to the appropriate Dart file.
-void mapLevelSchemaToDart(final MapLevelSchema level) {
+void mapLevelSchemaToDart({
+  required final ProjectContext projectContext,
+  required final MapLevelSchema level,
+}) {
   final template = jinja.fromString(
     mapLevelSchemaTemplate,
     path: level.jsonFilename,
@@ -28,7 +33,7 @@ void mapLevelSchemaToDart(final MapLevelSchema level) {
   final map = jsonDecode(data) as JsonType;
   final source = template.render(map);
   final code = codeFormatter.format(source);
-  level.dartFile.writeAsStringSync(code);
+  projectContext.getLevelDartFile(level).writeAsStringSync(code);
 }
 
 /// Get an asset reference from the given [directory].
@@ -68,8 +73,28 @@ void saveLevel({
   required final String id,
 }) {
   final provider = mapLevelSchemaProvider.call(id);
-  ref.watch(provider).save();
+  final level = ref.watch(provider);
+  ref.watch(projectContextProvider).saveLevel(level);
   ref
     ..invalidate(provider)
     ..invalidate(mapsProvider);
+}
+
+/// Return a pretty-printed version of [singleActivator].
+String singleActivatorToString(final SingleActivator singleActivator) {
+  final keys = <String>[];
+  if (singleActivator.control) {
+    keys.add('CTRL');
+  }
+  if (singleActivator.alt) {
+    keys.add('ALT');
+  }
+  if (singleActivator.meta) {
+    keys.add('META');
+  }
+  if (singleActivator.shift) {
+    keys.add('SHIFT');
+  }
+  keys.add(singleActivator.trigger.keyLabel);
+  return keys.join('+');
 }

@@ -18,6 +18,8 @@ import '../src/json/map_level_schema_function.dart';
 import '../src/json/map_level_schema_item.dart';
 import 'map_level_schema_argument.dart';
 import 'map_level_schema_context.dart';
+import 'project_context.dart';
+import 'project_context_notifier.dart';
 
 /// Provide a shared preferences instance.
 final sharedPreferencesProvider = FutureProvider(
@@ -73,21 +75,22 @@ final gameProvider = Provider(
 ///
 /// If any of the various directories don't exist, they will be created.
 final mapsProvider = Provider((final ref) {
+  final projectContext = ref.watch(projectContextProvider);
   for (final directory in [
-    mapsDirectory,
-    soundsDirectory,
-    footstepsDirectory,
-    wallsDirectory,
-    musicDirectory,
-    ambiancesDirectory,
-    earconsDirectory,
-    descriptionsDirectory,
+    projectContext.mapsDirectory,
+    projectContext.soundsDirectory,
+    projectContext.footstepsDirectory,
+    projectContext.wallsDirectory,
+    projectContext.musicDirectory,
+    projectContext.ambiancesDirectory,
+    projectContext.earconsDirectory,
+    projectContext.descriptionsDirectory,
   ]) {
     if (!directory.existsSync()) {
       directory.createSync(recursive: true);
     }
   }
-  return mapsDirectory
+  return projectContext.mapsDirectory
       .listSync()
       .whereType<File>()
       .where((final element) => path.extension(element.path) == '.json')
@@ -155,3 +158,23 @@ final mapLevelSchemaAmbianceProvider = Provider.family<
     return MapLevelSchemaContext(level: level, value: ambiance);
   },
 );
+
+/// Possibly provide a project context.
+///
+/// If you want a context that is never `null`, consider using the
+/// [projectContextProvider].
+final projectContextStateNotifier =
+    StateNotifierProvider<ProjectContextNotifier, ProjectContext?>(
+  (final ref) => ProjectContextNotifier(),
+);
+
+/// Provide a project context.
+///
+/// If no project has been loaded, [StateError] will be thrown.
+final projectContextProvider = Provider<ProjectContext>((final ref) {
+  final project = ref.watch(projectContextStateNotifier);
+  if (project == null) {
+    throw StateError('No project has yet been loaded.');
+  }
+  return project;
+});

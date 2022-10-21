@@ -2,7 +2,6 @@ import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../constants.dart';
 import '../../providers/providers.dart';
 import '../../util.dart';
 import '../../validators.dart';
@@ -26,6 +25,7 @@ class MapLevelSchemaSettingsTab extends ConsumerWidget {
   /// Build the widget.
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final projectContext = ref.watch(projectContextProvider);
     final level = ref.watch(mapLevelSchemaProvider.call(id));
     return ListView(
       children: [
@@ -49,7 +49,7 @@ class MapLevelSchemaSettingsTab extends ConsumerWidget {
           validator: (final value) => validateNonEmptyValue(value: value),
         ),
         SoundListTile(
-          directory: footstepsDirectory,
+          directory: projectContext.footstepsDirectory,
           sound: level.defaultFootstepSound,
           onChanged: (final value) {
             level.defaultFootstepSound = value;
@@ -58,7 +58,7 @@ class MapLevelSchemaSettingsTab extends ConsumerWidget {
           title: 'Default Footstep Sound',
         ),
         SoundListTile(
-          directory: wallsDirectory,
+          directory: projectContext.wallsDirectory,
           sound: level.wallSound,
           onChanged: (final value) {
             level.wallSound = value;

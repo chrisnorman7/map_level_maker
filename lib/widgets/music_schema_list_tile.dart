@@ -4,15 +4,17 @@ import 'dart:math';
 import 'package:backstreets_widgets/shortcuts.dart';
 import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 
 import '../constants.dart';
+import '../providers/providers.dart';
 import '../screens/select_sound.dart';
 import '../src/json/music_schema.dart';
 import 'play_sound_semantics.dart';
 
 /// A widget for editing the given [music].
-class MusicSchemaListTile extends StatelessWidget {
+class MusicSchemaListTile extends ConsumerWidget {
   /// Create an instance.
   const MusicSchemaListTile({
     required this.music,
@@ -48,8 +50,9 @@ class MusicSchemaListTile extends StatelessWidget {
 
   /// Build the widget.
   @override
-  Widget build(final BuildContext context) {
-    final d = directory ?? musicDirectory;
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final projectContext = ref.watch(projectContextProvider);
+    final d = directory ?? projectContext.musicDirectory;
     final schema = music;
     if (schema == null) {
       return PushWidgetListTile(

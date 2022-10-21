@@ -10,22 +10,31 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jinja/jinja.dart';
 
 import '../constants.dart';
+import '../providers/project_context.dart';
 import '../providers/providers.dart';
 import '../src/json/map_level_schema.dart';
 import '../util.dart';
 import 'edit_map_level_schema.dart';
 import 'system_information_screen.dart';
 
-/// The home page for the application.
-class HomePage extends ConsumerWidget {
+/// The project home page.
+class HomePage extends ConsumerStatefulWidget {
   /// Create an instance.
   const HomePage({
     super.key,
   });
 
-  /// Build the widget.
+  /// Create state for this widget.
   @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
+  HomePageState createState() => HomePageState();
+}
+
+/// State for [HomePage].
+class HomePageState extends ConsumerState<HomePage> {
+  /// Build a widget.
+  @override
+  Widget build(final BuildContext context) {
+    final projectContext = ref.watch(projectContextProvider);
     final maps = ref.watch(mapsProvider)
       ..sort(
         (final a, final b) =>
@@ -38,7 +47,11 @@ class HomePage extends ConsumerWidget {
           LogicalKeyboardKey.keyB,
           control: useControlKey,
           meta: useMetaKey,
-        ): () => buildMaps(context: context, levels: maps),
+        ): () => buildMaps(
+              context: context,
+              projectContext: projectContext,
+              levels: maps,
+            ),
         SingleActivator(
           LogicalKeyboardKey.keyI,
           control: useControlKey,
@@ -47,7 +60,8 @@ class HomePage extends ConsumerWidget {
         ): () => pushWidget(
               context: context,
               builder: (final context) => const SystemInformationScreen(),
-            )
+            ),
+        closeProjectShortcut: () => Navigator.pop(context)
       },
       child: SimpleScaffold(
         actions: [
@@ -62,7 +76,11 @@ class HomePage extends ConsumerWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () => buildMaps(context: context, levels: maps),
+            onPressed: () => buildMaps(
+              context: context,
+              projectContext: projectContext,
+              levels: maps,
+            ),
             child: const Icon(
               Icons.build,
               semanticLabel: 'Build Levels',
@@ -90,11 +108,19 @@ class HomePage extends ConsumerWidget {
                               title: confirmDeleteTitle,
                               yesCallback: () {
                                 Navigator.pop(context);
-                                if (map.jsonFile.existsSync()) {
-                                  map.jsonFile.deleteSync();
+                                final jsonFile =
+                                    projectContext.getLevelJsonFile(
+                                  map,
+                                );
+                                final dartFile =
+                                    projectContext.getLevelDartFile(
+                                  map,
+                                );
+                                if (jsonFile.existsSync()) {
+                                  jsonFile.deleteSync();
                                 }
-                                if (map.dartFile.existsSync()) {
-                                  map.dartFile.deleteSync();
+                                if (dartFile.existsSync()) {
+                                  dartFile.deleteSync();
                                 }
                                 ref.invalidate(mapsProvider);
                               },
@@ -125,7 +151,8 @@ class HomePage extends ConsumerWidget {
     required final BuildContext context,
     required final WidgetRef ref,
   }) {
-    final level = MapLevelSchema()..save();
+    final level = MapLevelSchema();
+    ref.watch(projectContextProvider).saveLevel(level);
     ref.invalidate(mapsProvider);
     pushWidget(
       context: context,
@@ -136,13 +163,14 @@ class HomePage extends ConsumerWidget {
   /// Build all the maps we can find.
   void buildMaps({
     required final BuildContext context,
+    required final ProjectContext projectContext,
     required final List<MapLevelSchema> levels,
   }) {
     final started = DateTime.now().millisecondsSinceEpoch;
     var i = 0;
     for (final level in levels) {
       try {
-        mapLevelSchemaToDart(level);
+        mapLevelSchemaToDart(projectContext: projectContext, level: level);
         i++;
       } on FormatterException catch (e, s) {
         pushWidget(

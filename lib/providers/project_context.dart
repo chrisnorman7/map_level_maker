@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 
+import '../constants.dart';
+import '../src/json/map_level_schema.dart';
+
 /// A class to hold context about a project.
 class ProjectContext {
   /// Create an instance.
@@ -52,4 +55,19 @@ class ProjectContext {
   /// The directory where descriptions are stored.
   Directory get descriptionsDirectory =>
       Directory(path.join(soundsDirectory.path, 'descriptions'));
+
+  /// Get the Dart file for the given [level].
+  File getLevelDartFile(final MapLevelSchema level) =>
+      File(path.join(mapsDirectory.path, level.dartFilename));
+
+  /// Get the JSON file for the given [level].
+  File getLevelJsonFile(final MapLevelSchema level) =>
+      File(path.join(mapsDirectory.path, level.jsonFilename));
+
+  /// Save the given [level].
+  void saveLevel(final MapLevelSchema level) {
+    final json = level.toJson();
+    final data = indentedJsonEncoder.convert(json);
+    getLevelJsonFile(level).writeAsStringSync(data);
+  }
 }

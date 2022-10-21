@@ -8,6 +8,7 @@ import 'package:ziggurat/sound.dart';
 import '../constants.dart';
 import '../providers/providers.dart';
 import '../screens/edit_reverb_preset_reference.dart';
+import '../util.dart';
 
 /// A widget for showing the reverb of the level with the given [id].
 class ReverbListTile extends ConsumerWidget {
@@ -40,7 +41,7 @@ class ReverbListTile extends ConsumerWidget {
         subtitle: const Text(unsetMessage),
         onTap: () {
           level.reverbPreset = ReverbPreset(name: level.name);
-          save(ref);
+          saveLevel(ref: ref, id: id);
         },
       );
     }
@@ -53,7 +54,7 @@ class ReverbListTile extends ConsumerWidget {
               yesCallback: () {
                 Navigator.pop(context);
                 level.reverbPreset = null;
-                save(ref);
+                saveLevel(ref: ref, id: id);
               },
             )
       },
@@ -67,11 +68,5 @@ class ReverbListTile extends ConsumerWidget {
         subtitle: 'Set',
       ),
     );
-  }
-
-  /// Save the level.
-  void save(final WidgetRef ref) {
-    ref.watch(mapLevelSchemaProvider.call(id)).save();
-    ref.invalidate(mapLevelSchemaProvider.call(id));
   }
 }

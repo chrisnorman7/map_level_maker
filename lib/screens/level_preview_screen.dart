@@ -8,7 +8,6 @@ import 'package:ziggurat/levels.dart';
 import 'package:ziggurat/sound.dart';
 import 'package:ziggurat/ziggurat.dart';
 
-import '../constants.dart';
 import '../providers/providers.dart';
 import '../src/json/map_level_schema.dart';
 import '../src/json/map_level_schema_feature.dart';
@@ -54,6 +53,7 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {
+    final projectContext = ref.watch(projectContextProvider);
     final game = ref.watch(gameProvider);
     var level = _level;
     if (level == null) {
@@ -73,7 +73,7 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
           ...widget.levelSchema.ambiances.map<Ambiance>(
             (final e) => Ambiance(
               sound: getAssetReference(
-                directory: ambiancesDirectory,
+                directory: projectContext.ambiancesDirectory,
                 sound: e.sound.sound,
               ),
               position: e.coordinates,
@@ -87,7 +87,7 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
               final ambiance = e.ambiance!;
               return Ambiance(
                 sound: getAssetReference(
-                  directory: ambiancesDirectory,
+                  directory: projectContext.ambiancesDirectory,
                   sound: ambiance.sound,
                 ),
                 gain: ambiance.gain,
@@ -100,7 +100,7 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
             ? null
             : Music(
                 sound: getAssetReference(
-                  directory: musicDirectory,
+                  directory: projectContext.musicDirectory,
                   sound: music.sound,
                 ),
                 gain: music.gain,
@@ -122,7 +122,7 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
                   if (sound != null) {
                     game.playSimpleSound(
                       sound: getAssetReference(
-                        directory: wallsDirectory,
+                        directory: projectContext.wallsDirectory,
                         sound: sound,
                       ),
                     );
@@ -133,7 +133,7 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
                       widget.levelSchema.defaultFootstepSound;
                   if (footstepSound != null) {
                     final assetReference = getAssetReference(
-                      directory: footstepsDirectory,
+                      directory: projectContext.footstepsDirectory,
                       sound: footstepSound,
                     );
                     game.playSimpleSound(sound: assetReference);

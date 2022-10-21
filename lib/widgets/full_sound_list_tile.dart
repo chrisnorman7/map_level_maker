@@ -4,16 +4,18 @@ import 'package:backstreets_widgets/util.dart';
 import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 
 import '../constants.dart';
+import '../providers/providers.dart';
 import '../screens/select_directory.dart';
 import '../screens/select_sound.dart';
 import '../util.dart';
 import 'play_sound_semantics.dart';
 
 /// A widget to select a sound and directory.
-class FullSoundListTile extends StatelessWidget {
+class FullSoundListTile extends ConsumerWidget {
   /// Create an instance.
   const FullSoundListTile({
     required this.value,
@@ -37,10 +39,11 @@ class FullSoundListTile extends StatelessWidget {
 
   /// Build the widget.
   @override
-  Widget build(final BuildContext context) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final projectContext = ref.watch(projectContextProvider);
     final currentValue = value;
     return PlaySoundSemantics(
-      directory: currentValue?.parent ?? soundsDirectory,
+      directory: currentValue?.parent ?? projectContext.soundsDirectory,
       sound: currentValue == null ? null : path.basename(currentValue.path),
       child: PushWidgetListTile(
         title: title,
@@ -48,7 +51,7 @@ class FullSoundListTile extends StatelessWidget {
           final currentValue = value;
           if (currentValue == null) {
             return SelectDirectory(
-              directory: soundsDirectory,
+              directory: projectContext.soundsDirectory,
               onChanged: (final directory) => pushWidget(
                 context: context,
                 builder: (final context) => SelectSound(
@@ -56,11 +59,14 @@ class FullSoundListTile extends StatelessWidget {
                   onDone: (final soundPath) {
                     final newValue = path.relative(
                       path.join(directory.path, soundPath),
-                      from: soundsDirectory.path,
+                      from: projectContext.soundsDirectory.path,
                     );
                     onChanged(
                       getFileSystemEntity(
-                        path.join(soundsDirectory.path, newValue),
+                        path.join(
+                          projectContext.soundsDirectory.path,
+                          newValue,
+                        ),
                       ),
                     );
                   },
@@ -75,7 +81,7 @@ class FullSoundListTile extends StatelessWidget {
                   pushWidget(
                     context: context,
                     builder: (final context) => SelectDirectory(
-                      directory: soundsDirectory,
+                      directory: projectContext.soundsDirectory,
                       onChanged: (final directory) => pushWidget(
                         context: context,
                         builder: (final context) => SelectSound(
@@ -83,11 +89,14 @@ class FullSoundListTile extends StatelessWidget {
                           onDone: (final soundPath) {
                             final newValue = path.relative(
                               path.join(directory.path, soundPath),
-                              from: soundsDirectory.path,
+                              from: projectContext.soundsDirectory.path,
                             );
                             onChanged(
                               getFileSystemEntity(
-                                path.join(soundsDirectory.path, newValue),
+                                path.join(
+                                  projectContext.soundsDirectory.path,
+                                  newValue,
+                                ),
                               ),
                             );
                           },
@@ -105,7 +114,7 @@ class FullSoundListTile extends StatelessWidget {
                   } else {
                     final newValue = path.relative(
                       path.join(currentValue.parent.path, soundPath),
-                      from: soundsDirectory.path,
+                      from: projectContext.soundsDirectory.path,
                     );
                     onChanged(getFileSystemEntity(newValue));
                   }
@@ -118,7 +127,10 @@ class FullSoundListTile extends StatelessWidget {
         autofocus: autofocus,
         subtitle: currentValue == null
             ? unsetMessage
-            : path.relative(currentValue.path, from: soundsDirectory.path),
+            : path.relative(
+                currentValue.path,
+                from: projectContext.soundsDirectory.path,
+              ),
       ),
     );
   }

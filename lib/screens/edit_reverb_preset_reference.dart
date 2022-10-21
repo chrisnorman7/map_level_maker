@@ -5,11 +5,12 @@ import 'package:backstreets_widgets/shortcuts.dart';
 import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 import 'package:ziggurat/sound.dart';
 import 'package:ziggurat/ziggurat.dart';
 
-import '../constants.dart';
+import '../providers/providers.dart';
 import '../src/json/map_level_schema.dart';
 import '../util.dart';
 import '../widgets/full_sound_list_tile.dart';
@@ -117,7 +118,7 @@ const _gainSetting = ReverbSetting(
 );
 
 /// A widget to edit the reverb preset of the given [level].
-class EditReverbPresetReference extends StatefulWidget {
+class EditReverbPresetReference extends ConsumerStatefulWidget {
   /// Create an instance.
   const EditReverbPresetReference({
     required this.game,
@@ -138,7 +139,8 @@ class EditReverbPresetReference extends StatefulWidget {
 }
 
 /// State for [EditReverbPresetReference].
-class EditReverbPresetReferenceState extends State<EditReverbPresetReference> {
+class EditReverbPresetReferenceState
+    extends ConsumerState<EditReverbPresetReference> {
   Sound? _sound;
 
   /// The sound channel to use.
@@ -159,11 +161,14 @@ class EditReverbPresetReferenceState extends State<EditReverbPresetReference> {
   /// Build the widget.
   @override
   Widget build(final BuildContext context) {
+    final projectContext = ref.watch(projectContextProvider);
     final level = widget.level;
     final testPath = level.reverbTestSound;
     final testEntity = testPath == null
         ? null
-        : getFileSystemEntity(path.join(soundsDirectory.path, testPath));
+        : getFileSystemEntity(
+            path.join(projectContext.soundsDirectory.path, testPath),
+          );
     final preset = level.reverbPreset!;
     final tiles = [
       FullSoundListTile(
@@ -171,8 +176,11 @@ class EditReverbPresetReferenceState extends State<EditReverbPresetReference> {
         onChanged: (final value) {
           level.reverbTestSound = value == null
               ? null
-              : path.relative(value.path, from: soundsDirectory.path);
-          setState(level.save);
+              : path.relative(
+                  value.path,
+                  from: projectContext.soundsDirectory.path,
+                );
+          save();
         },
         autofocus: true,
       ),
@@ -334,7 +342,7 @@ class EditReverbPresetReferenceState extends State<EditReverbPresetReference> {
       meanFreePath: meanFreePath ?? oldPreset.meanFreePath,
       t60: t60 ?? oldPreset.t60,
     );
-    setState(level.save);
+    save();
     if (_sound != null) {
       play();
     }
@@ -357,13 +365,16 @@ class EditReverbPresetReferenceState extends State<EditReverbPresetReference> {
 
   /// Play the test sound.
   void play() {
+    final projectContext = ref.watch(projectContextProvider);
     final level = widget.level;
     final preset = level.reverbPreset!;
     final sound = level.reverbTestSound;
     stop();
     if (sound != null) {
       // We use a file here, even though the path might be a directory.
-      final file = File(path.join(soundsDirectory.path, sound));
+      final file = File(
+        path.join(projectContext.soundsDirectory.path, sound),
+      );
       final directory = file.parent;
       reverb.setPreset(preset);
       _sound?.destroy();
@@ -376,5 +387,13 @@ class EditReverbPresetReferenceState extends State<EditReverbPresetReference> {
         looping: true,
       );
     }
+  }
+
+  /// Save the level.
+  void save() {
+    final projectContext = ref.watch(projectContextProvider);
+    setState(
+      () => projectContext.saveLevel(widget.level),
+    );
   }
 }

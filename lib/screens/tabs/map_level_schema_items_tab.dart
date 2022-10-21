@@ -33,6 +33,7 @@ class MapLevelSchemaItemsTabState
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {
+    final projectContext = ref.watch(projectContextProvider);
     final level = ref.watch(mapLevelSchemaProvider.call(widget.id));
     final items = level.items
       ..sort(
@@ -52,7 +53,7 @@ class MapLevelSchemaItemsTabState
         return SearchableListTile(
           searchString: item.name,
           child: PlaySoundSemantics(
-            directory: ambiancesDirectory,
+            directory: projectContext.ambiancesDirectory,
             sound: item.ambiance?.sound,
             gain: item.ambiance?.gain ?? 0.7,
             looping: true,

@@ -27,6 +27,7 @@ class EditMapLevelSchemaItem extends ConsumerWidget {
   /// Build the widget.
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final projectContext = ref.watch(projectContextProvider);
     final itemContext = ref.watch(mapLevelSchemaItemProvider.call(argument));
     final item = itemContext.value;
     return Cancel(
@@ -52,7 +53,7 @@ class EditMapLevelSchemaItem extends ConsumerWidget {
               header: 'Description Text',
             ),
             SoundListTile(
-              directory: earconsDirectory,
+              directory: projectContext.earconsDirectory,
               sound: item.earcon,
               onChanged: (final value) {
                 item.earcon = value;
@@ -61,7 +62,7 @@ class EditMapLevelSchemaItem extends ConsumerWidget {
               title: 'Earcon',
             ),
             SoundListTile(
-              directory: descriptionsDirectory,
+              directory: projectContext.descriptionsDirectory,
               sound: item.descriptionSound,
               onChanged: (final value) {
                 item.descriptionSound = value;
@@ -75,7 +76,7 @@ class EditMapLevelSchemaItem extends ConsumerWidget {
                 item.ambiance = value;
                 save(ref);
               },
-              directory: ambiancesDirectory,
+              directory: projectContext.ambiancesDirectory,
               title: 'Ambiance',
             ),
             Builder(
@@ -116,9 +117,11 @@ class EditMapLevelSchemaItem extends ConsumerWidget {
 
   /// Save the level.
   void save(final WidgetRef ref) {
-    ref.watch(mapLevelSchemaProvider.call(argument.mapLevelId)).save();
+    final provider = mapLevelSchemaProvider.call(argument.mapLevelId);
+    final level = ref.watch(provider);
+    ref.watch(projectContextProvider).saveLevel(level);
     ref
-      ..invalidate(mapLevelSchemaProvider.call(argument.mapLevelId))
+      ..invalidate(provider)
       ..invalidate(mapLevelSchemaItemProvider.call(argument));
   }
 }

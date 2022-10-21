@@ -35,6 +35,7 @@ class MapLevelSchemaAmbiancesTabState
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {
+    final projectContext = ref.watch(projectContextProvider);
     final level = ref.watch(mapLevelSchemaProvider.call(widget.id));
     final ambiances = level.ambiances
       ..sort(
@@ -55,7 +56,7 @@ class MapLevelSchemaAmbiancesTabState
           searchString: ambiance.sound.sound,
           child: PlaySoundSemantics(
             sound: ambiance.sound.sound,
-            directory: ambiancesDirectory,
+            directory: projectContext.ambiancesDirectory,
             gain: ambiance.sound.gain,
             looping: true,
             child: Builder(

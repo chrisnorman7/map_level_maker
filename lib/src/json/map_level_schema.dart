@@ -1,12 +1,9 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:path/path.dart' as path;
 import 'package:recase/recase.dart';
 import 'package:ziggurat/sound.dart';
 
-import '../../constants.dart';
 import '../../util.dart';
 import 'map_level_schema_ambiance.dart';
 import 'map_level_schema_feature.dart';
@@ -151,24 +148,11 @@ class MapLevelSchema {
 
   /// The sound to use to test the [reverbPreset].
   ///
-  /// This value will be a path relative to [soundsDirectory].
+  /// This value will be a path relative to `soundsDirectory`.
   String? reverbTestSound;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaToJson(this);
-
-  /// Save this schema.
-  void save() {
-    final json = toJson();
-    final data = indentedJsonEncoder.convert(json);
-    jsonFile.writeAsStringSync(data);
-  }
-
-  /// Get the JSON file where this instance should be stored.
-  File get jsonFile => File(path.join(mapsDirectory.path, jsonFilename));
-
-  /// Get the Dart file where this instance should be stored.
-  File get dartFile => File(path.join(mapsDirectory.path, dartFilename));
 
   /// Get the base filename for this instance.
   ///
