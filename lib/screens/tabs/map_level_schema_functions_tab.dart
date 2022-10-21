@@ -10,7 +10,7 @@ import '../../util.dart';
 import '../edit_map_level_schema_function.dart';
 
 /// The functions tab.
-class MapLevelSchemaFunctionsTab extends ConsumerWidget {
+class MapLevelSchemaFunctionsTab extends ConsumerStatefulWidget {
   /// Create an instance.
   const MapLevelSchemaFunctionsTab({
     required this.id,
@@ -20,10 +20,19 @@ class MapLevelSchemaFunctionsTab extends ConsumerWidget {
   /// The ID of the level to use.
   final String id;
 
-  /// Build the widget.
+  /// Create state for this widget.
   @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
-    final level = ref.watch(mapLevelSchemaProvider.call(id));
+  MapLevelSchemaFunctionsTabState createState() =>
+      MapLevelSchemaFunctionsTabState();
+}
+
+/// State for [MapLevelSchemaFunctionsTab].
+class MapLevelSchemaFunctionsTabState
+    extends ConsumerState<MapLevelSchemaFunctionsTab> {
+  /// Build a widget.
+  @override
+  Widget build(final BuildContext context) {
+    final level = ref.watch(mapLevelSchemaProvider.call(widget.id));
     final functions = level.functions
       ..sort(
         (final a, final b) =>
@@ -66,7 +75,7 @@ class MapLevelSchemaFunctionsTab extends ConsumerWidget {
                     level.functions.removeWhere(
                       (final element) => element.id == function.id,
                     );
-                    saveLevel(ref: ref, id: id);
+                    saveLevel(ref: ref, id: widget.id);
                   },
                 );
               }
@@ -75,12 +84,13 @@ class MapLevelSchemaFunctionsTab extends ConsumerWidget {
               title: function.name,
               builder: (final context) => EditMapLevelSchemaFunction(
                 argument: MapLevelSchemaArgument(
-                  mapLevelId: id,
+                  mapLevelId: widget.id,
                   valueId: function.id,
                 ),
               ),
               autofocus: index == 0,
               subtitle: function.comment,
+              onSetState: () => setState(() {}),
             ),
           ),
         );

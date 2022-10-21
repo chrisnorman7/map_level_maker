@@ -11,7 +11,7 @@ import '../../util.dart';
 import '../edit_map_level_schema_feature.dart';
 
 /// The features tab.
-class MapLevelSchemaFeaturesTab extends ConsumerWidget {
+class MapLevelSchemaFeaturesTab extends ConsumerStatefulWidget {
   /// Create an instance.
   const MapLevelSchemaFeaturesTab({
     required this.id,
@@ -21,10 +21,19 @@ class MapLevelSchemaFeaturesTab extends ConsumerWidget {
   /// The ID of the level to use.
   final String id;
 
-  /// Build the widget.
+  /// Create state for this widget.
   @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
-    final level = ref.watch(mapLevelSchemaProvider.call(id));
+  MapLevelSchemaFeaturesTabState createState() =>
+      MapLevelSchemaFeaturesTabState();
+}
+
+/// State for [MapLevelSchemaFeaturesTab].
+class MapLevelSchemaFeaturesTabState
+    extends ConsumerState<MapLevelSchemaFeaturesTab> {
+  /// Build a widget.
+  @override
+  Widget build(final BuildContext context) {
+    final level = ref.watch(mapLevelSchemaProvider.call(widget.id));
     final features = level.features
       ..sort(
         (final a, final b) =>
@@ -55,19 +64,20 @@ class MapLevelSchemaFeaturesTab extends ConsumerWidget {
                       level.features.removeWhere(
                         (final element) => element.id == feature.id,
                       );
-                      saveLevel(ref: ref, id: id);
+                      saveLevel(ref: ref, id: widget.id);
                     },
                   )
             },
             child: PushWidgetListTile(
               title: feature.name,
+              autofocus: index == 0,
               builder: (final context) => EditMapLevelSchemaFeature(
                 mapLevelSchemaArgument: MapLevelSchemaArgument(
-                  mapLevelId: id,
+                  mapLevelId: widget.id,
                   valueId: feature.id,
                 ),
               ),
-              autofocus: index == 0,
+              onSetState: () => setState(() {}),
             ),
           ),
         );

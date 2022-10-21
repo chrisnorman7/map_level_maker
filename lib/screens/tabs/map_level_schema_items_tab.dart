@@ -12,7 +12,7 @@ import '../../widgets/play_sound_semantics.dart';
 import '../edit_map_level_schema_item.dart';
 
 /// The items tab.
-class MapLevelSchemaItemsTab extends ConsumerWidget {
+class MapLevelSchemaItemsTab extends ConsumerStatefulWidget {
   /// Create an instance.
   const MapLevelSchemaItemsTab({
     required this.id,
@@ -22,10 +22,18 @@ class MapLevelSchemaItemsTab extends ConsumerWidget {
   /// The ID of the level to use.
   final String id;
 
-  /// Build the widget.
+  /// Create state for this widget.
   @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
-    final level = ref.watch(mapLevelSchemaProvider.call(id));
+  MapLevelSchemaItemsTabState createState() => MapLevelSchemaItemsTabState();
+}
+
+/// State for [MapLevelSchemaItemsTab].
+class MapLevelSchemaItemsTabState
+    extends ConsumerState<MapLevelSchemaItemsTab> {
+  /// Build a widget.
+  @override
+  Widget build(final BuildContext context) {
+    final level = ref.watch(mapLevelSchemaProvider.call(widget.id));
     final items = level.items
       ..sort(
         (final a, final b) =>
@@ -43,41 +51,48 @@ class MapLevelSchemaItemsTab extends ConsumerWidget {
         final item = items[index];
         return SearchableListTile(
           searchString: item.name,
-          child: CallbackShortcuts(
-            bindings: {
-              deleteShortcut: () => confirm(
-                    context: context,
-                    message: 'Are you sure you want to delete the ${item.name} '
-                        'item?',
-                    title: confirmDeleteTitle,
-                    yesCallback: () {
-                      Navigator.pop(context);
-                      level.items.removeWhere(
-                        (final element) => element.id == item.id,
-                      );
-                      saveLevel(ref: ref, id: id);
-                    },
-                  )
-            },
-            child: PlaySoundSemantics(
-              directory: ambiancesDirectory,
-              sound: item.ambiance?.sound,
-              gain: item.ambiance?.gain ?? 0.7,
-              looping: true,
-              child: Builder(
-                builder: (final context) => PushWidgetListTile(
-                  title: item.name,
-                  builder: (final builderContext) {
+          child: PlaySoundSemantics(
+            directory: ambiancesDirectory,
+            sound: item.ambiance?.sound,
+            gain: item.ambiance?.gain ?? 0.7,
+            looping: true,
+            child: Builder(
+              builder: (final context) => CallbackShortcuts(
+                bindings: {
+                  deleteShortcut: () {
                     PlaySoundSemantics.of(context)?.stop();
-                    return EditMapLevelSchemaItem(
-                      argument: MapLevelSchemaArgument(
-                        mapLevelId: id,
-                        valueId: item.id,
-                      ),
+                    confirm(
+                      context: context,
+                      message:
+                          'Are you sure you want to delete the ${item.name} '
+                          'item?',
+                      title: confirmDeleteTitle,
+                      yesCallback: () {
+                        Navigator.pop(context);
+                        level.items.removeWhere(
+                          (final element) => element.id == item.id,
+                        );
+                        saveLevel(ref: ref, id: widget.id);
+                      },
                     );
-                  },
-                  autofocus: index == 0,
-                  subtitle: item.descriptionText,
+                  }
+                },
+                child: Builder(
+                  builder: (final context) => PushWidgetListTile(
+                    title: item.name,
+                    builder: (final builderContext) {
+                      PlaySoundSemantics.of(context)?.stop();
+                      return EditMapLevelSchemaItem(
+                        argument: MapLevelSchemaArgument(
+                          mapLevelId: widget.id,
+                          valueId: item.id,
+                        ),
+                      );
+                    },
+                    autofocus: index == 0,
+                    subtitle: item.descriptionText,
+                    onSetState: () => setState(() {}),
+                  ),
                 ),
               ),
             ),
