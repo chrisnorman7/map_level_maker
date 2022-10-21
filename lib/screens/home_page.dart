@@ -14,6 +14,7 @@ import '../providers/providers.dart';
 import '../src/json/map_level_schema.dart';
 import '../util.dart';
 import 'edit_map_level_schema.dart';
+import 'system_information_screen.dart';
 
 /// The home page for the application.
 class HomePage extends ConsumerWidget {
@@ -37,10 +38,29 @@ class HomePage extends ConsumerWidget {
           LogicalKeyboardKey.keyB,
           control: useControlKey,
           meta: useMetaKey,
-        ): () => buildMaps(context: context, levels: maps)
+        ): () => buildMaps(context: context, levels: maps),
+        SingleActivator(
+          LogicalKeyboardKey.keyI,
+          control: useControlKey,
+          meta: useMetaKey,
+          shift: true,
+        ): () => pushWidget(
+              context: context,
+              builder: (final context) => const SystemInformationScreen(),
+            )
       },
       child: SimpleScaffold(
         actions: [
+          ElevatedButton(
+            onPressed: () => pushWidget(
+              context: context,
+              builder: (final context) => const SystemInformationScreen(),
+            ),
+            child: const Icon(
+              Icons.info,
+              semanticLabel: 'System Information',
+            ),
+          ),
           ElevatedButton(
             onPressed: () => buildMaps(context: context, levels: maps),
             child: const Icon(
