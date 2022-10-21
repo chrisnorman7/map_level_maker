@@ -6,6 +6,7 @@ import 'package:dart_sdl/dart_sdl.dart';
 import 'package:dart_synthizer/dart_synthizer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ziggurat/sound.dart';
 import 'package:ziggurat/ziggurat.dart';
 
@@ -17,6 +18,11 @@ import '../src/json/map_level_schema_function.dart';
 import '../src/json/map_level_schema_item.dart';
 import 'map_level_schema_argument.dart';
 import 'map_level_schema_context.dart';
+
+/// Provide a shared preferences instance.
+final sharedPreferencesProvider = FutureProvider(
+  (final ref) => SharedPreferences.getInstance(),
+);
 
 /// Provide an sdl instance.
 final sdlProvider = Provider((final ref) => Sdl());
