@@ -6,7 +6,7 @@ import 'constants.dart';
 
 /// The template to use for generating maps.
 const mapLevelSchemaTemplate = '''
-// ignore_for_file: lines_longer_than_80_chars, unused_import
+// ignore_for_file: lines_longer_than_80_chars, unused_import, avoid_redundant_argument_values
 import 'dart:math';
 import 'package:ziggurat/sound.dart';
 import '../assets/amb.dart';
@@ -45,6 +45,14 @@ abstract class {{ className }} extends MapLevel {
     final List<MapLevelItem>? items,
     final List<MapLevelFeature>? features,
     final List<Ambiance>? levelAmbiances,
+    super.reverbPreset = const ReverbPreset(
+      name: {{ name | quote }},
+      {% for name, value in reverbPreset %}
+      {% if name != 'name' %}
+      {{ name }}: {{ value }},
+      {% endif %}
+      {% endfor %}
+    ),
   }) : super(
     items: [
       ... items ?? [],
