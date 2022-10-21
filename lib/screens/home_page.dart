@@ -76,7 +76,7 @@ class HomePage extends ConsumerWidget {
                                 if (map.dartFile.existsSync()) {
                                   map.dartFile.deleteSync();
                                 }
-                                ref.refresh(mapsProvider);
+                                ref.invalidate(mapsProvider);
                               },
                             )
                       },
@@ -106,7 +106,7 @@ class HomePage extends ConsumerWidget {
     required final WidgetRef ref,
   }) {
     final level = MapLevelSchema()..save();
-    ref.refresh(mapsProvider);
+    ref.invalidate(mapsProvider);
     pushWidget(
       context: context,
       builder: (final context) => EditMapLevelSchema(id: level.id),

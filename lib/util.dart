@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 import 'package:ziggurat/ziggurat.dart';
 
 import 'constants.dart';
 import 'map_level_schema_to_code.dart';
+import 'providers/providers.dart';
 import 'src/json/map_level_schema.dart';
 
 /// Generate a new ID.
@@ -58,4 +60,16 @@ FileSystemEntity getFileSystemEntity(final String path) {
     return f;
   }
   throw StateError('Not found: $path.');
+}
+
+/// Save the level with the given [id].
+void saveLevel({
+  required final WidgetRef ref,
+  required final String id,
+}) {
+  final provider = mapLevelSchemaProvider.call(id);
+  ref.watch(provider).save();
+  ref
+    ..invalidate(provider)
+    ..invalidate(mapsProvider);
 }

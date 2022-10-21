@@ -72,6 +72,6 @@ class ReverbListTile extends ConsumerWidget {
   /// Save the level.
   void save(final WidgetRef ref) {
     ref.watch(mapLevelSchemaProvider.call(id)).save();
-    ref.refresh(mapLevelSchemaProvider.call(id));
+    ref.invalidate(mapLevelSchemaProvider.call(id));
   }
 }

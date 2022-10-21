@@ -86,7 +86,7 @@ class EditMapLevelSchemaAmbiance extends ConsumerWidget {
   void save(final WidgetRef ref) {
     ref.watch(mapLevelSchemaProvider.call(argument.mapLevelId)).save();
     ref
-      ..refresh(mapLevelSchemaProvider.call(argument.mapLevelId))
-      ..refresh(mapLevelSchemaAmbianceProvider.call(argument));
+      ..invalidate(mapLevelSchemaProvider.call(argument.mapLevelId))
+      ..invalidate(mapLevelSchemaAmbianceProvider.call(argument));
   }
 }

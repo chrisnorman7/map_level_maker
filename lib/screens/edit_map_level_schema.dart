@@ -21,18 +21,16 @@ import '../src/json/map_level_schema_function.dart';
 import '../src/json/map_level_schema_item.dart';
 import '../src/json/music_schema.dart';
 import '../util.dart';
-import '../validators.dart';
-import '../widgets/double_coordinates_list_tile.dart';
-import '../widgets/int_coordinates_list_tile.dart';
-import '../widgets/music_schema_list_tile.dart';
-import '../widgets/play_sound_semantics.dart';
-import '../widgets/reverb_list_tile.dart';
-import '../widgets/sound_list_tile.dart';
 import 'edit_map_level_schema_ambiance.dart';
 import 'edit_map_level_schema_feature.dart';
 import 'edit_map_level_schema_function.dart';
 import 'edit_map_level_schema_item.dart';
 import 'level_preview_screen.dart';
+import 'tabs/map_level_schema_ambiances_tab.dart';
+import 'tabs/map_level_schema_features_tab.dart';
+import 'tabs/map_level_schema_functions_tab.dart';
+import 'tabs/map_level_schema_items_tab.dart';
+import 'tabs/map_level_schema_settings_tab.dart';
 
 /// A widget to edit the map with the given [id].
 class EditMapLevelSchema extends ConsumerWidget {
@@ -91,7 +89,7 @@ class EditMapLevelSchema extends ConsumerWidget {
                 bindings: {
                   newShortcut: () => newMenu(context: context, ref: ref)
                 },
-                child: getSettingsPage(ref: ref),
+                child: MapLevelSchemaSettingsTab(id: id),
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () => newMenu(context: context, ref: ref),
@@ -109,7 +107,7 @@ class EditMapLevelSchema extends ConsumerWidget {
                 bindings: {
                   newShortcut: () => newFeature(context: context, ref: ref)
                 },
-                child: getFeaturesPage(ref: ref),
+                child: MapLevelSchemaFeaturesTab(id: id),
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () => newFeature(context: context, ref: ref),
@@ -124,7 +122,7 @@ class EditMapLevelSchema extends ConsumerWidget {
                 bindings: {
                   newShortcut: () => newItem(context: context, ref: ref)
                 },
-                child: getItemsTab(ref: ref),
+                child: MapLevelSchemaItemsTab(id: id),
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () => newItem(context: context, ref: ref),
@@ -139,7 +137,7 @@ class EditMapLevelSchema extends ConsumerWidget {
                 bindings: {
                   newShortcut: () => newAmbiance(context: context, ref: ref)
                 },
-                child: getAmbiancesTab(ref: ref),
+                child: MapLevelSchemaAmbiancesTab(id: id),
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () => newAmbiance(context: context, ref: ref),
@@ -154,7 +152,7 @@ class EditMapLevelSchema extends ConsumerWidget {
                 bindings: {
                   newShortcut: () => newFunction(context: context, ref: ref)
                 },
-                child: getFunctionsTab(ref: ref),
+                child: MapLevelSchemaFunctionsTab(id: id),
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () => newFunction(context: context, ref: ref),
@@ -166,413 +164,6 @@ class EditMapLevelSchema extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  /// Get the settings tab.
-  Widget getSettingsPage({
-    required final WidgetRef ref,
-  }) {
-    final level = ref.watch(mapLevelSchemaProvider.call(id));
-    return ListView(
-      children: [
-        TextListTile(
-          value: level.className,
-          onChanged: (final value) {
-            level.className = value;
-            save(ref);
-          },
-          header: 'Class Name',
-          autofocus: true,
-          validator: (final value) => validateClassName(value: value),
-        ),
-        TextListTile(
-          value: level.name,
-          onChanged: (final value) {
-            level.name = value;
-            save(ref);
-          },
-          header: 'Name',
-          validator: (final value) => validateNonEmptyValue(value: value),
-        ),
-        SoundListTile(
-          directory: footstepsDirectory,
-          sound: level.defaultFootstepSound,
-          onChanged: (final value) {
-            level.defaultFootstepSound = value;
-            save(ref);
-          },
-          title: 'Default Footstep Sound',
-        ),
-        SoundListTile(
-          directory: wallsDirectory,
-          sound: level.wallSound,
-          onChanged: (final value) {
-            level.wallSound = value;
-            save(ref);
-          },
-          title: 'Wall Sound',
-        ),
-        MusicSchemaListTile(
-          music: level.music,
-          onChanged: (final value) {
-            level.music = value;
-            save(ref);
-          },
-        ),
-        ReverbListTile(
-          id: id,
-        ),
-        IntCoordinatesListTile(
-          coordinates: level.maxSize,
-          onChanged: (final value) {
-            level.maxSize = value;
-            save(ref);
-          },
-          title: 'Size',
-          minX: 1,
-          minY: 1,
-        ),
-        DoubleCoordinatesListTile(
-          coordinates: level.coordinates,
-          onChanged: (final value) {
-            level.coordinates = value;
-            save(ref);
-          },
-          minX: 0.0,
-          minY: 0.0,
-          maxX: level.maxX - 1,
-          maxY: level.maxY - 1,
-          title: 'Initial Coordinates',
-        ),
-        DoubleListTile(
-          value: level.heading,
-          onChanged: (final value) {
-            level.heading = value;
-            save(ref);
-          },
-          title: 'Initial Heading',
-          min: 0.0,
-          max: 359.0,
-          modifier: 5.0,
-          subtitle: '${level.heading} °',
-        ),
-        IntListTile(
-          value: level.turnInterval,
-          onChanged: (final value) {
-            level.turnInterval = value;
-            save(ref);
-          },
-          title: 'Turn Interval',
-          min: 1,
-          modifier: 10,
-          subtitle: '${level.turnInterval} ms',
-        ),
-        IntListTile(
-          value: level.turnAmount,
-          onChanged: (final value) {
-            level.turnAmount = value;
-            save(ref);
-          },
-          title: 'Turn Amount',
-          max: 359,
-          modifier: 5,
-          subtitle: '${level.turnAmount} °',
-        ),
-        IntListTile(
-          value: level.moveInterval,
-          onChanged: (final value) {
-            level.moveInterval = value;
-            save(ref);
-          },
-          title: 'Move Interval',
-          min: 1,
-          modifier: 10,
-          subtitle: '${level.moveInterval} ms',
-        ),
-        DoubleListTile(
-          value: level.moveDistance,
-          onChanged: (final value) {
-            level.moveDistance = value;
-            save(ref);
-          },
-          title: 'Move Distance',
-          modifier: 0.5,
-          subtitle: '${level.moveDistance.toStringAsFixed(2)} tiles',
-        ),
-        IntListTile(
-          value: level.sonarDistanceMultiplier,
-          onChanged: (final value) {
-            level.sonarDistanceMultiplier = value;
-            save(ref);
-          },
-          title: 'Sonar Distance Multiplier',
-        )
-      ],
-    );
-  }
-
-  /// Get the features tab.
-  Widget getFeaturesPage({
-    required final WidgetRef ref,
-  }) {
-    final level = ref.watch(mapLevelSchemaProvider.call(id));
-    final features = level.features
-      ..sort(
-        (final a, final b) =>
-            a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-      );
-    if (features.isEmpty) {
-      return const CenterText(
-        text: 'There are no features to show.',
-        autofocus: true,
-      );
-    }
-    return BuiltSearchableListView(
-      items: features,
-      builder: (final context, final index) {
-        final feature = features[index];
-        return SearchableListTile(
-          searchString: feature.name,
-          child: CallbackShortcuts(
-            bindings: {
-              deleteShortcut: () => confirm(
-                    context: context,
-                    message:
-                        'Are you sure you want to delete the ${feature.name} '
-                        'feature?',
-                    title: confirmDeleteTitle,
-                    yesCallback: () {
-                      Navigator.pop(context);
-                      level.features.removeWhere(
-                        (final element) => element.id == feature.id,
-                      );
-                      save(ref);
-                    },
-                  )
-            },
-            child: PushWidgetListTile(
-              title: feature.name,
-              builder: (final context) => EditMapLevelSchemaFeature(
-                mapLevelSchemaArgument: MapLevelSchemaArgument(
-                  mapLevelId: level.id,
-                  valueId: feature.id,
-                ),
-              ),
-              autofocus: index == 0,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  /// Get the items tab.
-  Widget getItemsTab({
-    required final WidgetRef ref,
-  }) {
-    final level = ref.watch(mapLevelSchemaProvider.call(id));
-    final items = level.items
-      ..sort(
-        (final a, final b) =>
-            a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-      );
-    if (items.isEmpty) {
-      return const CenterText(
-        text: 'There are no items to show.',
-        autofocus: true,
-      );
-    }
-    return BuiltSearchableListView(
-      items: items,
-      builder: (final context, final index) {
-        final item = items[index];
-        return SearchableListTile(
-          searchString: item.name,
-          child: CallbackShortcuts(
-            bindings: {
-              deleteShortcut: () => confirm(
-                    context: context,
-                    message: 'Are you sure you want to delete the ${item.name} '
-                        'item?',
-                    title: confirmDeleteTitle,
-                    yesCallback: () {
-                      Navigator.pop(context);
-                      level.items.removeWhere(
-                        (final element) => element.id == item.id,
-                      );
-                      save(ref);
-                    },
-                  )
-            },
-            child: PlaySoundSemantics(
-              directory: ambiancesDirectory,
-              sound: item.ambiance?.sound,
-              gain: item.ambiance?.gain ?? 0.7,
-              looping: true,
-              child: Builder(
-                builder: (final context) => PushWidgetListTile(
-                  title: item.name,
-                  builder: (final builderContext) {
-                    PlaySoundSemantics.of(context)?.stop();
-                    return EditMapLevelSchemaItem(
-                      argument: MapLevelSchemaArgument(
-                        mapLevelId: id,
-                        valueId: item.id,
-                      ),
-                    );
-                  },
-                  autofocus: index == 0,
-                  subtitle: item.descriptionText,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  /// Get the ambiances tab.
-  Widget getAmbiancesTab({
-    required final WidgetRef ref,
-  }) {
-    final level = ref.watch(mapLevelSchemaProvider.call(id));
-    final ambiances = level.ambiances;
-    if (ambiances.isEmpty) {
-      return const CenterText(
-        text: 'There are no ambiances to show.',
-        autofocus: true,
-      );
-    }
-    return BuiltSearchableListView(
-      items: ambiances,
-      builder: (final context, final index) {
-        final ambiance = ambiances[index];
-        return SearchableListTile(
-          searchString: ambiance.sound.sound,
-          child: CallbackShortcuts(
-            bindings: {
-              deleteShortcut: () => confirm(
-                    context: context,
-                    message: 'Are you sure you want to delete this ambiance?',
-                    title: confirmDeleteTitle,
-                    yesCallback: () {
-                      level.ambiances.removeWhere(
-                        (final element) => element.id == ambiance.id,
-                      );
-                      save(ref);
-                    },
-                  )
-            },
-            child: PlaySoundSemantics(
-              sound: ambiance.sound.sound,
-              directory: ambiancesDirectory,
-              gain: ambiance.sound.gain,
-              looping: true,
-              child: Builder(
-                builder: (final context) {
-                  final coordinates = ambiance.coordinates;
-                  return PushWidgetListTile(
-                    title: path.basenameWithoutExtension(ambiance.sound.sound),
-                    builder: (final builderContext) {
-                      PlaySoundSemantics.of(context)?.stop();
-                      return EditMapLevelSchemaAmbiance(
-                        argument: MapLevelSchemaArgument(
-                          mapLevelId: id,
-                          valueId: ambiance.id,
-                        ),
-                      );
-                    },
-                    autofocus: index == 0,
-                    subtitle: coordinates == null
-                        ? unsetMessage
-                        : '${coordinates.x}, ${coordinates.y}',
-                  );
-                },
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  /// Get the functions tab.
-  Widget getFunctionsTab({
-    required final WidgetRef ref,
-  }) {
-    final level = ref.watch(mapLevelSchemaProvider.call(id));
-    final functions = level.functions
-      ..sort(
-        (final a, final b) =>
-            a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-      );
-    if (functions.isEmpty) {
-      return const CenterText(
-        text: 'There are no functions to show.',
-        autofocus: true,
-      );
-    }
-    return BuiltSearchableListView(
-      items: functions,
-      builder: (final context, final index) {
-        final function = functions[index];
-        return SearchableListTile(
-          searchString: function.name,
-          child: CallbackShortcuts(
-            bindings: {
-              deleteShortcut: () {
-                for (final feature in level.features) {
-                  for (final id in [feature.onActivateFunctionId]) {
-                    if (id == function.id) {
-                      showMessage(
-                        context: context,
-                        message: 'This function is being used by the '
-                            '${feature.name} feature.',
-                      );
-                      return;
-                    }
-                  }
-                }
-                confirm(
-                  context: context,
-                  message:
-                      'Are you sure you want to delete the ${function.name} '
-                      'function?',
-                  yesCallback: () {
-                    Navigator.pop(context);
-                    level.functions.removeWhere(
-                      (final element) => element.id == function.id,
-                    );
-                    save(ref);
-                  },
-                );
-              }
-            },
-            child: PushWidgetListTile(
-              title: function.name,
-              builder: (final context) => EditMapLevelSchemaFunction(
-                argument: MapLevelSchemaArgument(
-                  mapLevelId: id,
-                  valueId: function.id,
-                ),
-              ),
-              autofocus: index == 0,
-              subtitle: function.comment,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  /// Save the project.
-  void save(final WidgetRef ref) {
-    final provider = mapLevelSchemaProvider.call(id);
-    ref.watch(provider).save();
-    ref
-      ..refresh(provider)
-      ..refresh(mapsProvider);
   }
 
   /// Show a "new" menu.
@@ -644,7 +235,7 @@ class EditMapLevelSchema extends ConsumerWidget {
     final level = ref.watch(mapLevelSchemaProvider.call(id));
     final feature = MapLevelSchemaFeature();
     level.features.add(feature);
-    save(ref);
+    saveLevel(ref: ref, id: id);
     pushWidget(
       context: context,
       builder: (final context) => EditMapLevelSchemaFeature(
@@ -664,12 +255,12 @@ class EditMapLevelSchema extends ConsumerWidget {
     final level = ref.watch(mapLevelSchemaProvider.call(id));
     final item = MapLevelSchemaItem();
     level.items.add(item);
-    save(ref);
+    saveLevel(ref: ref, id: id);
     pushWidget(
       context: context,
       builder: (final context) => EditMapLevelSchemaItem(
         argument: MapLevelSchemaArgument(
-          mapLevelId: level.id,
+          mapLevelId: id,
           valueId: item.id,
         ),
       ),
@@ -695,7 +286,7 @@ class EditMapLevelSchema extends ConsumerWidget {
         ),
       );
       level.ambiances.add(ambiance);
-      save(ref);
+      saveLevel(ref: ref, id: id);
       pushWidget(
         context: context,
         builder: (final context) => EditMapLevelSchemaAmbiance(
@@ -716,7 +307,7 @@ class EditMapLevelSchema extends ConsumerWidget {
     final level = ref.watch(mapLevelSchemaProvider.call(id));
     final function = MapLevelSchemaFunction();
     level.functions.add(function);
-    save(ref);
+    saveLevel(ref: ref, id: id);
     pushWidget(
       context: context,
       builder: (final context) => EditMapLevelSchemaFunction(

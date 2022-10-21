@@ -101,11 +101,11 @@ class EditMapLevelSchemaFeature extends ConsumerWidget {
         )
         .save();
     ref
-      ..refresh(
+      ..invalidate(
         mapLevelSchemaProvider.call(
           mapLevelSchemaArgument.mapLevelId,
         ),
       )
-      ..refresh(mapLevelSchemaFeatureProvider.call(mapLevelSchemaArgument));
+      ..invalidate(mapLevelSchemaFeatureProvider.call(mapLevelSchemaArgument));
   }
 }
