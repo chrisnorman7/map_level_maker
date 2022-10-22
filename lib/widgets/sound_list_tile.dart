@@ -79,6 +79,7 @@ class SoundListTile extends StatelessWidget {
                 nullable: nullable,
               );
             },
+            autofocus: autofocus,
             subtitle: value == null
                 ? unsetMessage
                 : path.basenameWithoutExtension(value).replaceAll('_', ' '),
