@@ -10,10 +10,10 @@ MapLevelSchemaRandomSound _$MapLevelSchemaRandomSoundFromJson(
         Map<String, dynamic> json) =>
     MapLevelSchemaRandomSound(
       sound: json['sound'] as String,
+      maxX: (json['maxX'] as num).toDouble(),
+      maxY: (json['maxY'] as num).toDouble(),
       minX: (json['minX'] as num?)?.toDouble() ?? 0.0,
-      maxX: (json['maxX'] as num?)?.toDouble() ?? 10.0,
       minY: (json['minY'] as num?)?.toDouble() ?? 0.0,
-      maxY: (json['maxY'] as num?)?.toDouble() ?? 10.0,
       minGain: (json['minGain'] as num?)?.toDouble() ?? 0.5,
       maxGain: (json['maxGain'] as num?)?.toDouble() ?? 1.0,
       minInterval: json['minInterval'] as int? ?? 5000,

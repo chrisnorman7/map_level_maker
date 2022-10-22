@@ -12,10 +12,10 @@ class MapLevelSchemaRandomSound {
   /// Create an instance.
   MapLevelSchemaRandomSound({
     required this.sound,
+    required this.maxX,
+    required this.maxY,
     this.minX = 0.0,
-    this.maxX = 10.0,
     this.minY = 0.0,
-    this.maxY = 10.0,
     this.minGain = 0.5,
     this.maxGain = 1.0,
     this.minInterval = 5000,
