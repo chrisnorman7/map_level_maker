@@ -14,6 +14,7 @@ import '../assets/descriptions.dart';
 import '../assets/earcons.dart';
 import '../assets/footsteps.dart';
 import '../assets/music.dart';
+import '../assets/random_sounds.dart';
 import '../assets/walls.dart';
 import '../map_level/map_level.dart';
 import '../map_level/map_level_feature.dart';
@@ -27,10 +28,8 @@ abstract class {{ className }} extends MapLevel {
     super.defaultFootstepSound = {{ defaultFootstepSound | asset }},
     super.wallSound = {{ wallSound | asset }},
     {% if music %}
-    super.music = const Music(sound: {{ music.sound | asset }}
-    {% if music.gain != 0.5 %}
-    , gain: {{ music.gain }}
-    {% endif %}
+    super.music = const Music(sound: {{ music.sound | asset }},
+    gain: {{ music.gain }},
     ),
     {% endif %}
     super.maxX = {{ maxX }},
@@ -42,9 +41,9 @@ abstract class {{ className }} extends MapLevel {
     super.moveInterval = {{ moveInterval }},
     super.moveDistance = {{ moveDistance }},
     super.sonarDistanceMultiplier = {{ sonarDistanceMultiplier }},
-    final List<MapLevelItem>? items,
-    final List<MapLevelFeature>? features,
-    final List<Ambiance>? levelAmbiances,
+    final List<MapLevelItem> items = const [],
+    final List<MapLevelFeature> features = const [],
+    final List<Ambiance> levelAmbiances = const [],
     {% if reverbPreset %}
       super.reverbPreset = const ReverbPreset(
         name: {{ name | quote }},
@@ -55,9 +54,10 @@ abstract class {{ className }} extends MapLevel {
         {% endfor %}
       ),
     {% endif %}
+    final List<RandomSound> randomSounds = const [],
   }) : super(
     items: [
-      ... items ?? [],
+      ...items,
       {% for item in items %}
       const MapLevelItem(
         name: {{ item.name | quote }},
@@ -77,8 +77,7 @@ abstract class {{ className }} extends MapLevel {
       {% endfor %}
     ],
     levelAmbiances: [
-      if (levelAmbiances != null)
-        ...levelAmbiances,
+      ...levelAmbiances,
       {% for ambiance in ambiances %}
       const Ambiance(
         sound: {{ ambiance.sound.sound | asset }},
@@ -91,9 +90,24 @@ abstract class {{ className }} extends MapLevel {
       ),
       {% endfor %}
     ],
-    features: features ?? [],
+    randomSounds: [
+      ...randomSounds,
+      {% for randomSound in randomSounds %}
+        const RandomSound(
+          sound: {{ randomSound.sound | asset }},
+          minCoordinates: Point({{ randomSound.minX }}, {{ randomSound.minY }}),
+          maxCoordinates: Point({{ randomSound.maxX }}, {{ randomSound.maxY }}),
+          minInterval: {{ randomSound.minInterval }},
+          maxInterval: {{ randomSound.maxInterval }},
+          minGain: {{ randomSound.minGain }},
+          maxGain: {{ randomSound.maxGain }},
+        ),
+      {% endfor %}
+    ],
+    features: [],
   ) {
     this.features.addAll([
+      ...features,
       {% for feature in features %}
       {% if feature.onActivateFunctionName is none %}
       const
