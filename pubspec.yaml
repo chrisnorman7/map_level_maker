@@ -1,9 +1,8 @@
 name: map_level_maker
+version: 1.1.0+1
 description: Generate `MapLevel` class code.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-
-version: 1.0.0+1
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
