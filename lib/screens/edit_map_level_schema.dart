@@ -350,6 +350,8 @@ class EditMapLevelSchema extends ConsumerWidget {
       final level = ref.watch(mapLevelSchemaProvider.call(id));
       final randomSound = MapLevelSchemaRandomSound(
         sound: path.basename(possibleRandomSounds.first.path),
+        maxX: level.maxX.toDouble(),
+        maxY: level.maxY.toDouble(),
       );
       level.randomSounds.add(randomSound);
       saveLevel(ref: ref, id: id);
