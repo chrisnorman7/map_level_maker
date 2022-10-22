@@ -56,6 +56,10 @@ class ProjectContext {
   Directory get descriptionsDirectory =>
       Directory(path.join(soundsDirectory.path, 'descriptions'));
 
+  /// The directory where random sounds are stored.
+  Directory get randomSoundsDirectory =>
+      Directory(path.join(soundsDirectory.path, 'random_sounds'));
+
   /// Get the Dart file for the given [level].
   File getLevelDartFile(final MapLevelSchema level) =>
       File(path.join(mapsDirectory.path, level.dartFilename));

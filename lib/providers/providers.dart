@@ -76,20 +76,6 @@ final gameProvider = Provider(
 /// If any of the various directories don't exist, they will be created.
 final mapsProvider = Provider((final ref) {
   final projectContext = ref.watch(projectContextProvider);
-  for (final directory in [
-    projectContext.mapsDirectory,
-    projectContext.soundsDirectory,
-    projectContext.footstepsDirectory,
-    projectContext.wallsDirectory,
-    projectContext.musicDirectory,
-    projectContext.ambiancesDirectory,
-    projectContext.earconsDirectory,
-    projectContext.descriptionsDirectory,
-  ]) {
-    if (!directory.existsSync()) {
-      directory.createSync(recursive: true);
-    }
-  }
   return projectContext.mapsDirectory
       .listSync()
       .whereType<File>()
@@ -172,9 +158,24 @@ final projectContextStateNotifier =
 ///
 /// If no project has been loaded, [StateError] will be thrown.
 final projectContextProvider = Provider<ProjectContext>((final ref) {
-  final project = ref.watch(projectContextStateNotifier);
-  if (project == null) {
+  final projectContext = ref.watch(projectContextStateNotifier);
+  if (projectContext == null) {
     throw StateError('No project has yet been loaded.');
   }
-  return project;
+  for (final directory in [
+    projectContext.mapsDirectory,
+    projectContext.soundsDirectory,
+    projectContext.footstepsDirectory,
+    projectContext.wallsDirectory,
+    projectContext.musicDirectory,
+    projectContext.ambiancesDirectory,
+    projectContext.earconsDirectory,
+    projectContext.descriptionsDirectory,
+    projectContext.randomSoundsDirectory,
+  ]) {
+    if (!directory.existsSync()) {
+      directory.createSync(recursive: true);
+    }
+  }
+  return projectContext;
 });

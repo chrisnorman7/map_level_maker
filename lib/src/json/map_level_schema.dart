@@ -9,6 +9,7 @@ import 'map_level_schema_ambiance.dart';
 import 'map_level_schema_feature.dart';
 import 'map_level_schema_function.dart';
 import 'map_level_schema_item.dart';
+import 'map_level_schema_random_sound.dart';
 import 'music_schema.dart';
 
 part 'map_level_schema.g.dart';
@@ -40,11 +41,13 @@ class MapLevelSchema {
     final List<MapLevelSchemaAmbiance>? ambiances,
     this.reverbPreset,
     this.reverbTestSound,
+    final List<MapLevelSchemaRandomSound>? randomSounds,
   })  : id = id ?? newId(),
         features = features ?? [],
         functions = functions ?? [],
         items = items ?? [],
-        ambiances = ambiances ?? [];
+        ambiances = ambiances ?? [],
+        randomSounds = randomSounds ?? [];
 
   /// Create an instance from a JSON object.
   factory MapLevelSchema.fromJson(final Map<String, dynamic> json) =>
@@ -150,6 +153,9 @@ class MapLevelSchema {
   ///
   /// This value will be a path relative to `soundsDirectory`.
   String? reverbTestSound;
+
+  /// The random sounds to play.
+  final List<MapLevelSchemaRandomSound> randomSounds;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaToJson(this);

@@ -45,6 +45,10 @@ MapLevelSchema _$MapLevelSchemaFromJson(Map<String, dynamic> json) =>
           ? null
           : ReverbPreset.fromJson(json['reverbPreset'] as Map<String, dynamic>),
       reverbTestSound: json['reverbTestSound'] as String?,
+      randomSounds: (json['randomSounds'] as List<dynamic>?)
+          ?.map((e) =>
+              MapLevelSchemaRandomSound.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$MapLevelSchemaToJson(MapLevelSchema instance) =>
@@ -71,4 +75,5 @@ Map<String, dynamic> _$MapLevelSchemaToJson(MapLevelSchema instance) =>
       'ambiances': instance.ambiances,
       'reverbPreset': instance.reverbPreset,
       'reverbTestSound': instance.reverbTestSound,
+      'randomSounds': instance.randomSounds,
     };
