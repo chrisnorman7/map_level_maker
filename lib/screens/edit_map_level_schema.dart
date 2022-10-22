@@ -19,17 +19,20 @@ import '../src/json/map_level_schema_ambiance.dart';
 import '../src/json/map_level_schema_feature.dart';
 import '../src/json/map_level_schema_function.dart';
 import '../src/json/map_level_schema_item.dart';
+import '../src/json/map_level_schema_random_sound.dart';
 import '../src/json/music_schema.dart';
 import '../util.dart';
 import 'edit_map_level_schema_ambiance.dart';
 import 'edit_map_level_schema_feature.dart';
 import 'edit_map_level_schema_function.dart';
 import 'edit_map_level_schema_item.dart';
+import 'edit_map_level_schema_random_sound.dart';
 import 'level_preview_screen.dart';
 import 'tabs/map_level_schema_ambiances_tab.dart';
 import 'tabs/map_level_schema_features_tab.dart';
 import 'tabs/map_level_schema_functions_tab.dart';
 import 'tabs/map_level_schema_items_tab.dart';
+import 'tabs/map_level_schema_random_sounds_tab.dart';
 import 'tabs/map_level_schema_settings_tab.dart';
 
 /// A widget to edit the map with the given [id].
@@ -49,6 +52,7 @@ class EditMapLevelSchema extends ConsumerWidget {
     final projectContext = ref.watch(projectContextProvider);
     final level = ref.watch(mapLevelSchemaProvider.call(id));
     final features = level.features;
+    final randomSounds = level.randomSounds;
     final functions = level.functions;
     return Cancel(
       child: CallbackShortcuts(
@@ -154,6 +158,21 @@ class EditMapLevelSchema extends ConsumerWidget {
               ),
             ),
             TabbedScaffoldTab(
+              title: 'Random Sounds',
+              icon: Text('${randomSounds.length}'),
+              builder: (final context) => CallbackShortcuts(
+                bindings: {
+                  newShortcut: () => newRandomSound(context: context, ref: ref)
+                },
+                child: MapLevelSchemaRandomSoundsTab(id: id),
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () => newRandomSound(context: context, ref: ref),
+                tooltip: 'New Random Sound',
+                child: addIcon,
+              ),
+            ),
+            TabbedScaffoldTab(
               title: 'Functions',
               icon: Text('${functions.length}'),
               builder: (final context) => CallbackShortcuts(
@@ -194,6 +213,11 @@ class EditMapLevelSchema extends ConsumerWidget {
         title: 'Ambiance',
         shortcut: LogicalKeyboardKey.keyA,
         onPressed: () => newAmbiance(context: context, ref: ref),
+      ),
+      NewMenuItemContext(
+        title: 'Random Sound',
+        shortcut: LogicalKeyboardKey.keyR,
+        onPressed: () => newRandomSound(context: context, ref: ref),
       ),
       NewMenuItemContext(
         title: 'Function',
@@ -303,6 +327,38 @@ class EditMapLevelSchema extends ConsumerWidget {
           argument: MapLevelSchemaArgument(
             mapLevelId: id,
             valueId: ambiance.id,
+          ),
+        ),
+      );
+    }
+  }
+
+  /// Create a new random sound.
+  void newRandomSound({
+    required final BuildContext context,
+    required final WidgetRef ref,
+  }) {
+    final projectContext = ref.watch(projectContextProvider);
+    final possibleRandomSounds =
+        projectContext.randomSoundsDirectory.listSync();
+    if (possibleRandomSounds.isEmpty) {
+      showMessage(
+        context: context,
+        message: 'There are no random sounds to use.',
+      );
+    } else {
+      final level = ref.watch(mapLevelSchemaProvider.call(id));
+      final randomSound = MapLevelSchemaRandomSound(
+        sound: path.basename(possibleRandomSounds.first.path),
+      );
+      level.randomSounds.add(randomSound);
+      saveLevel(ref: ref, id: id);
+      pushWidget(
+        context: context,
+        builder: (final context) => EditMapLevelSchemaRandomSound(
+          argument: MapLevelSchemaArgument(
+            mapLevelId: id,
+            valueId: randomSound.id,
           ),
         ),
       );

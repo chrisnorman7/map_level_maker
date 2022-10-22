@@ -16,6 +16,7 @@ import '../src/json/map_level_schema_ambiance.dart';
 import '../src/json/map_level_schema_feature.dart';
 import '../src/json/map_level_schema_function.dart';
 import '../src/json/map_level_schema_item.dart';
+import '../src/json/map_level_schema_random_sound.dart';
 import 'map_level_schema_argument.dart';
 import 'map_level_schema_context.dart';
 import 'project_context.dart';
@@ -179,3 +180,14 @@ final projectContextProvider = Provider<ProjectContext>((final ref) {
   }
   return projectContext;
 });
+
+/// Get a single random sound.
+final mapLevelSchemaRandomSoundProvider = Provider.family<
+    MapLevelSchemaContext<MapLevelSchemaRandomSound>, MapLevelSchemaArgument>(
+  (final ref, final arg) {
+    final level = ref.watch(mapLevelSchemaProvider.call(arg.mapLevelId));
+    final randomSound = level.randomSounds
+        .firstWhere((final element) => element.id == arg.valueId);
+    return MapLevelSchemaContext(level: level, value: randomSound);
+  },
+);
