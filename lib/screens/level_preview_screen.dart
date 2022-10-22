@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:backstreets_widgets/screens.dart';
@@ -32,6 +33,9 @@ class LevelPreviewScreen extends ConsumerStatefulWidget {
 
 /// State for [LevelPreviewScreen].
 class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
+  /// The timer to use for ticking the level.
+  late final Timer timer;
+
   /// The level to use.
   Level? _level;
 
@@ -48,6 +52,9 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
     super.initState();
     coordinates = const Point(0, 0);
     heading = 0;
+    timer = Timer.periodic(const Duration(milliseconds: 16), (final timer) {
+      _level?.tick(16);
+    });
   }
 
   /// Build a widget.
@@ -105,6 +112,22 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
                 ),
                 gain: music.gain,
               ),
+        randomSounds: widget.levelSchema.randomSounds
+            .map<RandomSound>(
+              (final e) => RandomSound(
+                sound: getAssetReference(
+                  directory: projectContext.randomSoundsDirectory,
+                  sound: e.sound,
+                ),
+                minCoordinates: e.minCoordinates,
+                maxCoordinates: e.maxCoordinates,
+                minInterval: e.minInterval,
+                maxInterval: e.maxInterval,
+                minGain: e.minGain,
+                maxGain: e.maxGain,
+              ),
+            )
+            .toList(),
       );
       _level = level;
       level.onPush();
@@ -181,6 +204,7 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
     super.dispose();
     _level?.onPop(0.5);
     _reverb?.destroy();
+    timer.cancel();
   }
 
   /// Get the feature at the current [coordinates].
