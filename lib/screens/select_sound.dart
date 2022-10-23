@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:backstreets_widgets/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
+import 'package:ziggurat/ziggurat.dart';
 
 import '../constants.dart';
+import '../util.dart';
 import '../widgets/play_sound_semantics.dart';
 
 /// A project to select a sound.
@@ -33,8 +35,18 @@ class SelectSound extends StatelessWidget {
   /// Build the widget.
   @override
   Widget build(final BuildContext context) {
+    final value = currentSound;
     final sounds = directory.listSync();
-    final currentValue = currentSound == null
+    AssetReference? assetReference;
+    try {
+      assetReference = value == null
+          ? null
+          : getAssetReference(directory: directory, sound: value);
+      // ignore: avoid_catching_errors
+    } on StateError {
+      assetReference = null;
+    }
+    final currentValue = value == null || assetReference == null
         ? null
         : sounds.firstWhere(
             (final element) => path.basename(element.path) == currentSound,

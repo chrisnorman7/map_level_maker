@@ -6,9 +6,11 @@ import 'package:backstreets_widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
+import 'package:ziggurat/ziggurat.dart';
 
 import '../constants.dart';
 import '../screens/select_sound.dart';
+import '../util.dart';
 import 'play_sound_semantics.dart';
 
 /// A widget to edit the given [sound].
@@ -54,17 +56,34 @@ class SoundListTile extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final value = sound;
+    AssetReference? assetReference;
+    try {
+      assetReference = value == null
+          ? null
+          : getAssetReference(directory: directory, sound: value);
+      // ignore: avoid_catching_errors
+    } on StateError {
+      assetReference = null;
+    }
+    final String subtitle;
+    if (value == null) {
+      subtitle = unsetMessage;
+    } else if (assetReference == null) {
+      subtitle = '!! INVALID SOUND !!';
+    } else {
+      subtitle = path.basename(value);
+    }
     return CallbackShortcuts(
       bindings: {
         SingleActivator(
           LogicalKeyboardKey.keyC,
           control: useControlKey,
           meta: useMetaKey,
-        ): () => setClipboardText(path.join(directory.path, sound))
+        ): () => setClipboardText(path.join(directory.path, value))
       },
       child: PlaySoundSemantics(
         directory: directory,
-        sound: value,
+        sound: assetReference == null ? null : value,
         gain: gain,
         looping: looping,
         child: Builder(
@@ -80,9 +99,7 @@ class SoundListTile extends StatelessWidget {
               );
             },
             autofocus: autofocus,
-            subtitle: value == null
-                ? unsetMessage
-                : path.basenameWithoutExtension(value).replaceAll('_', ' '),
+            subtitle: subtitle,
           ),
         ),
       ),
