@@ -25,9 +25,17 @@ void mapLevelSchemaToDart({
     path: level.jsonFilename,
   );
   for (final terrain in level.terrains) {
-    terrain.onActivateFunctionName =
-        level.findFunction(terrain.onActivateFunctionId)?.name;
+    terrain
+      ..onActivateFunctionName =
+          level.findFunction(terrain.onActivateFunctionId)?.name
+      ..onEnterFunctionName =
+          level.findFunction(terrain.onEnterFunctionId)?.name
+      ..onExitFunctionName = level.findFunction(terrain.onExitFunctionId)?.name
+      ..isConst = terrain.onActivateFunctionName == null &&
+          terrain.onEnterFunctionName == null &&
+          terrain.onExitFunctionName == null;
   }
+  projectContext.saveLevel(level);
   final json = level.toJson();
   final data = indentedJsonEncoder.convert(json);
   final map = jsonDecode(data) as JsonType;

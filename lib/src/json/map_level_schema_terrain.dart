@@ -20,6 +20,7 @@ class MapLevelSchemaTerrain {
     this.footstepSound,
     this.onActivateFunctionId,
     this.onActivateFunctionName,
+    this.isConst = true,
   }) : id = id ?? newId();
 
   /// Create an instance from a JSON object.
@@ -90,6 +91,9 @@ class MapLevelSchemaTerrain {
   ///
   /// This value is set by the [mapLevelSchemaToDart] function.
   String? onExitFunctionName;
+
+  /// Whether or not this terrain should be written as a `const`.
+  bool isConst;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaTerrainToJson(this);
