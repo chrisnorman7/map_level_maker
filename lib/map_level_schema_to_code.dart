@@ -90,7 +90,7 @@ abstract class {{ className }} extends MapLevel {
         {% if ambiance.sound.gain != 0.5 %}
         gain: {{ ambiance.sound.gain }},
         {% endif %}
-        {% if ambiance.x and ambiance.y %}
+        {% if ambiance.x != null and ambiance.y != null %}
         position: Point({{ambiance.x }}, {{ ambiance.y }}),
         {% endif %}
       ),
