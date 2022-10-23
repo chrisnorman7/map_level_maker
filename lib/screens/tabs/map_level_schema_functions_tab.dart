@@ -60,7 +60,11 @@ class MapLevelSchemaFunctionsTabState
               bindings: {
                 deleteShortcut: () {
                   for (final terrain in level.terrains) {
-                    for (final id in [terrain.onActivateFunctionId]) {
+                    for (final id in [
+                      terrain.onActivateFunctionId,
+                      terrain.onEnterFunctionId,
+                      terrain.onExitFunctionId
+                    ]) {
                       if (id == function.id) {
                         showMessage(
                           context: context,
