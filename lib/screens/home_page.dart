@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:backstreets_widgets/icons.dart';
 import 'package:backstreets_widgets/screens.dart';
 import 'package:backstreets_widgets/shortcuts.dart';
@@ -61,7 +63,21 @@ class HomePageState extends ConsumerState<HomePage> {
               context: context,
               builder: (final context) => const SystemInformationScreen(),
             ),
-        closeProjectShortcut: () => Navigator.pop(context)
+        closeProjectShortcut: () => Navigator.pop(context),
+        pasteShortcut: () {
+          final value = projectContext.getClipboard<MapLevelSchema>(ref: ref);
+          if (value != null) {
+            final json = jsonDecode(jsonEncode(value)) as JsonType;
+            json['id'] = newId();
+            final level = MapLevelSchema.fromJson(json);
+            projectContext.saveLevel(level);
+            ref.invalidate(mapsProvider);
+            pushWidget(
+              context: context,
+              builder: (final context) => EditMapLevelSchema(id: level.id),
+            );
+          }
+        },
       },
       child: SimpleScaffold(
         actions: [
@@ -124,7 +140,9 @@ class HomePageState extends ConsumerState<HomePage> {
                                 }
                                 ref.invalidate(mapsProvider);
                               },
-                            )
+                            ),
+                        copyShortcut: () =>
+                            projectContext.setClipboard(ref: ref, value: map)
                       },
                       child: PushWidgetListTile(
                         title: map.name,

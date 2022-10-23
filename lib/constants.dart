@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:backstreets_widgets/shortcuts.dart';
 import 'package:dart_style/dart_style.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:jinja/jinja.dart';
 import 'package:uuid/uuid.dart';
 
@@ -38,3 +41,17 @@ const clearMessage = 'Clear';
 
 /// The title of delete confirmations.
 const confirmDeleteTitle = 'Confirm Delete';
+
+/// The copy shortcut key.
+final copyShortcut = SingleActivator(
+  LogicalKeyboardKey.keyC,
+  control: useControlKey,
+  meta: useMetaKey,
+);
+
+/// The paste shortcut key.
+final pasteShortcut = SingleActivator(
+  LogicalKeyboardKey.keyV,
+  control: useControlKey,
+  meta: useMetaKey,
+);

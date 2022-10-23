@@ -196,3 +196,6 @@ final mapLevelSchemaRandomSoundProvider = Provider.family<
     return MapLevelSchemaContext(level: level, value: randomSound);
   },
 );
+
+/// Provide a clipboard dict.
+final clipboardProvider = Provider((final ref) => <Type, dynamic>{});

@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 
 import '../constants.dart';
 import '../src/json/map_level_schema.dart';
+import 'providers.dart';
 
 /// A class to hold context about a project.
 class ProjectContext {
@@ -73,5 +75,23 @@ class ProjectContext {
     final json = level.toJson();
     final data = indentedJsonEncoder.convert(json);
     getLevelJsonFile(level).writeAsStringSync(data);
+  }
+
+  /// Set the clipboard data according to the given [value].
+  void setClipboard({
+    required final WidgetRef ref,
+    required final dynamic value,
+  }) {
+    final clipboard = ref.watch(clipboardProvider);
+    clipboard[value.runtimeType] = value;
+  }
+
+  /// Get a clipboard value according to [T].
+  T? getClipboard<T>({
+    required final WidgetRef ref,
+    final T? defaultValue,
+  }) {
+    final clipboard = ref.watch(clipboardProvider);
+    return (clipboard[T] as T?) ?? defaultValue;
   }
 }

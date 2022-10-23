@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:backstreets_widgets/shortcuts.dart';
 import 'package:backstreets_widgets/util.dart';
 import 'package:backstreets_widgets/widgets.dart';
@@ -8,6 +10,7 @@ import 'package:path/path.dart' as path;
 import '../../constants.dart';
 import '../../providers/map_level_schema_argument.dart';
 import '../../providers/providers.dart';
+import '../../src/json/map_level_schema_ambiance.dart';
 import '../../util.dart';
 import '../../widgets/play_sound_semantics.dart';
 import '../edit_map_level_schema_ambiance.dart';
@@ -42,69 +45,93 @@ class MapLevelSchemaAmbiancesTabState
         (final a, final b) =>
             a.sound.sound.toLowerCase().compareTo(b.sound.sound.toLowerCase()),
       );
+    final Widget child;
     if (ambiances.isEmpty) {
-      return const CenterText(
+      child = const CenterText(
         text: 'There are no ambiances to show.',
         autofocus: true,
       );
-    }
-    return BuiltSearchableListView(
-      items: ambiances,
-      builder: (final context, final index) {
-        final ambiance = ambiances[index];
-        return SearchableListTile(
-          searchString: ambiance.sound.sound,
-          child: PlaySoundSemantics(
-            sound: ambiance.sound.sound,
-            directory: projectContext.ambiancesDirectory,
-            gain: ambiance.sound.gain,
-            looping: true,
-            child: Builder(
-              builder: (final context) => CallbackShortcuts(
-                bindings: {
-                  deleteShortcut: () {
-                    PlaySoundSemantics.of(context)?.stop();
-                    confirm(
-                      context: context,
-                      message: 'Are you sure you want to delete this ambiance?',
-                      title: confirmDeleteTitle,
-                      yesCallback: () {
-                        level.ambiances.removeWhere(
-                          (final element) => element.id == ambiance.id,
-                        );
-                        saveLevel(ref: ref, id: widget.id);
-                      },
-                    );
-                  }
-                },
-                child: Builder(
-                  builder: (final context) {
-                    final coordinates = ambiance.coordinates;
-                    return PushWidgetListTile(
-                      title:
-                          path.basenameWithoutExtension(ambiance.sound.sound),
-                      builder: (final builderContext) {
-                        PlaySoundSemantics.of(context)?.stop();
-                        return EditMapLevelSchemaAmbiance(
-                          argument: MapLevelSchemaArgument(
-                            mapLevelId: widget.id,
-                            valueId: ambiance.id,
-                          ),
-                        );
-                      },
-                      autofocus: index == 0,
-                      subtitle: coordinates == null
-                          ? unsetMessage
-                          : '${coordinates.x}, ${coordinates.y}',
-                      onSetState: () => setState(() {}),
-                    );
+    } else {
+      child = BuiltSearchableListView(
+        items: ambiances,
+        builder: (final context, final index) {
+          final ambiance = ambiances[index];
+          return SearchableListTile(
+            searchString: ambiance.sound.sound,
+            child: PlaySoundSemantics(
+              sound: ambiance.sound.sound,
+              directory: projectContext.ambiancesDirectory,
+              gain: ambiance.sound.gain,
+              looping: true,
+              child: Builder(
+                builder: (final context) => CallbackShortcuts(
+                  bindings: {
+                    copyShortcut: () {
+                      projectContext.setClipboard(ref: ref, value: ambiance);
+                    },
+                    deleteShortcut: () {
+                      PlaySoundSemantics.of(context)?.stop();
+                      confirm(
+                        context: context,
+                        message:
+                            'Are you sure you want to delete this ambiance?',
+                        title: confirmDeleteTitle,
+                        yesCallback: () {
+                          Navigator.pop(context);
+                          level.ambiances.removeWhere(
+                            (final element) => element.id == ambiance.id,
+                          );
+                          saveLevel(ref: ref, id: widget.id);
+                        },
+                      );
+                    }
                   },
+                  child: Builder(
+                    builder: (final context) {
+                      final coordinates = ambiance.coordinates;
+                      return PushWidgetListTile(
+                        title:
+                            path.basenameWithoutExtension(ambiance.sound.sound),
+                        builder: (final builderContext) {
+                          PlaySoundSemantics.of(context)?.stop();
+                          return EditMapLevelSchemaAmbiance(
+                            argument: MapLevelSchemaArgument(
+                              mapLevelId: widget.id,
+                              valueId: ambiance.id,
+                            ),
+                          );
+                        },
+                        autofocus: index == 0,
+                        subtitle: coordinates == null
+                            ? unsetMessage
+                            : '${coordinates.x}, ${coordinates.y}',
+                        onSetState: () => setState(() {}),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-        );
+          );
+        },
+      );
+    }
+    return CallbackShortcuts(
+      bindings: {
+        pasteShortcut: () {
+          final value =
+              projectContext.getClipboard<MapLevelSchemaAmbiance>(ref: ref);
+          if (value != null) {
+            final json = jsonDecode(jsonEncode(value)) as JsonType;
+            json['id'] = newId();
+            final ambiance = MapLevelSchemaAmbiance.fromJson(json);
+            level.ambiances.add(ambiance);
+            projectContext.saveLevel(level);
+            setState(() {});
+          }
+        }
       },
+      child: child,
     );
   }
 }
