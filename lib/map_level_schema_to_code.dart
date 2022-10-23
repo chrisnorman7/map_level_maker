@@ -67,7 +67,7 @@ abstract class {{ className }} extends MapLevel {
       {% for item in items %}
       const MapLevelItem(
         name: {{ item.name | quote }},
-        {% if item.x and item.y %}
+        {% if item.x != null and item.y != null %}
         coordinates: Point({{ item.x }}, {{ item.y }}),
         {% endif %}
         earcon: {{ item.earcon | asset }},
