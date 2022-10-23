@@ -9,6 +9,7 @@ const mapLevelSchemaTemplate = '''
 // ignore_for_file: lines_longer_than_80_chars, unused_import, avoid_redundant_argument_values
 import 'dart:math';
 import 'package:ziggurat/sound.dart';
+import 'package:ziggurat_simple_maps/ziggurat_simple_maps.dart';
 import '../assets/amb.dart';
 import '../assets/descriptions.dart';
 import '../assets/earcons.dart';
@@ -16,9 +17,6 @@ import '../assets/footsteps.dart';
 import '../assets/music.dart';
 import '../assets/random_sounds.dart';
 import '../assets/walls.dart';
-import '../map_level/map_level.dart';
-import '../map_level/map_level_item.dart';
-import '../map_level/map_level_terrain.dart';
 
 {{ name | comment }} ({{ id }}).
 abstract class {{ className }} extends MapLevel {
@@ -61,6 +59,8 @@ abstract class {{ className }} extends MapLevel {
     {% endif %}
     final List<RandomSound> randomSounds = const [],
     super.currentTerrain,
+    super.sonarBeaconSound,
+    super.sonarHereSound,
   }) : super(
     items: [
       ...items,
