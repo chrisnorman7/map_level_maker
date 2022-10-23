@@ -61,7 +61,13 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
   @override
   Widget build(final BuildContext context) {
     final projectContext = ref.watch(projectContextProvider);
-    final game = ref.watch(gameProvider);
+    final game = ref.watch(gameProvider)
+      ..setListenerOrientation(0.0)
+      ..setListenerPosition(
+        coordinates.x.toDouble(),
+        coordinates.y.toDouble(),
+        0.0,
+      );
     var level = _level;
     if (level == null) {
       final reverb = _reverb;
