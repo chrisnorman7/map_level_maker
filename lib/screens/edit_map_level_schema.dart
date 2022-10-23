@@ -284,8 +284,24 @@ class EditMapLevelSchema extends ConsumerWidget {
     required final BuildContext context,
     required final WidgetRef ref,
   }) {
+    final projectContext = ref.watch(projectContextProvider);
+    final possibleEarcons = projectContext.earconsDirectory.listSync();
+    if (possibleEarcons.isEmpty) {
+      showMessage(context: context, message: 'There are no earcons to use.');
+    }
+    final possibleDescriptions =
+        projectContext.descriptionsDirectory.listSync();
+    if (possibleDescriptions.isEmpty) {
+      showMessage(
+        context: context,
+        message: 'There are no description sounds to use.',
+      );
+    }
     final level = ref.watch(mapLevelSchemaProvider.call(id));
-    final item = MapLevelSchemaItem();
+    final item = MapLevelSchemaItem(
+      earcon: path.basename(possibleEarcons.first.path),
+      descriptionSound: path.basename(possibleDescriptions.first.path),
+    );
     level.items.add(item);
     saveLevel(ref: ref, id: id);
     pushWidget(

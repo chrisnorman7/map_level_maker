@@ -12,13 +12,13 @@ part 'map_level_schema_item.g.dart';
 class MapLevelSchemaItem {
   /// Create an instance.
   MapLevelSchemaItem({
+    required this.earcon,
+    required this.descriptionSound,
     final String? id,
     this.name = 'Untitled Item',
     this.x,
     this.y,
     this.ambiance,
-    this.earcon,
-    this.descriptionSound,
     this.descriptionText = 'An item with no description.',
   }) : id = id ?? newId();
 
@@ -59,13 +59,13 @@ class MapLevelSchemaItem {
   MusicSchema? ambiance;
 
   /// The earcon to use.
-  String? earcon;
+  String earcon;
 
   /// The description text of this item.
   String descriptionText;
 
   /// The description sound for this item.
-  String? descriptionSound;
+  String descriptionSound;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaItemToJson(this);

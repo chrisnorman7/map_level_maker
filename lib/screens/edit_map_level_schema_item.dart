@@ -56,18 +56,20 @@ class EditMapLevelSchemaItem extends ConsumerWidget {
               directory: projectContext.earconsDirectory,
               sound: item.earcon,
               onChanged: (final value) {
-                item.earcon = value;
+                item.earcon = value!;
                 save(ref);
               },
+              nullable: false,
               title: 'Earcon',
             ),
             SoundListTile(
               directory: projectContext.descriptionsDirectory,
               sound: item.descriptionSound,
               onChanged: (final value) {
-                item.descriptionSound = value;
+                item.descriptionSound = value!;
                 save(ref);
               },
+              nullable: false,
               title: 'Description Sound',
             ),
             MusicSchemaListTile(

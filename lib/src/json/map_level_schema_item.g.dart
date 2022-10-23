@@ -8,6 +8,8 @@ part of 'map_level_schema_item.dart';
 
 MapLevelSchemaItem _$MapLevelSchemaItemFromJson(Map<String, dynamic> json) =>
     MapLevelSchemaItem(
+      earcon: json['earcon'] as String,
+      descriptionSound: json['descriptionSound'] as String,
       id: json['id'] as String?,
       name: json['name'] as String? ?? 'Untitled Item',
       x: json['x'] as int?,
@@ -15,8 +17,6 @@ MapLevelSchemaItem _$MapLevelSchemaItemFromJson(Map<String, dynamic> json) =>
       ambiance: json['ambiance'] == null
           ? null
           : MusicSchema.fromJson(json['ambiance'] as Map<String, dynamic>),
-      earcon: json['earcon'] as String?,
-      descriptionSound: json['descriptionSound'] as String?,
       descriptionText:
           json['descriptionText'] as String? ?? 'An item with no description.',
     );
