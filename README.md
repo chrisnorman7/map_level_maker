@@ -1,4 +1,4 @@
-# map_level_maker
+# Map Level Maker
 
 Generate `MapLevel` class code that will work with the [ziggurat_simple_maps](https://pub.dev/packages/ziggurat_simple_maps) package.
 
