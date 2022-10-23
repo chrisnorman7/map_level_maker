@@ -1,5 +1,5 @@
 name: map_level_maker
-version: 1.3.3
+version: 1.3.4
 description: Generate `MapLevel` class code.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev

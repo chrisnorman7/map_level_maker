@@ -62,7 +62,7 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
   Widget build(final BuildContext context) {
     final projectContext = ref.watch(projectContextProvider);
     final game = ref.watch(gameProvider)
-      ..setListenerOrientation(0.0)
+      ..setListenerOrientation(heading.toDouble())
       ..setListenerPosition(
         coordinates.x.toDouble(),
         coordinates.y.toDouble(),
@@ -185,7 +185,6 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
               value: heading,
               onChanged: (final value) => setState(() {
                 heading = value;
-                game.setListenerOrientation(heading.toDouble());
               }),
               max: 359,
               min: 0,
