@@ -18,7 +18,7 @@ MapLevelSchemaTerrain _$MapLevelSchemaTerrainFromJson(
       footstepSound: json['footstepSound'] as String?,
       onActivateFunctionId: json['onActivateFunctionId'] as String?,
       onActivateFunctionName: json['onActivateFunctionName'] as String?,
-      isConst: json['isConst'] as bool? ?? true,
+      needsConst: json['needsConst'] as bool? ?? true,
     )
       ..onEnterFunctionId = json['onEnterFunctionId'] as String?
       ..onEnterFunctionName = json['onEnterFunctionName'] as String?
@@ -41,5 +41,5 @@ Map<String, dynamic> _$MapLevelSchemaTerrainToJson(
       'onEnterFunctionName': instance.onEnterFunctionName,
       'onExitFunctionId': instance.onExitFunctionId,
       'onExitFunctionName': instance.onExitFunctionName,
-      'isConst': instance.isConst,
+      'needsConst': instance.needsConst,
     };

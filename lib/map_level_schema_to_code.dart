@@ -109,17 +109,17 @@ abstract class {{ className }} extends MapLevel {
     this.terrains.addAll([
       ...terrains,
       {% for terrain in terrains%}
-      {% if terrain.onActivateFunctionName is none %}
+      {% if terrain.needsConst %}
       const
       {% endif %}
       MapLevelTerrain(
         start:
-        {% if terrain.onActivateFunctionName %}
+        {% if terrain.needsConst %}
         const
         {% endif %}
         Point({{ terrain.startX }}, {{ terrain.startY }}),
         end:
-        {% if terrain.onActivateFunctionName %}
+        {% if terrain.needsConst %}
         const
         {% endif %}
         Point({{ terrain.endX }}, {{ terrain.endY }}),
@@ -128,6 +128,12 @@ abstract class {{ className }} extends MapLevel {
         {% endif %}
         {% if terrain.onActivateFunctionName %}
         onActivate: {{ terrain.onActivateFunctionName }},
+        {% endif %}
+        {% if terrain.onEnterFunctionName %}
+        onEnterFunction: {{ terrain.onEnterFunctionName }},
+        {% endif %}
+        {% if terrain.onExitFunctionName %}
+        onExitFunction: {{ terrain.onExitFunctionName }},
         {% endif %}
       ),
     {% endfor %}

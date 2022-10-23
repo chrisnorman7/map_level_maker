@@ -31,7 +31,7 @@ void mapLevelSchemaToDart({
       ..onEnterFunctionName =
           level.findFunction(terrain.onEnterFunctionId)?.name
       ..onExitFunctionName = level.findFunction(terrain.onExitFunctionId)?.name
-      ..isConst = terrain.onActivateFunctionName == null &&
+      ..needsConst = terrain.onActivateFunctionName == null &&
           terrain.onEnterFunctionName == null &&
           terrain.onExitFunctionName == null;
   }
