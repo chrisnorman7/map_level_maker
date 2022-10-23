@@ -60,6 +60,7 @@ abstract class {{ className }} extends MapLevel {
       ),
     {% endif %}
     final List<RandomSound> randomSounds = const [],
+    super.currentTerrain,
   }) : super(
     items: [
       ...items,
