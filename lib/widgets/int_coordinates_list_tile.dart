@@ -4,6 +4,8 @@ import 'package:backstreets_widgets/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../constants.dart';
+
 /// A list tile to show the given int [coordinates].
 class IntCoordinatesListTile extends StatelessWidget {
   /// Create an instance.
@@ -51,6 +53,9 @@ class IntCoordinatesListTile extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => CallbackShortcuts(
         bindings: {
+          copyShortcut: () => setClipboardText(
+                'const Point(${coordinates.x}, ${coordinates.y})',
+              ),
           const SingleActivator(
             LogicalKeyboardKey.arrowLeft,
             alt: true,
@@ -78,7 +83,7 @@ class IntCoordinatesListTile extends StatelessWidget {
           ): () {
             final y = coordinates.y + coordinateModifier;
             onChanged(Point(coordinates.x, min(y, maxY ?? y)));
-          }
+          },
         },
         child: ListTile(
           autofocus: autofocus,
