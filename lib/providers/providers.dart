@@ -13,10 +13,10 @@ import 'package:ziggurat/ziggurat.dart';
 import '../constants.dart';
 import '../src/json/map_level_schema.dart';
 import '../src/json/map_level_schema_ambiance.dart';
-import '../src/json/map_level_schema_feature.dart';
 import '../src/json/map_level_schema_function.dart';
 import '../src/json/map_level_schema_item.dart';
 import '../src/json/map_level_schema_random_sound.dart';
+import '../src/json/map_level_schema_terrain.dart';
 import 'map_level_schema_argument.dart';
 import 'map_level_schema_context.dart';
 import 'project_context.dart';
@@ -84,6 +84,9 @@ final mapsProvider = Provider((final ref) {
       .map<MapLevelSchema>((final file) {
     final data = file.readAsStringSync();
     final json = jsonDecode(data) as JsonType;
+    final terrains = (json['terrains'] as List<dynamic>?) ?? <JsonType>[];
+    final features = (json['features'] as List<dynamic>?) ?? <JsonType>[];
+    json['terrains'] = <dynamic>[...terrains, ...features];
     return MapLevelSchema.fromJson(json);
   }).toList();
 });
@@ -96,17 +99,19 @@ final mapLevelSchemaProvider = Provider.family<MapLevelSchema, String>(
   },
 );
 
-/// Provide a single feature.
-final mapLevelSchemaFeatureProvider = Provider.family<
-    MapLevelSchemaContext<MapLevelSchemaFeature>, MapLevelSchemaArgument>(
+/// Provide a single terrain.
+final mapLevelSchemaTerrainProvider = Provider.family<
+    MapLevelSchemaContext<MapLevelSchemaTerrain>, MapLevelSchemaArgument>(
   (final ref, final argument) {
     final level = ref.watch(
       mapLevelSchemaProvider.call(argument.mapLevelId),
     );
+    final terrain = level.terrains.firstWhere(
+      (final element) => element.id == argument.valueId,
+    );
     return MapLevelSchemaContext(
       level: level,
-      value: level.features
-          .firstWhere((final element) => element.id == argument.valueId),
+      value: terrain,
     );
   },
 );

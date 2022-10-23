@@ -1,16 +1,16 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'map_level_schema_feature.dart';
+part of 'map_level_schema_terrain.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-MapLevelSchemaFeature _$MapLevelSchemaFeatureFromJson(
+MapLevelSchemaTerrain _$MapLevelSchemaTerrainFromJson(
         Map<String, dynamic> json) =>
-    MapLevelSchemaFeature(
+    MapLevelSchemaTerrain(
       id: json['id'] as String?,
-      name: json['name'] as String? ?? 'Untitled Feature',
+      name: json['name'] as String? ?? 'Untitled Terrain',
       startX: json['startX'] as int? ?? 0,
       startY: json['startY'] as int? ?? 0,
       endX: json['endX'] as int? ?? 0,
@@ -20,8 +20,8 @@ MapLevelSchemaFeature _$MapLevelSchemaFeatureFromJson(
       onActivateFunctionName: json['onActivateFunctionName'] as String?,
     );
 
-Map<String, dynamic> _$MapLevelSchemaFeatureToJson(
-        MapLevelSchemaFeature instance) =>
+Map<String, dynamic> _$MapLevelSchemaTerrainToJson(
+        MapLevelSchemaTerrain instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

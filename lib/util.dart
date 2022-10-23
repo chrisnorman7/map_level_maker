@@ -24,9 +24,9 @@ void mapLevelSchemaToDart({
     mapLevelSchemaTemplate,
     path: level.jsonFilename,
   );
-  for (final feature in level.features) {
-    feature.onActivateFunctionName =
-        level.findFunction(feature.onActivateFunctionId)?.name;
+  for (final terrain in level.terrains) {
+    terrain.onActivateFunctionName =
+        level.findFunction(terrain.onActivateFunctionId)?.name;
   }
   final json = level.toJson();
   final data = indentedJsonEncoder.convert(json);

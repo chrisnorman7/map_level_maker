@@ -8,12 +8,12 @@ import '../../constants.dart';
 import '../../providers/map_level_schema_argument.dart';
 import '../../providers/providers.dart';
 import '../../util.dart';
-import '../edit_map_level_schema_feature.dart';
+import '../edit_map_level_schema_terrain.dart';
 
-/// The features tab.
-class MapLevelSchemaFeaturesTab extends ConsumerStatefulWidget {
+/// The terrains tab.
+class MapLevelSchemaTerrainsTab extends ConsumerStatefulWidget {
   /// Create an instance.
-  const MapLevelSchemaFeaturesTab({
+  const MapLevelSchemaTerrainsTab({
     required this.id,
     super.key,
   });
@@ -23,58 +23,58 @@ class MapLevelSchemaFeaturesTab extends ConsumerStatefulWidget {
 
   /// Create state for this widget.
   @override
-  MapLevelSchemaFeaturesTabState createState() =>
-      MapLevelSchemaFeaturesTabState();
+  MapLevelSchemaTerrainsTabState createState() =>
+      MapLevelSchemaTerrainsTabState();
 }
 
-/// State for [MapLevelSchemaFeaturesTab].
-class MapLevelSchemaFeaturesTabState
-    extends ConsumerState<MapLevelSchemaFeaturesTab> {
+/// State for [MapLevelSchemaTerrainsTab].
+class MapLevelSchemaTerrainsTabState
+    extends ConsumerState<MapLevelSchemaTerrainsTab> {
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {
     final level = ref.watch(mapLevelSchemaProvider.call(widget.id));
-    final features = level.features
+    final terrains = level.terrains
       ..sort(
         (final a, final b) =>
             a.name.toLowerCase().compareTo(b.name.toLowerCase()),
       );
-    if (features.isEmpty) {
+    if (terrains.isEmpty) {
       return const CenterText(
-        text: 'There are no features to show.',
+        text: 'There are no terrains to show.',
         autofocus: true,
       );
     }
     return BuiltSearchableListView(
-      items: features,
+      items: terrains,
       builder: (final context, final index) {
-        final feature = features[index];
+        final terrain = terrains[index];
         return SearchableListTile(
-          searchString: feature.name,
+          searchString: terrain.name,
           child: CallbackShortcuts(
             bindings: {
               deleteShortcut: () => confirm(
                     context: context,
                     message:
-                        'Are you sure you want to delete the ${feature.name} '
-                        'feature?',
+                        'Are you sure you want to delete the ${terrain.name} '
+                        'terrain?',
                     title: confirmDeleteTitle,
                     yesCallback: () {
                       Navigator.pop(context);
-                      level.features.removeWhere(
-                        (final element) => element.id == feature.id,
+                      level.terrains.removeWhere(
+                        (final element) => element.id == terrain.id,
                       );
                       saveLevel(ref: ref, id: widget.id);
                     },
                   )
             },
             child: PushWidgetListTile(
-              title: feature.name,
+              title: terrain.name,
               autofocus: index == 0,
-              builder: (final context) => EditMapLevelSchemaFeature(
+              builder: (final context) => EditMapLevelSchemaTerrain(
                 mapLevelSchemaArgument: MapLevelSchemaArgument(
                   mapLevelId: widget.id,
-                  valueId: feature.id,
+                  valueId: terrain.id,
                 ),
               ),
               onSetState: () => setState(() {}),

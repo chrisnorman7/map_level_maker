@@ -16,24 +16,24 @@ import '../providers/project_context.dart';
 import '../providers/providers.dart';
 import '../src/json/map_level_schema.dart';
 import '../src/json/map_level_schema_ambiance.dart';
-import '../src/json/map_level_schema_feature.dart';
 import '../src/json/map_level_schema_function.dart';
 import '../src/json/map_level_schema_item.dart';
 import '../src/json/map_level_schema_random_sound.dart';
+import '../src/json/map_level_schema_terrain.dart';
 import '../src/json/music_schema.dart';
 import '../util.dart';
 import 'edit_map_level_schema_ambiance.dart';
-import 'edit_map_level_schema_feature.dart';
 import 'edit_map_level_schema_function.dart';
 import 'edit_map_level_schema_item.dart';
 import 'edit_map_level_schema_random_sound.dart';
+import 'edit_map_level_schema_terrain.dart';
 import 'level_preview_screen.dart';
 import 'tabs/map_level_schema_ambiances_tab.dart';
-import 'tabs/map_level_schema_features_tab.dart';
 import 'tabs/map_level_schema_functions_tab.dart';
 import 'tabs/map_level_schema_items_tab.dart';
 import 'tabs/map_level_schema_random_sounds_tab.dart';
 import 'tabs/map_level_schema_settings_tab.dart';
+import 'tabs/map_level_schema_terrains_tab.dart';
 
 /// A widget to edit the map with the given [id].
 class EditMapLevelSchema extends ConsumerWidget {
@@ -51,7 +51,7 @@ class EditMapLevelSchema extends ConsumerWidget {
   Widget build(final BuildContext context, final WidgetRef ref) {
     final projectContext = ref.watch(projectContextProvider);
     final level = ref.watch(mapLevelSchemaProvider.call(id));
-    final features = level.features;
+    final terrains = level.terrains;
     final randomSounds = level.randomSounds;
     final functions = level.functions;
     return Cancel(
@@ -113,17 +113,17 @@ class EditMapLevelSchema extends ConsumerWidget {
               ),
             ),
             TabbedScaffoldTab(
-              title: 'Features',
-              icon: Text('${features.length}'),
+              title: 'Terrains',
+              icon: Text('${terrains.length}'),
               builder: (final context) => CallbackShortcuts(
                 bindings: {
-                  newShortcut: () => newFeature(context: context, ref: ref)
+                  newShortcut: () => newTerrain(context: context, ref: ref)
                 },
-                child: MapLevelSchemaFeaturesTab(id: id),
+                child: MapLevelSchemaTerrainsTab(id: id),
               ),
               floatingActionButton: FloatingActionButton(
-                onPressed: () => newFeature(context: context, ref: ref),
-                tooltip: 'Create Feature',
+                onPressed: () => newTerrain(context: context, ref: ref),
+                tooltip: 'New Terrain',
                 child: addIcon,
               ),
             ),
@@ -200,9 +200,9 @@ class EditMapLevelSchema extends ConsumerWidget {
   }) {
     final items = [
       NewMenuItemContext(
-        title: 'Feature',
-        shortcut: LogicalKeyboardKey.keyF,
-        onPressed: () => newFeature(context: context, ref: ref),
+        title: 'Terrain',
+        shortcut: LogicalKeyboardKey.keyT,
+        onPressed: () => newTerrain(context: context, ref: ref),
       ),
       NewMenuItemContext(
         title: 'Item',
@@ -221,7 +221,7 @@ class EditMapLevelSchema extends ConsumerWidget {
       ),
       NewMenuItemContext(
         title: 'Function',
-        shortcut: LogicalKeyboardKey.keyM,
+        shortcut: LogicalKeyboardKey.keyF,
         onPressed: () => newFunction(context: context, ref: ref),
       )
     ];
@@ -259,21 +259,21 @@ class EditMapLevelSchema extends ConsumerWidget {
     );
   }
 
-  /// Create a new feature.
-  void newFeature({
+  /// Create a new terrain.
+  void newTerrain({
     required final BuildContext context,
     required final WidgetRef ref,
   }) {
     final level = ref.watch(mapLevelSchemaProvider.call(id));
-    final feature = MapLevelSchemaFeature();
-    level.features.add(feature);
+    final terrain = MapLevelSchemaTerrain();
+    level.terrains.add(terrain);
     saveLevel(ref: ref, id: id);
     pushWidget(
       context: context,
-      builder: (final context) => EditMapLevelSchemaFeature(
+      builder: (final context) => EditMapLevelSchemaTerrain(
         mapLevelSchemaArgument: MapLevelSchemaArgument(
           mapLevelId: id,
-          valueId: feature.id,
+          valueId: terrain.id,
         ),
       ),
     );

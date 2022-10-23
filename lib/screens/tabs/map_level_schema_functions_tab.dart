@@ -53,13 +53,13 @@ class MapLevelSchemaFunctionsTabState
           child: CallbackShortcuts(
             bindings: {
               deleteShortcut: () {
-                for (final feature in level.features) {
-                  for (final id in [feature.onActivateFunctionId]) {
+                for (final terrain in level.terrains) {
+                  for (final id in [terrain.onActivateFunctionId]) {
                     if (id == function.id) {
                       showMessage(
                         context: context,
                         message: 'This function is being used by the '
-                            '${feature.name} feature.',
+                            '${terrain.name} terrain.',
                       );
                       return;
                     }

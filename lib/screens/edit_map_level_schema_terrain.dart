@@ -9,10 +9,10 @@ import '../widgets/function_list_tile.dart';
 import '../widgets/int_coordinates_list_tile.dart';
 import '../widgets/sound_list_tile.dart';
 
-/// A widget to edit a feature.
-class EditMapLevelSchemaFeature extends ConsumerWidget {
+/// A widget to edit a map terrain.
+class EditMapLevelSchemaTerrain extends ConsumerWidget {
   /// Create an instance.
-  const EditMapLevelSchemaFeature({
+  const EditMapLevelSchemaTerrain({
     required this.mapLevelSchemaArgument,
     super.key,
   });
@@ -24,20 +24,20 @@ class EditMapLevelSchemaFeature extends ConsumerWidget {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     final projectContext = ref.watch(projectContextProvider);
-    final featureContext = ref.watch(
-      mapLevelSchemaFeatureProvider.call(mapLevelSchemaArgument),
+    final terrainContext = ref.watch(
+      mapLevelSchemaTerrainProvider.call(mapLevelSchemaArgument),
     );
-    final level = featureContext.level;
-    final feature = featureContext.value;
+    final level = terrainContext.level;
+    final terrain = terrainContext.value;
     return Cancel(
       child: SimpleScaffold(
-        title: 'Edit Map Feature',
+        title: 'Edit Map Terrain',
         body: ListView(
           children: [
             TextListTile(
-              value: feature.name,
+              value: terrain.name,
               onChanged: (final value) {
-                feature.name = value;
+                terrain.name = value;
                 save(ref);
               },
               header: 'Name',
@@ -45,42 +45,42 @@ class EditMapLevelSchemaFeature extends ConsumerWidget {
             ),
             SoundListTile(
               directory: projectContext.footstepsDirectory,
-              sound: feature.footstepSound,
+              sound: terrain.footstepSound,
               onChanged: (final value) {
-                feature.footstepSound = value;
+                terrain.footstepSound = value;
                 save(ref);
               },
               title: 'Footstep Sound',
             ),
             FunctionListTile(
               functions: [null, ...level.functions],
-              function: level.findFunction(feature.onActivateFunctionId),
+              function: level.findFunction(terrain.onActivateFunctionId),
               onChanged: (final value) {
-                feature.onActivateFunctionId = value?.id;
+                terrain.onActivateFunctionId = value?.id;
                 save(ref);
               },
               title: 'On Activate Function',
             ),
             IntCoordinatesListTile(
-              coordinates: feature.start,
+              coordinates: terrain.start,
               onChanged: (final value) {
-                feature.start = value;
+                terrain.start = value;
                 save(ref);
               },
               minX: 0,
               minY: 0,
-              maxX: feature.endX,
-              maxY: feature.endY,
+              maxX: terrain.endX,
+              maxY: terrain.endY,
               title: 'Start Coordinates',
             ),
             IntCoordinatesListTile(
-              coordinates: feature.end,
+              coordinates: terrain.end,
               onChanged: (final value) {
-                feature.end = value;
+                terrain.end = value;
                 save(ref);
               },
-              minX: feature.startX,
-              minY: feature.startY,
+              minX: terrain.startX,
+              minY: terrain.startY,
               maxX: level.maxX - 1,
               maxY: level.maxY - 1,
               title: 'End Coordinates',
@@ -100,6 +100,6 @@ class EditMapLevelSchemaFeature extends ConsumerWidget {
     ref.watch(projectContextProvider).saveLevel(level);
     ref
       ..invalidate(provider)
-      ..invalidate(mapLevelSchemaFeatureProvider.call(mapLevelSchemaArgument));
+      ..invalidate(mapLevelSchemaTerrainProvider.call(mapLevelSchemaArgument));
   }
 }

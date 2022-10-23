@@ -11,7 +11,7 @@ import 'package:ziggurat/ziggurat.dart';
 
 import '../providers/providers.dart';
 import '../src/json/map_level_schema.dart';
-import '../src/json/map_level_schema_feature.dart';
+import '../src/json/map_level_schema_terrain.dart';
 import '../util.dart';
 import '../widgets/int_coordinates_list_tile.dart';
 
@@ -152,7 +152,7 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
                   }
                 } else {
                   coordinates = value;
-                  final footstepSound = getFeature()?.footstepSound ??
+                  final footstepSound = getTerrain()?.footstepSound ??
                       widget.levelSchema.defaultFootstepSound;
                   if (footstepSound != null) {
                     final assetReference = getAssetReference(
@@ -188,8 +188,8 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
               subtitle: '$heading °',
             ),
             ListTile(
-              title: const Text('Current Feature'),
-              subtitle: Text(getFeature()?.name ?? '<None>'),
+              title: const Text('Current Terrain'),
+              subtitle: Text(getTerrain()?.name ?? '<None>'),
               onTap: () {},
             )
           ],
@@ -207,14 +207,14 @@ class LevelPreviewScreenState extends ConsumerState<LevelPreviewScreen> {
     timer.cancel();
   }
 
-  /// Get the feature at the current [coordinates].
-  MapLevelSchemaFeature? getFeature() {
-    for (final feature in widget.levelSchema.features) {
-      if (coordinates.x >= feature.startX &&
-          coordinates.y >= feature.startY &&
-          coordinates.x <= feature.endX &&
-          coordinates.y <= feature.endY) {
-        return feature;
+  /// Get the terrain at the current [coordinates].
+  MapLevelSchemaTerrain? getTerrain() {
+    for (final terrain in widget.levelSchema.terrains) {
+      if (coordinates.x >= terrain.startX &&
+          coordinates.y >= terrain.startY &&
+          coordinates.x <= terrain.endX &&
+          coordinates.y <= terrain.endY) {
+        return terrain;
       }
     }
     return null;

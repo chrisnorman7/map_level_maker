@@ -17,7 +17,7 @@ import '../assets/music.dart';
 import '../assets/random_sounds.dart';
 import '../assets/walls.dart';
 import '../map_level/map_level.dart';
-import '../map_level/map_level_feature.dart';
+import '../map_level/map_level_terrain.dart';
 import '../map_level/map_level_item.dart';
 
 {{ name | comment }} ({{ id }}).
@@ -42,7 +42,7 @@ abstract class {{ className }} extends MapLevel {
     super.moveDistance = {{ moveDistance }},
     super.sonarDistanceMultiplier = {{ sonarDistanceMultiplier }},
     final List<MapLevelItem> items = const [],
-    final List<MapLevelFeature> features = const [],
+    final List<MapLevelTerrain> terrains = const [],
     final List<Ambiance> levelAmbiances = const [],
     {% if reverbPreset %}
       super.reverbPreset = const ReverbPreset(
@@ -104,30 +104,30 @@ abstract class {{ className }} extends MapLevel {
         ),
       {% endfor %}
     ],
-    features: [],
+    terrains: [],
   ) {
-    this.features.addAll([
-      ...features,
-      {% for feature in features %}
-      {% if feature.onActivateFunctionName is none %}
+    this.terrains.addAll([
+      ...terrains,
+      {% for terrain in terrains%}
+      {% if terrain.onActivateFunctionName is none %}
       const
       {% endif %}
-      MapLevelFeature(
+      MapLevelTerrain(
         start:
-        {% if feature.onActivateFunctionName %}
+        {% if terrain.onActivateFunctionName %}
         const
         {% endif %}
-        Point({{ feature.startX }}, {{ feature.startY }}),
+        Point({{ terrain.startX }}, {{ terrain.startY }}),
         end:
-        {% if feature.onActivateFunctionName %}
+        {% if terrain.onActivateFunctionName %}
         const
         {% endif %}
-        Point({{ feature.endX }}, {{ feature.endY }}),
-        {% if feature.footstepSound %}
-        footstepSound: {{ feature.footstepSound | asset }},
+        Point({{ terrain.endX }}, {{ terrain.endY }}),
+        {% if terrain.footstepSound %}
+        footstepSound: {{ terrain.footstepSound | asset }},
         {% endif %}
-        {% if feature.onActivateFunctionName %}
-        onActivate: {{ feature.onActivateFunctionName }},
+        {% if terrain.onActivateFunctionName %}
+        onActivate: {{ terrain.onActivateFunctionName }},
         {% endif %}
       ),
     {% endfor %}

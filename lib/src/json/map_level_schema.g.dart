@@ -26,9 +26,9 @@ MapLevelSchema _$MapLevelSchemaFromJson(Map<String, dynamic> json) =>
       music: json['music'] == null
           ? null
           : MusicSchema.fromJson(json['music'] as Map<String, dynamic>),
-      features: (json['features'] as List<dynamic>?)
+      terrains: (json['terrains'] as List<dynamic>?)
           ?.map(
-              (e) => MapLevelSchemaFeature.fromJson(e as Map<String, dynamic>))
+              (e) => MapLevelSchemaTerrain.fromJson(e as Map<String, dynamic>))
           .toList(),
       functions: (json['functions'] as List<dynamic>?)
           ?.map(
@@ -69,7 +69,7 @@ Map<String, dynamic> _$MapLevelSchemaToJson(MapLevelSchema instance) =>
       'wallSound': instance.wallSound,
       'sonarDistanceMultiplier': instance.sonarDistanceMultiplier,
       'music': instance.music,
-      'features': instance.features,
+      'terrains': instance.terrains,
       'functions': instance.functions,
       'items': instance.items,
       'ambiances': instance.ambiances,

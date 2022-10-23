@@ -128,10 +128,12 @@ class HomePageState extends ConsumerState<HomePage> {
                       },
                       child: PushWidgetListTile(
                         title: map.name,
-                        builder: (final context) =>
-                            EditMapLevelSchema(id: map.id),
+                        builder: (final context) => EditMapLevelSchema(
+                          id: map.id,
+                        ),
                         autofocus: index == 0,
                         subtitle: '${map.maxX} x ${map.maxY}',
+                        key: ValueKey(map.id),
                       ),
                     ),
                   );

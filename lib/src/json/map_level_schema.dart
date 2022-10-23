@@ -6,10 +6,10 @@ import 'package:ziggurat/sound.dart';
 
 import '../../util.dart';
 import 'map_level_schema_ambiance.dart';
-import 'map_level_schema_feature.dart';
 import 'map_level_schema_function.dart';
 import 'map_level_schema_item.dart';
 import 'map_level_schema_random_sound.dart';
+import 'map_level_schema_terrain.dart';
 import 'music_schema.dart';
 
 part 'map_level_schema.g.dart';
@@ -35,7 +35,7 @@ class MapLevelSchema {
     this.wallSound,
     this.sonarDistanceMultiplier = 75,
     this.music,
-    final List<MapLevelSchemaFeature>? features,
+    final List<MapLevelSchemaTerrain>? terrains,
     final List<MapLevelSchemaFunction>? functions,
     final List<MapLevelSchemaItem>? items,
     final List<MapLevelSchemaAmbiance>? ambiances,
@@ -43,7 +43,7 @@ class MapLevelSchema {
     this.reverbTestSound,
     final List<MapLevelSchemaRandomSound>? randomSounds,
   })  : id = id ?? newId(),
-        features = features ?? [],
+        terrains = terrains ?? [],
         functions = functions ?? [],
         items = items ?? [],
         ambiances = ambiances ?? [],
@@ -121,8 +121,8 @@ class MapLevelSchema {
   /// The music to use.
   MusicSchema? music;
 
-  /// The features of this map.
-  final List<MapLevelSchemaFeature> features;
+  /// The terrains of this map.
+  final List<MapLevelSchemaTerrain> terrains;
 
   /// The functions for this map.
   final List<MapLevelSchemaFunction> functions;

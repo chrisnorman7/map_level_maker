@@ -4,15 +4,15 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../util.dart';
 
-part 'map_level_schema_feature.g.dart';
+part 'map_level_schema_terrain.g.dart';
 
-/// A feature in a map level schema.
+/// A terrain in a map level schema.
 @JsonSerializable()
-class MapLevelSchemaFeature {
+class MapLevelSchemaTerrain {
   /// Create an instance.
-  MapLevelSchemaFeature({
+  MapLevelSchemaTerrain({
     final String? id,
-    this.name = 'Untitled Feature',
+    this.name = 'Untitled Terrain',
     this.startX = 0,
     this.startY = 0,
     this.endX = 0,
@@ -23,13 +23,13 @@ class MapLevelSchemaFeature {
   }) : id = id ?? newId();
 
   /// Create an instance from a JSON object.
-  factory MapLevelSchemaFeature.fromJson(final Map<String, dynamic> json) =>
-      _$MapLevelSchemaFeatureFromJson(json);
+  factory MapLevelSchemaTerrain.fromJson(final Map<String, dynamic> json) =>
+      _$MapLevelSchemaTerrainFromJson(json);
 
-  /// The ID of this feature.
+  /// The ID of this terrain.
   final String id;
 
-  /// The name of this feature.
+  /// The name of this terrain.
   String name;
 
   /// The start x coordinate.
@@ -67,7 +67,7 @@ class MapLevelSchemaFeature {
   /// The footstep sound to use.
   String? footstepSound;
 
-  /// The function to call when activating this feature.
+  /// The function to call when activating this terrain.
   String? onActivateFunctionId;
 
   /// The name of the function represented by [onActivateFunctionId].
@@ -76,5 +76,5 @@ class MapLevelSchemaFeature {
   String? onActivateFunctionName;
 
   /// Convert an instance to JSON.
-  Map<String, dynamic> toJson() => _$MapLevelSchemaFeatureToJson(this);
+  Map<String, dynamic> toJson() => _$MapLevelSchemaTerrainToJson(this);
 }
