@@ -17,16 +17,21 @@ import '../assets/music.dart';
 import '../assets/random_sounds.dart';
 import '../assets/walls.dart';
 import '../map_level/map_level.dart';
-import '../map_level/map_level_terrain.dart';
 import '../map_level/map_level_item.dart';
+import '../map_level/map_level_terrain.dart';
 
 {{ name | comment }} ({{ id }}).
 abstract class {{ className }} extends MapLevel {
   /// Create an instance.
   {{ className }}({
     required super.game,
-    super.defaultFootstepSound = {{ defaultFootstepSound | asset }},
-    super.wallSound = {{ wallSound | asset }},
+    super.defaultFootstepSound
+    {% if defaultFootstepSound != null %}
+     = {{ defaultFootstepSound | asset }}
+     {% endif %},
+    super.wallSound {% if wallSound != null %}
+    = {{ wallSound | asset }}
+    {% endif %},
     {% if music %}
     super.music = const Music(sound: {{ music.sound | asset }},
     gain: {{ music.gain }},
@@ -109,7 +114,7 @@ abstract class {{ className }} extends MapLevel {
     this.terrains.addAll([
       ...terrains,
       {% for terrain in terrains%}
-      {% if terrain.needsConst %}
+      {% if terrain.needsConst == false %}
       const
       {% endif %}
       MapLevelTerrain(
@@ -130,10 +135,10 @@ abstract class {{ className }} extends MapLevel {
         onActivate: {{ terrain.onActivateFunctionName }},
         {% endif %}
         {% if terrain.onEnterFunctionName %}
-        onEnterFunction: {{ terrain.onEnterFunctionName }},
+        onEnter: {{ terrain.onEnterFunctionName }},
         {% endif %}
         {% if terrain.onExitFunctionName %}
-        onExitFunction: {{ terrain.onExitFunctionName }},
+        onExit: {{ terrain.onExitFunctionName }},
         {% endif %}
       ),
     {% endfor %}

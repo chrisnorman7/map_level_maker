@@ -31,9 +31,9 @@ void mapLevelSchemaToDart({
       ..onEnterFunctionName =
           level.findFunction(terrain.onEnterFunctionId)?.name
       ..onExitFunctionName = level.findFunction(terrain.onExitFunctionId)?.name
-      ..needsConst = terrain.onActivateFunctionName == null &&
-          terrain.onEnterFunctionName == null &&
-          terrain.onExitFunctionName == null;
+      ..needsConst = terrain.onActivateFunctionName != null ||
+          terrain.onEnterFunctionName != null ||
+          terrain.onExitFunctionName != null;
   }
   projectContext.saveLevel(level);
   final json = level.toJson();

@@ -92,7 +92,7 @@ class MapLevelSchemaTerrain {
   /// This value is set by the [mapLevelSchemaToDart] function.
   String? onExitFunctionName;
 
-  /// Whether or not this terrain should be written as a `const`.
+  /// Whether or not arguments to this terrain require `const`.
   bool needsConst;
 
   /// Convert an instance to JSON.
