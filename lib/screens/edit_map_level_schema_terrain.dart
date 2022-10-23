@@ -28,6 +28,7 @@ class EditMapLevelSchemaTerrain extends ConsumerWidget {
       mapLevelSchemaTerrainProvider.call(mapLevelSchemaArgument),
     );
     final level = terrainContext.level;
+    final functions = [null, ...level.functions];
     final terrain = terrainContext.value;
     return Cancel(
       child: SimpleScaffold(
@@ -53,13 +54,31 @@ class EditMapLevelSchemaTerrain extends ConsumerWidget {
               title: 'Footstep Sound',
             ),
             FunctionListTile(
-              functions: [null, ...level.functions],
+              functions: functions,
               function: level.findFunction(terrain.onActivateFunctionId),
               onChanged: (final value) {
                 terrain.onActivateFunctionId = value?.id;
                 save(ref);
               },
-              title: 'On Activate Function',
+              title: 'Activate Function',
+            ),
+            FunctionListTile(
+              functions: functions,
+              function: level.findFunction(terrain.onEnterFunctionId),
+              onChanged: (final value) {
+                terrain.onEnterFunctionId = value?.id;
+                save(ref);
+              },
+              title: 'Enter Function',
+            ),
+            FunctionListTile(
+              functions: functions,
+              function: level.findFunction(terrain.onExitFunctionId),
+              onChanged: (final value) {
+                terrain.onExitFunctionId = value?.id;
+                save(ref);
+              },
+              title: 'Exit Function',
             ),
             IntCoordinatesListTile(
               coordinates: terrain.start,

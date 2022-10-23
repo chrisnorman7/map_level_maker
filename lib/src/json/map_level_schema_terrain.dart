@@ -75,6 +75,22 @@ class MapLevelSchemaTerrain {
   /// This value is set by the [mapLevelSchemaToDart] function.
   String? onActivateFunctionName;
 
+  /// The function to call when entering this terrain.
+  String? onEnterFunctionId;
+
+  /// The name of the function represented by [onEnterFunctionId].
+  ///
+  /// This value is set by the [mapLevelSchemaToDart] function.
+  String? onEnterFunctionName;
+
+  /// The function to call when exiting this terrain.
+  String? onExitFunctionId;
+
+  /// The name of the function represented by [onExitFunctionId].
+  ///
+  /// This value is set by the [mapLevelSchemaToDart] function.
+  String? onExitFunctionName;
+
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaTerrainToJson(this);
 }
