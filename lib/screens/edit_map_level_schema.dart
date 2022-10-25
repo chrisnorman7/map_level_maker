@@ -36,7 +36,7 @@ import 'tabs/map_level_schema_settings_tab.dart';
 import 'tabs/map_level_schema_terrains_tab.dart';
 
 /// A widget to edit the map with the given [id].
-class EditMapLevelSchema extends ConsumerWidget {
+class EditMapLevelSchema extends ConsumerStatefulWidget {
   /// Create an instance.
   const EditMapLevelSchema({
     required this.id,
@@ -46,11 +46,18 @@ class EditMapLevelSchema extends ConsumerWidget {
   /// The ID of the level to use.
   final String id;
 
+  /// Create state for this widget.
+  @override
+  EditMapLevelSchemaState createState() => EditMapLevelSchemaState();
+}
+
+/// State for [EditMapLevelSchema].
+class EditMapLevelSchemaState extends ConsumerState<EditMapLevelSchema> {
   /// Build the widget.
   @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
+  Widget build(final BuildContext context) {
     final projectContext = ref.watch(projectContextProvider);
-    final level = ref.watch(mapLevelSchemaProvider.call(id));
+    final level = ref.watch(mapLevelSchemaProvider.call(widget.id));
     final terrains = level.terrains;
     final randomSounds = level.randomSounds;
     final functions = level.functions;
@@ -98,13 +105,11 @@ class EditMapLevelSchema extends ConsumerWidget {
                 )
               ],
               builder: (final context) => CallbackShortcuts(
-                bindings: {
-                  newShortcut: () => newMenu(context: context, ref: ref)
-                },
-                child: MapLevelSchemaSettingsTab(id: id),
+                bindings: {newShortcut: () => newMenu(context: context)},
+                child: MapLevelSchemaSettingsTab(id: widget.id),
               ),
               floatingActionButton: FloatingActionButton(
-                onPressed: () => newMenu(context: context, ref: ref),
+                onPressed: () => newMenu(context: context),
                 tooltip: 'New...',
                 child: const Icon(
                   Icons.new_label,
@@ -116,13 +121,11 @@ class EditMapLevelSchema extends ConsumerWidget {
               title: 'Terrains',
               icon: Text('${terrains.length}'),
               builder: (final context) => CallbackShortcuts(
-                bindings: {
-                  newShortcut: () => newTerrain(context: context, ref: ref)
-                },
-                child: MapLevelSchemaTerrainsTab(id: id),
+                bindings: {newShortcut: () => newTerrain(context: context)},
+                child: MapLevelSchemaTerrainsTab(id: widget.id),
               ),
               floatingActionButton: FloatingActionButton(
-                onPressed: () => newTerrain(context: context, ref: ref),
+                onPressed: () => newTerrain(context: context),
                 tooltip: 'New Terrain',
                 child: addIcon,
               ),
@@ -131,13 +134,11 @@ class EditMapLevelSchema extends ConsumerWidget {
               title: 'Items',
               icon: Text('${level.items.length}'),
               builder: (final context) => CallbackShortcuts(
-                bindings: {
-                  newShortcut: () => newItem(context: context, ref: ref)
-                },
-                child: MapLevelSchemaItemsTab(id: id),
+                bindings: {newShortcut: () => newItem(context: context)},
+                child: MapLevelSchemaItemsTab(id: widget.id),
               ),
               floatingActionButton: FloatingActionButton(
-                onPressed: () => newItem(context: context, ref: ref),
+                onPressed: () => newItem(context: context),
                 tooltip: 'New Item',
                 child: addIcon,
               ),
@@ -146,13 +147,11 @@ class EditMapLevelSchema extends ConsumerWidget {
               title: 'Ambiances',
               icon: Text('${level.ambiances.length}'),
               builder: (final context) => CallbackShortcuts(
-                bindings: {
-                  newShortcut: () => newAmbiance(context: context, ref: ref)
-                },
-                child: MapLevelSchemaAmbiancesTab(id: id),
+                bindings: {newShortcut: () => newAmbiance(context: context)},
+                child: MapLevelSchemaAmbiancesTab(id: widget.id),
               ),
               floatingActionButton: FloatingActionButton(
-                onPressed: () => newAmbiance(context: context, ref: ref),
+                onPressed: () => newAmbiance(context: context),
                 tooltip: 'New Ambiance',
                 child: addIcon,
               ),
@@ -161,13 +160,11 @@ class EditMapLevelSchema extends ConsumerWidget {
               title: 'Random Sounds',
               icon: Text('${randomSounds.length}'),
               builder: (final context) => CallbackShortcuts(
-                bindings: {
-                  newShortcut: () => newRandomSound(context: context, ref: ref)
-                },
-                child: MapLevelSchemaRandomSoundsTab(id: id),
+                bindings: {newShortcut: () => newRandomSound(context: context)},
+                child: MapLevelSchemaRandomSoundsTab(id: widget.id),
               ),
               floatingActionButton: FloatingActionButton(
-                onPressed: () => newRandomSound(context: context, ref: ref),
+                onPressed: () => newRandomSound(context: context),
                 tooltip: 'New Random Sound',
                 child: addIcon,
               ),
@@ -176,13 +173,11 @@ class EditMapLevelSchema extends ConsumerWidget {
               title: 'Functions',
               icon: Text('${functions.length}'),
               builder: (final context) => CallbackShortcuts(
-                bindings: {
-                  newShortcut: () => newFunction(context: context, ref: ref)
-                },
-                child: MapLevelSchemaFunctionsTab(id: id),
+                bindings: {newShortcut: () => newFunction(context: context)},
+                child: MapLevelSchemaFunctionsTab(id: widget.id),
               ),
               floatingActionButton: FloatingActionButton(
-                onPressed: () => newFunction(context: context, ref: ref),
+                onPressed: () => newFunction(context: context),
                 tooltip: 'New Function',
                 child: addIcon,
               ),
@@ -194,38 +189,37 @@ class EditMapLevelSchema extends ConsumerWidget {
   }
 
   /// Show a "new" menu.
-  void newMenu({
+  Future<void> newMenu({
     required final BuildContext context,
-    required final WidgetRef ref,
-  }) {
+  }) async {
     final items = [
       NewMenuItemContext(
         title: 'Terrain',
         shortcut: LogicalKeyboardKey.keyT,
-        onPressed: () => newTerrain(context: context, ref: ref),
+        onPressed: () => newTerrain(context: context),
       ),
       NewMenuItemContext(
         title: 'Item',
         shortcut: LogicalKeyboardKey.keyI,
-        onPressed: () => newItem(context: context, ref: ref),
+        onPressed: () => newItem(context: context),
       ),
       NewMenuItemContext(
         title: 'Ambiance',
         shortcut: LogicalKeyboardKey.keyA,
-        onPressed: () => newAmbiance(context: context, ref: ref),
+        onPressed: () => newAmbiance(context: context),
       ),
       NewMenuItemContext(
         title: 'Random Sound',
         shortcut: LogicalKeyboardKey.keyR,
-        onPressed: () => newRandomSound(context: context, ref: ref),
+        onPressed: () => newRandomSound(context: context),
       ),
       NewMenuItemContext(
         title: 'Function',
         shortcut: LogicalKeyboardKey.keyF,
-        onPressed: () => newFunction(context: context, ref: ref),
+        onPressed: () => newFunction(context: context),
       )
     ];
-    pushWidget(
+    await pushWidget(
       context: context,
       builder: (final context) => Cancel(
         child: CallbackShortcuts(
@@ -257,150 +251,154 @@ class EditMapLevelSchema extends ConsumerWidget {
         ),
       ),
     );
+    setState(() {});
   }
 
   /// Create a new terrain.
-  void newTerrain({
+  Future<void> newTerrain({
     required final BuildContext context,
-    required final WidgetRef ref,
-  }) {
-    final level = ref.watch(mapLevelSchemaProvider.call(id));
+  }) async {
+    final level = ref.watch(mapLevelSchemaProvider.call(widget.id));
     final terrain = MapLevelSchemaTerrain();
     level.terrains.add(terrain);
-    saveLevel(ref: ref, id: id);
-    pushWidget(
+    saveLevel(ref: ref, id: widget.id);
+    await pushWidget(
       context: context,
       builder: (final context) => EditMapLevelSchemaTerrain(
         mapLevelSchemaArgument: MapLevelSchemaArgument(
-          mapLevelId: id,
+          mapLevelId: widget.id,
           valueId: terrain.id,
         ),
       ),
     );
+    setState(() {});
   }
 
   /// Create a new item.
-  void newItem({
+  Future<void> newItem({
     required final BuildContext context,
-    required final WidgetRef ref,
-  }) {
+  }) async {
     final projectContext = ref.watch(projectContextProvider);
     final possibleEarcons = projectContext.earconsDirectory.listSync();
     if (possibleEarcons.isEmpty) {
-      showMessage(context: context, message: 'There are no earcons to use.');
+      return showMessage(
+        context: context,
+        message: 'There are no earcons to use.',
+      );
     }
     final possibleDescriptions =
         projectContext.descriptionsDirectory.listSync();
     if (possibleDescriptions.isEmpty) {
-      showMessage(
+      return showMessage(
         context: context,
         message: 'There are no description sounds to use.',
       );
     }
-    final level = ref.watch(mapLevelSchemaProvider.call(id));
+    final level = ref.watch(mapLevelSchemaProvider.call(widget.id));
     final item = MapLevelSchemaItem(
       earcon: path.basename(possibleEarcons.first.path),
       descriptionSound: path.basename(possibleDescriptions.first.path),
     );
     level.items.add(item);
-    saveLevel(ref: ref, id: id);
-    pushWidget(
+    saveLevel(ref: ref, id: widget.id);
+    await pushWidget(
       context: context,
       builder: (final context) => EditMapLevelSchemaItem(
         argument: MapLevelSchemaArgument(
-          mapLevelId: id,
+          mapLevelId: widget.id,
           valueId: item.id,
         ),
       ),
     );
+    setState(() {});
   }
 
   /// Create a new ambiance.
-  void newAmbiance({
+  Future<void> newAmbiance({
     required final BuildContext context,
-    required final WidgetRef ref,
-  }) {
+  }) async {
     final ambiancesDirectory =
         ref.watch(projectContextProvider).ambiancesDirectory;
     final possibleAmbiances = ambiancesDirectory.listSync();
     if (possibleAmbiances.isEmpty) {
-      showMessage(
+      return showMessage(
         context: context,
         message: 'There are no ambiances to use.',
       );
     } else {
-      final level = ref.watch(mapLevelSchemaProvider.call(id));
+      final level = ref.watch(mapLevelSchemaProvider.call(widget.id));
       final ambiance = MapLevelSchemaAmbiance(
         sound: MusicSchema(
           sound: path.basename(possibleAmbiances.first.path),
         ),
       );
       level.ambiances.add(ambiance);
-      saveLevel(ref: ref, id: id);
-      pushWidget(
+      saveLevel(ref: ref, id: widget.id);
+      await pushWidget(
         context: context,
         builder: (final context) => EditMapLevelSchemaAmbiance(
           argument: MapLevelSchemaArgument(
-            mapLevelId: id,
+            mapLevelId: widget.id,
             valueId: ambiance.id,
           ),
         ),
       );
+      setState(() {});
     }
   }
 
   /// Create a new random sound.
-  void newRandomSound({
+  Future<void> newRandomSound({
     required final BuildContext context,
-    required final WidgetRef ref,
-  }) {
+  }) async {
     final projectContext = ref.watch(projectContextProvider);
     final possibleRandomSounds =
         projectContext.randomSoundsDirectory.listSync();
     if (possibleRandomSounds.isEmpty) {
-      showMessage(
+      return showMessage(
         context: context,
         message: 'There are no random sounds to use.',
       );
     } else {
-      final level = ref.watch(mapLevelSchemaProvider.call(id));
+      final level = ref.watch(mapLevelSchemaProvider.call(widget.id));
       final randomSound = MapLevelSchemaRandomSound(
         sound: path.basename(possibleRandomSounds.first.path),
         maxX: level.maxX.toDouble(),
         maxY: level.maxY.toDouble(),
       );
       level.randomSounds.add(randomSound);
-      saveLevel(ref: ref, id: id);
-      pushWidget(
+      saveLevel(ref: ref, id: widget.id);
+      await pushWidget(
         context: context,
         builder: (final context) => EditMapLevelSchemaRandomSound(
           argument: MapLevelSchemaArgument(
-            mapLevelId: id,
+            mapLevelId: widget.id,
             valueId: randomSound.id,
           ),
         ),
       );
+      setState(() {});
     }
   }
 
   /// Create a new function.
-  void newFunction({
+  Future<void> newFunction({
     required final BuildContext context,
-    required final WidgetRef ref,
-  }) {
-    final level = ref.watch(mapLevelSchemaProvider.call(id));
+  }) async {
+    final level = ref.watch(mapLevelSchemaProvider.call(widget.id));
     final function = MapLevelSchemaFunction();
     level.functions.add(function);
-    saveLevel(ref: ref, id: id);
-    pushWidget(
+    saveLevel(ref: ref, id: widget.id);
+    await pushWidget(
       context: context,
       builder: (final context) => EditMapLevelSchemaFunction(
         argument: MapLevelSchemaArgument(
-          mapLevelId: id,
+          mapLevelId: widget.id,
           valueId: function.id,
         ),
       ),
     );
+    setState(() {});
   }
 
   /// Show an error.
