@@ -88,7 +88,7 @@ class MapLevelSchemaTerrainsTabState
                   ),
                 ),
                 onSetState: () => setState(() {}),
-                subtitle: '(${start.x}, ${end.x}) to (${end.x}, ${end.y})',
+                subtitle: '(${start.x}, ${start.y}) to (${end.x}, ${end.y})',
               ),
             ),
           );
