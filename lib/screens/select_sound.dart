@@ -38,19 +38,21 @@ class SelectSound extends StatelessWidget {
     final value = currentSound;
     final sounds = directory.listSync();
     AssetReference? assetReference;
+    FileSystemEntity? currentValue;
     try {
       assetReference = value == null
           ? null
           : getAssetReference(directory: directory, sound: value);
+      currentValue = value == null || assetReference == null
+          ? null
+          : sounds.firstWhere(
+              (final element) => path.basename(element.path) == currentSound,
+            );
       // ignore: avoid_catching_errors
     } on StateError {
       assetReference = null;
+      currentValue = null;
     }
-    final currentValue = value == null || assetReference == null
-        ? null
-        : sounds.firstWhere(
-            (final element) => path.basename(element.path) == currentSound,
-          );
     return SelectItem(
       values: [if (nullable) null, ...sounds],
       onDone: (final value) => onDone(
