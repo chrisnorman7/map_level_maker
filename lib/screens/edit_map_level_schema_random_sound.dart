@@ -116,6 +116,6 @@ class EditMapLevelSchemaRandomSound extends ConsumerWidget {
   /// Save the level.
   void save(final WidgetRef ref) {
     saveLevel(ref: ref, id: argument.mapLevelId);
-    ref.refresh(mapLevelSchemaRandomSoundProvider.call(argument));
+    ref.invalidate(mapLevelSchemaRandomSoundProvider.call(argument));
   }
 }
