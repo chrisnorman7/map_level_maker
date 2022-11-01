@@ -54,6 +54,8 @@ class MapLevelSchemaTerrainsTabState
         items: terrains,
         builder: (final context, final index) {
           final terrain = terrains[index];
+          final start = terrain.start;
+          final end = terrain.end;
           return SearchableListTile(
             searchString: terrain.name,
             child: CallbackShortcuts(
@@ -86,6 +88,7 @@ class MapLevelSchemaTerrainsTabState
                   ),
                 ),
                 onSetState: () => setState(() {}),
+                subtitle: '(${start.x}, ${end.x}) to (${end.x}, ${end.y})',
               ),
             ),
           );
