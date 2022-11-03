@@ -116,7 +116,14 @@ class FullSoundListTile extends ConsumerWidget {
                       path.join(currentValue.parent.path, soundPath),
                       from: projectContext.soundsDirectory.path,
                     );
-                    onChanged(getFileSystemEntity(newValue));
+                    onChanged(
+                      getFileSystemEntity(
+                        path.join(
+                          projectContext.soundsDirectory.path,
+                          newValue,
+                        ),
+                      ),
+                    );
                   }
                 },
                 currentSound: path.basename(currentValue.path),
