@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:recase/recase.dart';
 import 'package:ziggurat/sound.dart';
+import 'package:ziggurat/ziggurat.dart';
 
 import '../../util.dart';
 import 'map_level_schema_ambiance.dart';
@@ -42,6 +43,10 @@ class MapLevelSchema {
     this.reverbPreset,
     this.reverbTestSound,
     final List<MapLevelSchemaRandomSound>? randomSounds,
+    this.moveRumbleEffect,
+    this.wallRumbleEffect,
+    this.turnRumbleEffect,
+    this.watchRumbleEffect,
   })  : id = id ?? newId(),
         terrains = terrains ?? [],
         functions = functions ?? [],
@@ -156,6 +161,18 @@ class MapLevelSchema {
 
   /// The random sounds to play.
   final List<MapLevelSchemaRandomSound> randomSounds;
+
+  /// The move rumble effect to use.
+  RumbleEffect? moveRumbleEffect;
+
+  /// The wall rumble effect to use.
+  RumbleEffect? wallRumbleEffect;
+
+  /// The turn rumble effect to use.
+  RumbleEffect? turnRumbleEffect;
+
+  /// The watch rumble effect to use.
+  RumbleEffect? watchRumbleEffect;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MapLevelSchemaToJson(this);

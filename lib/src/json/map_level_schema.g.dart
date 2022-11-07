@@ -49,6 +49,22 @@ MapLevelSchema _$MapLevelSchemaFromJson(Map<String, dynamic> json) =>
           ?.map((e) =>
               MapLevelSchemaRandomSound.fromJson(e as Map<String, dynamic>))
           .toList(),
+      moveRumbleEffect: json['moveRumbleEffect'] == null
+          ? null
+          : RumbleEffect.fromJson(
+              json['moveRumbleEffect'] as Map<String, dynamic>),
+      wallRumbleEffect: json['wallRumbleEffect'] == null
+          ? null
+          : RumbleEffect.fromJson(
+              json['wallRumbleEffect'] as Map<String, dynamic>),
+      turnRumbleEffect: json['turnRumbleEffect'] == null
+          ? null
+          : RumbleEffect.fromJson(
+              json['turnRumbleEffect'] as Map<String, dynamic>),
+      watchRumbleEffect: json['watchRumbleEffect'] == null
+          ? null
+          : RumbleEffect.fromJson(
+              json['watchRumbleEffect'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$MapLevelSchemaToJson(MapLevelSchema instance) =>
@@ -76,4 +92,8 @@ Map<String, dynamic> _$MapLevelSchemaToJson(MapLevelSchema instance) =>
       'reverbPreset': instance.reverbPreset,
       'reverbTestSound': instance.reverbTestSound,
       'randomSounds': instance.randomSounds,
+      'moveRumbleEffect': instance.moveRumbleEffect,
+      'wallRumbleEffect': instance.wallRumbleEffect,
+      'turnRumbleEffect': instance.turnRumbleEffect,
+      'watchRumbleEffect': instance.watchRumbleEffect,
     };
